@@ -1,0 +1,3 @@
+C:\Users\Matt\Dropbox\ROV\2015\Code\C#\TCPConsoleROVClient\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe.config
+C:\Users\Matt\Dropbox\ROV\2015\Code\C#\TCPConsoleROVClient\ConsoleApplication1\obj\Debug\ConsoleApplication1.exe
+C:\Users\Matt\Dropbox\ROV\2015\Code\C#\TCPConsoleROVClient\ConsoleApplication1\obj\Debug\ConsoleApplication1.pdb
