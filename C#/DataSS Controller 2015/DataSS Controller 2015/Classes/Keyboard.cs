@@ -27,9 +27,14 @@ namespace DataSS_Controller_2015.Classes
         public override void BeginPolling()
         {
             //threading doesnt seem to work with keyboards
-            //poll = new Thread(new ThreadStart(polling));
-            //poll.Start();
-            polling();
+            poll = new Thread(new ThreadStart(polling));
+            poll.Start();
+            //polling();
+        }
+
+        private KeyboardState KBState()
+        {
+            return Keyboard.GetState();
         }
 
         void polling()
@@ -39,7 +44,8 @@ namespace DataSS_Controller_2015.Classes
                 //new state to update old state
                 //also doesnt seem to work
                 //if a key is pressed initially, it stays pressed, and vice versa (not how it should be)
-                KeyboardState newState = Keyboard.GetState();
+                KeyboardState newState = KBState();
+                PressedKeys = newState.GetPressedKeys().ToList<Keys>();
                 //another way of detecting keypresses
                 //PressedKeys = newState.GetPressedKeys().ToList<Keys>();
                 bool flag = false;
