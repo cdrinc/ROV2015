@@ -14,144 +14,159 @@ namespace DataSS_Controller_2015.Classes
         //public delegate void ControllerHandler(object sender, ControllerEventArgs e);
         //public event ControllerHandler InputChanged;
 
-        private KeyboardState keyboardState;
-
+        private KeyboardState OldState;
+        private List<Keys> PressedKeys;
         Thread poll;
 
         public KeyboardController()
         {
-            poll = new Thread(new ThreadStart(polling));
-            poll.Start();
+            OldState = Keyboard.GetState();
+            PressedKeys = new List<Keys>();
+        }
+
+        public override void BeginPolling()
+        {
+            //threading doesnt seem to work with keyboards
+            //poll = new Thread(new ThreadStart(polling));
+            //poll.Start();
+            polling();
         }
 
         void polling()
         {
             while (true)
             {
-                keyboardState = Keyboard.GetState();
+                //new state to update old state
+                //also doesnt seem to work
+                //if a key is pressed initially, it stays pressed, and vice versa (not how it should be)
+                KeyboardState newState = Keyboard.GetState();
+                //another way of detecting keypresses
+                //PressedKeys = newState.GetPressedKeys().ToList<Keys>();
                 bool flag = false;
                 #region left stick equivalents
-                if (keyboardState.IsKeyDown(Keys.A))
+                //A uses that other way as a test
+                if (PressedKeys.Contains(Keys.A))
                 {
                     LS.X = -1;
                     flag = true;
                 }
-                if (keyboardState.IsKeyDown(Keys.D))
+                if (newState.IsKeyDown(Keys.D))
                 {
                     LS.X = 1;
                     flag = true;
                 }
-                if (keyboardState.IsKeyDown(Keys.W))
+                if (newState.IsKeyDown(Keys.W))
                 {
                     LS.Y = 1;
                     flag = true;
                 }
-                if (keyboardState.IsKeyDown(Keys.S))
+                if (newState.IsKeyDown(Keys.S))
                 {
                     LS.Y = -1;
                     flag = true;
                 }
-                if (keyboardState.IsKeyUp(Keys.A) && keyboardState.IsKeyUp(Keys.D) && LS.X != 0)
+                if (newState.IsKeyUp(Keys.A) && newState.IsKeyUp(Keys.D) && LS.X != 0)
                 {
                     LS.X = 0;
                     flag = true;
                 }
-                if (keyboardState.IsKeyUp(Keys.W) && keyboardState.IsKeyUp(Keys.S) && LS.Y != 0)
+                if (newState.IsKeyUp(Keys.W) && newState.IsKeyUp(Keys.S) && LS.Y != 0)
                 {
                     LS.Y = 0;
                     flag = true;
                 }
                 #endregion
                 #region right stick equivalents
-                if (keyboardState.IsKeyDown(Keys.Left))
+                if (newState.IsKeyDown(Keys.Left))
                 {
                     RS.X = -1;
                     flag = true;
                 }
-                if (keyboardState.IsKeyDown(Keys.Right))
+                if (newState.IsKeyDown(Keys.Right))
                 {
                     RS.X = 1;
                     flag = true;
                 }
-                if (keyboardState.IsKeyDown(Keys.Up))
+                if (newState.IsKeyDown(Keys.Up))
                 {
                     RS.Y = 1;
                     flag = true;
                 }
-                if (keyboardState.IsKeyDown(Keys.Down))
+                if (newState.IsKeyDown(Keys.Down))
                 {
                     RS.Y = -1;
                     flag = true;
                 }
-                if (keyboardState.IsKeyUp(Keys.Left) && keyboardState.IsKeyUp(Keys.Right) && RS.X != 0)
+                if (newState.IsKeyUp(Keys.Left) && newState.IsKeyUp(Keys.Right) && RS.X != 0)
                 {
                     RS.X = 0;
                     flag = true;
                 }
-                if (keyboardState.IsKeyUp(Keys.Down) && keyboardState.IsKeyUp(Keys.Up) && RS.Y != 0)
+                if (newState.IsKeyUp(Keys.Down) && newState.IsKeyUp(Keys.Up) && RS.Y != 0)
                 {
                     RS.Y = 0;
                     flag = true;
                 }
                 #endregion
                 #region trigger equivalents
-                if (keyboardState.IsKeyDown(Keys.Q))
+                if (newState.IsKeyDown(Keys.Q))
                 {
                     LT = 1;
                     flag = true;
                 }
-                if (keyboardState.IsKeyDown(Keys.E))
+                if (newState.IsKeyDown(Keys.E))
                 {
                     RT = 1;
                     flag = true;
                 }
-                if (keyboardState.IsKeyUp(Keys.Q) && LT != 0)
+                if (newState.IsKeyUp(Keys.Q) && LT != 0)
                 {
                     LT = 0;
                     flag = true;
                 }
-                if (keyboardState.IsKeyUp(Keys.E) && LT != 0)
+                if (newState.IsKeyUp(Keys.E) && LT != 0)
                 {
                     RT = 0;
                     flag = true;
                 }
 #endregion
                 #region button equivalents
-                if (A != keyboardState.IsKeyDown(Keys.M))
+                if (A != newState.IsKeyDown(Keys.M))
                 {
-                    A = keyboardState.IsKeyDown(Keys.M);
+                    A = newState.IsKeyDown(Keys.M);
                     flag = true;
                 }
-                if (B != keyboardState.IsKeyDown(Keys.OemPeriod))
+                if (B != newState.IsKeyDown(Keys.OemPeriod))
                 {
-                    B = keyboardState.IsKeyDown(Keys.OemPeriod);
+                    B = newState.IsKeyDown(Keys.OemPeriod);
                     flag = true;
                 }
-                if (X != keyboardState.IsKeyDown(Keys.OemComma))
+                if (X != newState.IsKeyDown(Keys.OemComma))
                 {
-                    X = keyboardState.IsKeyDown(Keys.OemComma);
+                    X = newState.IsKeyDown(Keys.OemComma);
                     flag = true;
                 }
-                if (Y != keyboardState.IsKeyDown(Keys.Divide))
+                if (Y != newState.IsKeyDown(Keys.Divide))
                 {
-                    Y = keyboardState.IsKeyDown(Keys.Divide);
+                    Y = newState.IsKeyDown(Keys.Divide);
                     flag = true;
                 }
-                if (LB != keyboardState.IsKeyDown(Keys.Z))
+                if (LB != newState.IsKeyDown(Keys.Z))
                 {
-                    LB = keyboardState.IsKeyDown(Keys.Z);
+                    LB = newState.IsKeyDown(Keys.Z);
                     flag = true;
                 }
-                if (RB != keyboardState.IsKeyDown(Keys.Z))
+                if (RB != newState.IsKeyDown(Keys.Z))
                 {
-                    RB = keyboardState.IsKeyDown(Keys.Z);
+                    RB = newState.IsKeyDown(Keys.Z);
                     flag = true;
                 }
                 #endregion
-                if (flag)
+                if (true)
                 {
                     OnInputChanged();
                 }
+                OldState = newState;
             }
         }
 

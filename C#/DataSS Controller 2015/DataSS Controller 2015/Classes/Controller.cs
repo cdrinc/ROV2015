@@ -23,6 +23,11 @@ namespace DataSS_Controller_2015.Classes
         public bool RB = false;
         public bool LB = false;
 
+        public virtual void BeginPolling()
+        {
+
+        }
+
         protected virtual void OnInputChanged()
         {
             //if (InputChanged != null)

@@ -63,6 +63,7 @@ namespace DataSS_Controller_2015
             {
                 controller = new Classes.KeyboardController();
                 controller.InputChanged += new Controller.ControllerHandler(controller_InputChanged);
+                controller.BeginPolling();
             }
             if (gameRadioButton.Checked)
             {
