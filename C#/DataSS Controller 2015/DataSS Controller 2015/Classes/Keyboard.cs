@@ -32,11 +32,6 @@ namespace DataSS_Controller_2015.Classes
             //polling();
         }
 
-        private KeyboardState KBState()
-        {
-            return Keyboard.GetState();
-        }
-
         void polling()
         {
             while (true)
@@ -44,14 +39,13 @@ namespace DataSS_Controller_2015.Classes
                 //new state to update old state
                 //also doesnt seem to work
                 //if a key is pressed initially, it stays pressed, and vice versa (not how it should be)
-                KeyboardState newState = KBState();
-                PressedKeys = newState.GetPressedKeys().ToList<Keys>();
+                KeyboardState newState = Keyboard.GetState();
                 //another way of detecting keypresses
                 //PressedKeys = newState.GetPressedKeys().ToList<Keys>();
                 bool flag = false;
                 #region left stick equivalents
                 //A uses that other way as a test
-                if (PressedKeys.Contains(Keys.A))
+                if (newState.IsKeyDown(Keys.A))
                 {
                     LS.X = -1;
                     flag = true;

@@ -63,31 +63,32 @@ namespace DataSS_Controller_2015
             {
                 controller = new Classes.KeyboardController();
                 controller.InputChanged += new Controller.ControllerHandler(controller_InputChanged);
-                controller.BeginPolling();
+                ((KeyboardController)controller).BeginPolling();
             }
             if (gameRadioButton.Checked)
             {
                 controller = new Classes.GameController();
-                controller.InputChanged += controller_InputChanged;
+                controller.InputChanged += new Controller.ControllerHandler(controller_InputChanged);
+                ((GameController)controller).BeginPolling();
             }
         }
 
         void controller_InputChanged(object sender, EventArgs e)
         {
-            forwardNum.Value = (decimal)controller.LS.Y;
-            translateNum.Value = (decimal)controller.LS.X;
-            upDownNum.Value = (decimal)controller.RS.Y;
-            yawNum.Value = (decimal)controller.RS.X;
+            forwardNum.Invoke((Action)delegate { forwardNum.Value = (decimal)controller.LS.Y; });
+            translateNum.Invoke((Action)delegate { translateNum.Value = (decimal)controller.LS.X; });
+            upDownNum.Invoke((Action)delegate { upDownNum.Value = (decimal)controller.RS.Y; });
+            yawNum.Invoke((Action)delegate { yawNum.Value = (decimal)controller.RS.X; });
 
-            aNum.Value = controller.A == false ? 0 : 1;
-            bNum.Value = controller.B == false ? 0 : 1;
-            xNum.Value = controller.X == false ? 0 : 1;
-            yNum.Value = controller.Y == false ? 0 : 1;
-            rbNum.Value = controller.RB == false ? 0 : 1;
-            lbNum.Value = controller.LB == false ? 0 : 1;
+            aNum.Invoke((Action)delegate { aNum.Value = controller.A == false ? 0 : 1; });
+            bNum.Invoke((Action)delegate { bNum.Value = controller.B == false ? 0 : 1; });
+            xNum.Invoke((Action)delegate { xNum.Value = controller.X == false ? 0 : 1; });
+            yNum.Invoke((Action)delegate { yNum.Value = controller.Y == false ? 0 : 1; });
+            rbNum.Invoke((Action)delegate { rbNum.Value = controller.RB == false ? 0 : 1; });
+            lbNum.Invoke((Action)delegate { lbNum.Value = controller.LB == false ? 0 : 1; });
 
-            rtNum.Value = (decimal)controller.RT;
-            ltNum.Value = (decimal)controller.LT;
+            rtNum.Invoke((Action)delegate { rtNum.Value = (decimal)controller.RT; });
+            ltNum.Invoke((Action)delegate { ltNum.Value = (decimal)controller.LT; });
         }
 
 

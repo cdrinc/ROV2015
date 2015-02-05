@@ -18,8 +18,15 @@ namespace DataSS_Controller_2015.Classes
 
         public GameController()
         {
+            
+        }
+
+        public override void BeginPolling()
+        {
+            //threading doesnt seem to work with keyboards
             poll = new Thread(new ThreadStart(polling));
             poll.Start();
+            //polling();
         }
 
         void polling()
@@ -80,7 +87,7 @@ namespace DataSS_Controller_2015.Classes
                 }
                 if (flag)
                 {
-                    InputChanged(this, new EventArgs());
+                    OnInputChanged();
                 }
                  
             }

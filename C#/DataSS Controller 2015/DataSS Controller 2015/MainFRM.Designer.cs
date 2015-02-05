@@ -80,7 +80,7 @@
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(8, 8);
-            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(405, 38);
             this.button1.TabIndex = 0;
@@ -92,7 +92,7 @@
             // 
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(12, 325);
-            this.listBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.listBox1.Margin = new System.Windows.Forms.Padding(2);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(701, 121);
             this.listBox1.TabIndex = 1;
@@ -100,7 +100,7 @@
             // button2
             // 
             this.button2.Location = new System.Drawing.Point(8, 56);
-            this.button2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button2.Margin = new System.Windows.Forms.Padding(2);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(66, 24);
             this.button2.TabIndex = 2;
@@ -111,7 +111,7 @@
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(78, 59);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(68, 20);
             this.textBox1.TabIndex = 3;
@@ -119,7 +119,7 @@
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(149, 56);
-            this.button3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button3.Margin = new System.Windows.Forms.Padding(2);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(264, 24);
             this.button3.TabIndex = 4;
@@ -133,9 +133,9 @@
             this.groupBox1.Controls.Add(this.gameRadioButton);
             this.groupBox1.Controls.Add(this.keyboardRadioButton);
             this.groupBox1.Location = new System.Drawing.Point(538, 8);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox1.Size = new System.Drawing.Size(173, 59);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
@@ -144,7 +144,7 @@
             // controllerStartButton
             // 
             this.controllerStartButton.Location = new System.Drawing.Point(108, 16);
-            this.controllerStartButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.controllerStartButton.Margin = new System.Windows.Forms.Padding(2);
             this.controllerStartButton.Name = "controllerStartButton";
             this.controllerStartButton.Size = new System.Drawing.Size(61, 35);
             this.controllerStartButton.TabIndex = 2;
@@ -156,7 +156,7 @@
             // 
             this.gameRadioButton.AutoSize = true;
             this.gameRadioButton.Location = new System.Drawing.Point(4, 36);
-            this.gameRadioButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.gameRadioButton.Margin = new System.Windows.Forms.Padding(2);
             this.gameRadioButton.Name = "gameRadioButton";
             this.gameRadioButton.Size = new System.Drawing.Size(100, 17);
             this.gameRadioButton.TabIndex = 1;
@@ -168,7 +168,7 @@
             // 
             this.keyboardRadioButton.AutoSize = true;
             this.keyboardRadioButton.Location = new System.Drawing.Point(4, 16);
-            this.keyboardRadioButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.keyboardRadioButton.Margin = new System.Windows.Forms.Padding(2);
             this.keyboardRadioButton.Name = "keyboardRadioButton";
             this.keyboardRadioButton.Size = new System.Drawing.Size(70, 17);
             this.keyboardRadioButton.TabIndex = 0;
@@ -300,7 +300,7 @@
             // 
             this.forwardNum.Enabled = false;
             this.forwardNum.Location = new System.Drawing.Point(121, 154);
-            this.forwardNum.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.forwardNum.Margin = new System.Windows.Forms.Padding(2);
             this.forwardNum.Maximum = new decimal(new int[] {
             1,
             0,
@@ -319,7 +319,7 @@
             // 
             this.rtNum.Enabled = false;
             this.rtNum.Location = new System.Drawing.Point(378, 196);
-            this.rtNum.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rtNum.Margin = new System.Windows.Forms.Padding(2);
             this.rtNum.Maximum = new decimal(new int[] {
             1,
             0,
@@ -338,7 +338,7 @@
             // 
             this.ltNum.Enabled = false;
             this.ltNum.Location = new System.Drawing.Point(378, 216);
-            this.ltNum.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ltNum.Margin = new System.Windows.Forms.Padding(2);
             this.ltNum.Maximum = new decimal(new int[] {
             1,
             0,
@@ -357,7 +357,7 @@
             // 
             this.lbNum.Enabled = false;
             this.lbNum.Location = new System.Drawing.Point(251, 258);
-            this.lbNum.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.lbNum.Margin = new System.Windows.Forms.Padding(2);
             this.lbNum.Maximum = new decimal(new int[] {
             1,
             0,
@@ -376,7 +376,7 @@
             // 
             this.rbNum.Enabled = false;
             this.rbNum.Location = new System.Drawing.Point(251, 237);
-            this.rbNum.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rbNum.Margin = new System.Windows.Forms.Padding(2);
             this.rbNum.Maximum = new decimal(new int[] {
             1,
             0,
@@ -395,7 +395,7 @@
             // 
             this.yNum.Enabled = false;
             this.yNum.Location = new System.Drawing.Point(251, 216);
-            this.yNum.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.yNum.Margin = new System.Windows.Forms.Padding(2);
             this.yNum.Maximum = new decimal(new int[] {
             1,
             0,
@@ -414,7 +414,7 @@
             // 
             this.xNum.Enabled = false;
             this.xNum.Location = new System.Drawing.Point(251, 196);
-            this.xNum.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.xNum.Margin = new System.Windows.Forms.Padding(2);
             this.xNum.Maximum = new decimal(new int[] {
             1,
             0,
@@ -433,7 +433,7 @@
             // 
             this.bNum.Enabled = false;
             this.bNum.Location = new System.Drawing.Point(251, 175);
-            this.bNum.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.bNum.Margin = new System.Windows.Forms.Padding(2);
             this.bNum.Maximum = new decimal(new int[] {
             1,
             0,
@@ -452,7 +452,7 @@
             // 
             this.aNum.Enabled = false;
             this.aNum.Location = new System.Drawing.Point(251, 154);
-            this.aNum.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.aNum.Margin = new System.Windows.Forms.Padding(2);
             this.aNum.Maximum = new decimal(new int[] {
             1,
             0,
@@ -471,7 +471,7 @@
             // 
             this.yawNum.Enabled = false;
             this.yawNum.Location = new System.Drawing.Point(121, 258);
-            this.yawNum.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.yawNum.Margin = new System.Windows.Forms.Padding(2);
             this.yawNum.Maximum = new decimal(new int[] {
             1,
             0,
@@ -490,7 +490,7 @@
             // 
             this.upDownNum.Enabled = false;
             this.upDownNum.Location = new System.Drawing.Point(121, 237);
-            this.upDownNum.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.upDownNum.Margin = new System.Windows.Forms.Padding(2);
             this.upDownNum.Maximum = new decimal(new int[] {
             1,
             0,
@@ -509,7 +509,7 @@
             // 
             this.translateNum.Enabled = false;
             this.translateNum.Location = new System.Drawing.Point(121, 175);
-            this.translateNum.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.translateNum.Margin = new System.Windows.Forms.Padding(2);
             this.translateNum.Maximum = new decimal(new int[] {
             1,
             0,
@@ -528,7 +528,7 @@
             // 
             this.valueGroupbox.Location = new System.Drawing.Point(8, 138);
             this.valueGroupbox.Name = "valueGroupbox";
-            this.valueGroupbox.Size = new System.Drawing.Size(443, 162);
+            this.valueGroupbox.Size = new System.Drawing.Size(452, 162);
             this.valueGroupbox.TabIndex = 31;
             this.valueGroupbox.TabStop = false;
             this.valueGroupbox.Text = "Control Values";
@@ -569,7 +569,7 @@
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.valueGroupbox);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MainFRM";
             this.Text = "DATASS Controller";
             this.Load += new System.EventHandler(this.MainFRM_Load);
