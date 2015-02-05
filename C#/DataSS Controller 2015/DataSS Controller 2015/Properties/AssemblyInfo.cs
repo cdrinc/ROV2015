@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("DataSS Controller 2015")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Controlling application for the FDS 2015 robot.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("First Descent Solutions")]
 [assembly: AssemblyProduct("DataSS Controller 2015")]

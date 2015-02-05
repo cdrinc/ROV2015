@@ -131,38 +131,38 @@ namespace DataSS_Controller_2015.Classes
                 }
 #endregion
                 #region button equivalents
-                if (A != newState.IsKeyDown(Keys.M))
-                {
-                    A = newState.IsKeyDown(Keys.M);
-                    flag = true;
-                }
-                if (B != newState.IsKeyDown(Keys.OemPeriod))
-                {
-                    B = newState.IsKeyDown(Keys.OemPeriod);
-                    flag = true;
-                }
-                if (X != newState.IsKeyDown(Keys.OemComma))
-                {
-                    X = newState.IsKeyDown(Keys.OemComma);
-                    flag = true;
-                }
-                if (Y != newState.IsKeyDown(Keys.Divide))
-                {
-                    Y = newState.IsKeyDown(Keys.Divide);
-                    flag = true;
-                }
-                if (LB != newState.IsKeyDown(Keys.Z))
-                {
-                    LB = newState.IsKeyDown(Keys.Z);
-                    flag = true;
-                }
-                if (RB != newState.IsKeyDown(Keys.Z))
-                {
-                    RB = newState.IsKeyDown(Keys.Z);
-                    flag = true;
-                }
+                //if (A != newState.IsKeyDown(Keys.M))
+                //{
+                //    A = newState.IsKeyDown(Keys.M);
+                //    flag = true;
+                //}
+                //if (B != newState.IsKeyDown(Keys.OemPeriod))
+                //{
+                //    B = newState.IsKeyDown(Keys.OemPeriod);
+                //    flag = true;
+                //}
+                //if (X != newState.IsKeyDown(Keys.OemComma))
+                //{
+                //    X = newState.IsKeyDown(Keys.OemComma);
+                //    flag = true;
+                //}
+                //if (Y != newState.IsKeyDown(Keys.Divide))
+                //{
+                //    Y = newState.IsKeyDown(Keys.Divide);
+                //    flag = true;
+                //}
+                //if (LB != newState.IsKeyDown(Keys.Z))
+                //{
+                //    LB = newState.IsKeyDown(Keys.Z);
+                //    flag = true;
+                //}
+                //if (RB != newState.IsKeyDown(Keys.Z))
+                //{
+                //    RB = newState.IsKeyDown(Keys.Z);
+                //    flag = true;
+                //}
                 #endregion
-                if (true)
+                if (flag)
                 {
                     OnInputChanged();
                 }

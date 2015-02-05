@@ -10,7 +10,6 @@ namespace DataSS_Controller_2015.Classes
 {
     public class GameController : Controller
     {
-        public event EventHandler InputChanged;
 
         private GamePadState padState;
 
@@ -35,6 +34,7 @@ namespace DataSS_Controller_2015.Classes
             {
                 padState = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One);
                 bool flag = false;
+                #region Sticks
                 if (LS != padState.ThumbSticks.Left)
                 {
                     LS = padState.ThumbSticks.Left;
@@ -45,6 +45,8 @@ namespace DataSS_Controller_2015.Classes
                     RS = padState.ThumbSticks.Right;
                     flag = true;
                 }
+                #endregion
+                #region Triggers
                 if (LT != padState.Triggers.Left)
                 {
                     LT = padState.Triggers.Left;
@@ -55,34 +57,35 @@ namespace DataSS_Controller_2015.Classes
                     RT = padState.Triggers.Right;
                     flag = true;
                 }
-                if (A != (padState.Buttons.A == 0 ? false : true))
+                #endregion
+                if (A != (int)padState.Buttons.A)
                 {
-                    A = (padState.Buttons.A == 0 ? false : true);
+                    A = (int)padState.Buttons.A;
                     flag = true;
                 }
-                if (B != (padState.Buttons.B == 0 ? false : true))
+                if (B != (int)padState.Buttons.B)
                 {
-                    B = (padState.Buttons.B == 0 ? false : true);
+                    B = (int)padState.Buttons.B;
                     flag = true;
                 }
-                if (X != (padState.Buttons.X == 0 ? false : true))
+                if (X != (int)padState.Buttons.X)
                 {
-                    X = (padState.Buttons.X == 0 ? false : true);
+                    X = (int)padState.Buttons.X;
                     flag = true;
                 }
-                if (Y != (padState.Buttons.Y == 0 ? false : true))
+                if (Y != (int)padState.Buttons.Y)
                 {
-                    Y = (padState.Buttons.Y == 0 ? false : true);
+                    Y = (int)padState.Buttons.Y;
                     flag = true;
                 }
-                if (LB != (padState.Buttons.LeftShoulder == 0 ? false : true))
+                if (LB != (int)padState.Buttons.LeftShoulder)
                 {
-                    LB = (padState.Buttons.LeftShoulder == 0 ? false : true);
+                    LB = (int)padState.Buttons.LeftShoulder;
                     flag = true;
                 }
-                if (RB != (padState.Buttons.RightShoulder == 0 ? false : true))
+                if (RB != (int)padState.Buttons.RightShoulder)
                 {
-                    RB = (padState.Buttons.RightShoulder == 0 ? false : true);
+                    RB = (int)padState.Buttons.RightShoulder;
                     flag = true;
                 }
                 if (flag)
