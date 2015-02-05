@@ -32,7 +32,8 @@ namespace DataSS_Controller_2015.Classes
         public int LSClick = 0;
         public int RSClick = 0;
         public int Start = 0;
-        public int Select = 0;
+        public int Back = 0;
+        public int BigButton = 0;
 
         /// <summary>
         /// Non-implemented polling function (overrided in child classes).
@@ -46,6 +47,14 @@ namespace DataSS_Controller_2015.Classes
         /// Non-implemented polling function (overrided in child classes).
         /// </summary>
         public virtual void EndPolling()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Non-implemented polling function (overrided in child classes).
+        /// </summary>
+        public virtual bool IsPolling()
         {
             throw new NotImplementedException();
         }

@@ -22,10 +22,23 @@ namespace DataSS_Controller_2015.Classes
 
         public override void BeginPolling()
         {
-            //threading doesnt seem to work with keyboards
             poll = new Thread(new ThreadStart(polling));
             poll.Start();
-            //polling();
+        }
+
+        public override void EndPolling()
+        {
+            if (poll != null)
+                if (poll.IsAlive)
+                    poll.Abort();
+        }
+
+        public override bool IsPolling()
+        {
+            if (poll != null)
+                return poll.IsAlive;
+            else
+                return false;
         }
 
         void polling()
@@ -58,6 +71,7 @@ namespace DataSS_Controller_2015.Classes
                     flag = true;
                 }
                 #endregion
+                #region Buttons, Shoulders, DPad, Stick Clicks, Start/Select, and BigButton
                 if (A != (int)padState.Buttons.A)
                 {
                     A = (int)padState.Buttons.A;
@@ -88,11 +102,54 @@ namespace DataSS_Controller_2015.Classes
                     RB = (int)padState.Buttons.RightShoulder;
                     flag = true;
                 }
-                if (flag)
+                if (LSClick != (int)padState.Buttons.LeftStick)
                 {
-                    OnInputChanged();
+                    LSClick = (int)padState.Buttons.LeftStick;
+                    flag = true;
                 }
-                 
+                if (RSClick != (int)padState.Buttons.RightStick)
+                {
+                    RSClick = (int)padState.Buttons.RightStick;
+                    flag = true;
+                }
+                if (DUp != (int)padState.DPad.Up)
+                {
+                    DUp = (int)padState.DPad.Up;
+                    flag = true;
+                }
+                if (DLeft != (int)padState.DPad.Left)
+                {
+                    DLeft = (int)padState.DPad.Left;
+                    flag = true;
+                }
+                if (DRight != (int)padState.DPad.Right)
+                {
+                    DRight = (int)padState.DPad.Right;
+                    flag = true;
+                }
+                if (DDown != (int)padState.DPad.Down)
+                {
+                    DDown = (int)padState.DPad.Down;
+                    flag = true;
+                } 
+                if (Start != (int)padState.Buttons.Start)
+                {
+                    Start = (int)padState.Buttons.Start;
+                    flag = true;
+                }
+                if (Back != (int)padState.Buttons.Back)
+                {
+                    Back = (int)padState.Buttons.Back;
+                    flag = true;
+                }
+                if (BigButton != (int)padState.Buttons.BigButton)
+                {
+                    BigButton = (int)padState.Buttons.BigButton;
+                    flag = true;
+                }
+                #endregion
+                if (flag)
+                    OnInputChanged();
             }
         }
     }

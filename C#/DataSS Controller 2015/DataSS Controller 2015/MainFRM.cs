@@ -63,10 +63,10 @@ namespace DataSS_Controller_2015
 
         void controller_InputChanged(object sender, EventArgs e)
         {
-            forwardNum.Invoke((Action)delegate { forwardNum.Value = (decimal)controller.LS.Y; });
-            translateNum.Invoke((Action)delegate { translateNum.Value = (decimal)controller.LS.X; });
-            upDownNum.Invoke((Action)delegate { upDownNum.Value = (decimal)controller.RS.Y; });
-            yawNum.Invoke((Action)delegate { yawNum.Value = (decimal)controller.RS.X; });
+            forwardNum.Invoke((Action)delegate { forwardNum.Value = (decimal)controller.LS.Y*100; });
+            translateNum.Invoke((Action)delegate { translateNum.Value = (decimal)controller.LS.X*100; });
+            upDownNum.Invoke((Action)delegate { upDownNum.Value = (decimal)controller.RS.Y*100; });
+            yawNum.Invoke((Action)delegate { yawNum.Value = (decimal)controller.RS.X*100; });
 
             aNum.Invoke((Action)delegate { aNum.Value = controller.A; });
             bNum.Invoke((Action)delegate { bNum.Value = controller.B; });
@@ -77,8 +77,26 @@ namespace DataSS_Controller_2015
 
             rtNum.Invoke((Action)delegate { rtNum.Value = (decimal)controller.RT; });
             ltNum.Invoke((Action)delegate { ltNum.Value = (decimal)controller.LT; });
+
+            rsNum.Invoke((Action)delegate { rsNum.Value = controller.RSClick; });
+            lsNum.Invoke((Action)delegate { lsNum.Value = controller.LSClick; });
+
+            startNum.Invoke((Action)delegate { startNum.Value = controller.Start; });
+            backNum.Invoke((Action)delegate { backNum.Value = controller.Back; });
+            bigNum.Invoke((Action)delegate { bigNum.Value = controller.BigButton; });
+
+            upNum.Invoke((Action)delegate { upNum.Value = controller.DUp; });
+            leftNum.Invoke((Action)delegate { leftNum.Value = controller.DLeft; });
+            rightNum.Invoke((Action)delegate { rightNum.Value = controller.DRight; });
+            downNum.Invoke((Action)delegate { downNum.Value = controller.DDown; });
+
         }
 
-
+        private void MainFRM_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (controller != null)
+                if (controller is GameController)
+                    ((GameController)controller).EndPolling();
+        }
     }
 }
