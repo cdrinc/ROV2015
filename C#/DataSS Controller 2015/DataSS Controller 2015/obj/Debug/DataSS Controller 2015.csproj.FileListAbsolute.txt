@@ -14,8 +14,6 @@ C:\Users\Matt\Documents\Visual Studio 2012\Projects\ROV2015\C#\DataSS Controller
 C:\Users\Matt\Documents\Visual Studio 2012\Projects\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\obj\Debug\DataSS Controller 2015.pdb
 C:\Users\Matt\Documents\Visual Studio 2012\Projects\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\bin\Debug\DataSS Controller 2015.exe
 C:\Users\Matt\Documents\Visual Studio 2012\Projects\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\bin\Debug\DataSS Controller 2015.pdb
-C:\Users\Matt\Documents\Visual Studio 2012\Projects\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\bin\Debug\Microsoft.Xna.Framework.dll
-C:\Users\Matt\Documents\Visual Studio 2012\Projects\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\bin\Debug\Microsoft.Xna.Framework.xml
 C:\Users\Matt\Documents\Visual Studio 2012\Projects\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\obj\Debug\DataSS Controller 2015.csprojResolveAssemblyReference.cache
 C:\Users\Matt\Documents\Visual Studio 2012\Projects\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\obj\Debug\DataSS_Controller_2015.MainFRM.resources
 C:\Users\Matt\Documents\Visual Studio 2012\Projects\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\obj\Debug\DataSS_Controller_2015.Properties.Resources.resources

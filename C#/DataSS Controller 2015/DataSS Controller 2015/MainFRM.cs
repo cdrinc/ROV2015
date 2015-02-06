@@ -98,5 +98,10 @@ namespace DataSS_Controller_2015
                 if (controller is GameController)
                     ((GameController)controller).EndPolling();
         }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }
