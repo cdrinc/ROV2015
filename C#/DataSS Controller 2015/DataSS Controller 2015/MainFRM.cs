@@ -6,6 +6,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 
 using DataSS_Controller_2015.Classes;
@@ -24,16 +28,17 @@ namespace DataSS_Controller_2015
             button2.Enabled = false;
         }
 
+        #region Main Form Events
+        private void MainFRM_Load(object sender, EventArgs e)
+        {
+
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             connection = new TcpConnection("169.254.60.110", 13000);
             button2.Enabled = true;
             connected = true;
-        }
-
-        private void MainFRM_Load(object sender, EventArgs e)
-        {
-            
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -63,6 +68,19 @@ namespace DataSS_Controller_2015
                 ((GameController)controller).BeginPolling();
             }
         }
+
+        private void MainFRM_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (controller != null)
+                if (controller is GameController)
+                    ((GameController)controller).EndPolling();
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+        #endregion
 
         void controller_InputChanged(object sender, EventArgs e)
         {
@@ -96,22 +114,33 @@ namespace DataSS_Controller_2015
             {
                 if (connected)
                 {
+                    SentData sending = new SentData();
+                    sending.A = (byte)controller.A;
+                    sending.B = (byte)controller.B;
+                    sending.X = (byte)controller.X;
+                    sending.Y = (byte)controller.Y;
+                    sending.RB = (byte)controller.RB;
+                    sending.LB = (byte)controller.LB;
+                    sending.RT = (byte)Processing.Map(controller.RT, 0, 1, 0, 255);
+                    sending.LT = (byte)Processing.Map(controller.LT, 0, 1, 0, 255);
+                    sending.LSY = (byte)Processing.Map(controller.LS.Y, 0, 1, 0, 255);
+                    sending.LSX = (byte)Processing.Map(controller.LS.X, 0, 1, 0, 255);
+                    sending.RSY = (byte)Processing.Map(controller.RS.Y, 0, 1, 0, 255);
+                    sending.RSX = (byte)Processing.Map(controller.RS.X, 0, 1, 0, 255);
+                    sending.DUp = (byte)controller.DUp;
+                    sending.DDown = (byte)controller.DDown;
+                    sending.DLeft = (byte)controller.DLeft;
+                    sending.DRight = (byte)controller.DRight;
+                    sending.LSClick = (byte)controller.LSClick;
+                    sending.RSClick = (byte)controller.RSClick;
+                    sending.Start = (byte)controller.Start;
+                    sending.Back = (byte)controller.Back;
 
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    formatter.Serialize(connection.Stream, sending);
                 }
             });
 
-        }
-
-        private void MainFRM_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            if (controller != null)
-                if (controller is GameController)
-                    ((GameController)controller).EndPolling();
-        }
-
-        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
         }
     }
 }

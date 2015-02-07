@@ -11,9 +11,9 @@ namespace DataSS_Controller_2015.Classes
 {
     public class TcpConnection
     {
-        public TcpClient client;
-        public StreamWriter writer;
-        public NetworkStream stream;
+        public TcpClient Client;
+        public StreamWriter Writer;
+        public NetworkStream Stream;
 
         public TcpConnection(string ipAddress, int port)
         {
@@ -23,15 +23,15 @@ namespace DataSS_Controller_2015.Classes
                 // Note, for this client to work you need to have a TcpServer  
                 // connected to the same address as specified by the server, port 
                 // combination.
-                client = new TcpClient();
-                client.Connect(ipAddress, port);
+                Client = new TcpClient();
+                Client.Connect(ipAddress, port);
 
                 // Get a client stream for reading and writing. 
                 // Stream stream = client.GetStream();
-                stream = client.GetStream();
+                Stream = Client.GetStream();
 
                 //create a writer for the network stream
-                writer = new StreamWriter(stream);
+                Writer = new StreamWriter(Stream);
             }
             catch (Exception ex)
             {
@@ -41,21 +41,21 @@ namespace DataSS_Controller_2015.Classes
 
         public void Close()
         {
-            writer.Close();
-            client.Close();
+            Writer.Close();
+            Client.Close();
         }
 
         public void Send(string message)
         {
-            writer.Write(message);
-            writer.Flush();
+            Writer.Write(message);
+            Writer.Flush();
         }
 
         public string ReadAllAvailable()
         {
             List<byte> data = new List<byte>();
-            while (stream.DataAvailable)
-                data.Add((byte)stream.ReadByte());
+            while (Stream.DataAvailable)
+                data.Add((byte)Stream.ReadByte());
             return System.Text.Encoding.ASCII.GetString(data.ToArray());
         }
     }

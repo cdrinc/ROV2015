@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Runtime.Serialization;
 
 namespace DataSS_Controller_2015.Classes
 {
@@ -28,7 +30,7 @@ namespace DataSS_Controller_2015.Classes
     /// 18  -   start
     /// 19  -   back
     /// </summary>
-    public class SentData
+    public class SentData : ISerializable
     {
         public byte LSY;
         public byte LSX;
