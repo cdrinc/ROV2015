@@ -33,7 +33,6 @@ namespace DataSS_Controller_2015.Classes
         public int RSClick = 0;
         public int Start = 0;
         public int Back = 0;
-        public int BigButton = 0;
 
         /// <summary>
         /// Non-implemented polling function (overrided in child classes).

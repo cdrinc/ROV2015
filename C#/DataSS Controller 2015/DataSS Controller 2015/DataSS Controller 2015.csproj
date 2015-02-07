@@ -61,9 +61,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Connection.cs" />
+    <Compile Include="Classes\ReceivedData.cs" />
+    <Compile Include="Classes\SentData.cs" />
     <Compile Include="Classes\GameController.cs" />
     <Compile Include="Classes\Controller.cs" />
     <Compile Include="Classes\Keyboard.cs" />
+    <Compile Include="Classes\Processing.cs" />
     <Compile Include="MainFRM.cs">
       <SubType>Form</SubType>
     </Compile>

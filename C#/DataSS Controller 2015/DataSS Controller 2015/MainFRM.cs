@@ -16,6 +16,7 @@ namespace DataSS_Controller_2015
     {
         TcpConnection connection;
         Controller controller;
+        bool connected = false;
 
         public MainFRM()
         {
@@ -27,6 +28,7 @@ namespace DataSS_Controller_2015
         {
             connection = new TcpConnection("169.254.60.110", 13000);
             button2.Enabled = true;
+            connected = true;
         }
 
         private void MainFRM_Load(object sender, EventArgs e)
@@ -43,6 +45,7 @@ namespace DataSS_Controller_2015
         private void button3_Click(object sender, EventArgs e)
         {
             connection.Close();
+            connected = false;
         }
 
         private void controllerStartButton_Click(object sender, EventArgs e)
@@ -63,7 +66,7 @@ namespace DataSS_Controller_2015
 
         void controller_InputChanged(object sender, EventArgs e)
         {
-            forwardNum.Invoke((Action)delegate { forwardNum.Value = (decimal)controller.LS.Y*100; });
+            forwardNum.Invoke((Action)delegate { forwardNum.Value = (decimal)controller.LS.Y * 100; });
             translateNum.Invoke((Action)delegate { translateNum.Value = (decimal)controller.LS.X*100; });
             upDownNum.Invoke((Action)delegate { upDownNum.Value = (decimal)controller.RS.Y*100; });
             yawNum.Invoke((Action)delegate { yawNum.Value = (decimal)controller.RS.X*100; });
@@ -75,20 +78,27 @@ namespace DataSS_Controller_2015
             rbNum.Invoke((Action)delegate { rbNum.Value = controller.RB; });
             lbNum.Invoke((Action)delegate { lbNum.Value = controller.LB; });
 
-            rtNum.Invoke((Action)delegate { rtNum.Value = (decimal)controller.RT; });
-            ltNum.Invoke((Action)delegate { ltNum.Value = (decimal)controller.LT; });
+            rtNum.Invoke((Action)delegate { rtNum.Value = (decimal)controller.RT*100; });
+            ltNum.Invoke((Action)delegate { ltNum.Value = (decimal)controller.LT*100; });
 
             rsNum.Invoke((Action)delegate { rsNum.Value = controller.RSClick; });
             lsNum.Invoke((Action)delegate { lsNum.Value = controller.LSClick; });
 
             startNum.Invoke((Action)delegate { startNum.Value = controller.Start; });
             backNum.Invoke((Action)delegate { backNum.Value = controller.Back; });
-            bigNum.Invoke((Action)delegate { bigNum.Value = controller.BigButton; });
 
             upNum.Invoke((Action)delegate { upNum.Value = controller.DUp; });
             leftNum.Invoke((Action)delegate { leftNum.Value = controller.DLeft; });
             rightNum.Invoke((Action)delegate { rightNum.Value = controller.DRight; });
             downNum.Invoke((Action)delegate { downNum.Value = controller.DDown; });
+
+            this.Invoke((Action)delegate
+            {
+                if (connected)
+                {
+
+                }
+            });
 
         }
 

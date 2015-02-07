@@ -71,7 +71,7 @@ namespace DataSS_Controller_2015.Classes
                     flag = true;
                 }
                 #endregion
-                #region Buttons, Shoulders, DPad, Stick Clicks, Start/Select, and BigButton
+                #region Buttons, Shoulders, DPad, Stick Clicks, Start/Select
                 if (A != (int)padState.Buttons.A)
                 {
                     A = (int)padState.Buttons.A;
@@ -140,11 +140,6 @@ namespace DataSS_Controller_2015.Classes
                 if (Back != (int)padState.Buttons.Back)
                 {
                     Back = (int)padState.Buttons.Back;
-                    flag = true;
-                }
-                if (BigButton != (int)padState.Buttons.BigButton)
-                {
-                    BigButton = (int)padState.Buttons.BigButton;
                     flag = true;
                 }
                 #endregion
