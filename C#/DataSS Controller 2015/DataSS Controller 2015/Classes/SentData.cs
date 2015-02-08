@@ -30,7 +30,7 @@ namespace DataSS_Controller_2015.Classes
     /// 18  -   start
     /// 19  -   back
     /// </summary>
-    public class SentData : ISerializable
+    public class SentData
     {
         public byte LSY;
         public byte LSX;

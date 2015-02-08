@@ -27,3 +27,12 @@ C:\Users\Matt\Dropbox\ROV\2015\Code\ROV2015\C#\DataSS Controller 2015\DataSS Con
 C:\Users\Matt\Dropbox\ROV\2015\Code\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\obj\Debug\DataSS_Controller_2015.MainFRM.resources
 C:\Users\Matt\Dropbox\ROV\2015\Code\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\obj\Debug\DataSS_Controller_2015.Properties.Resources.resources
 C:\Users\Matt\Dropbox\ROV\2015\Code\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\obj\Debug\DataSS Controller 2015.csproj.GenerateResource.Cache
+C:\Users\Monica\Documents\Visual Studio 2013\Projects\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\bin\Debug\DataSS Controller 2015.exe.config
+C:\Users\Monica\Documents\Visual Studio 2013\Projects\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\obj\Debug\DataSS Controller 2015.exe
+C:\Users\Monica\Documents\Visual Studio 2013\Projects\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\obj\Debug\DataSS Controller 2015.pdb
+C:\Users\Monica\Documents\Visual Studio 2013\Projects\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\obj\Debug\DataSS Controller 2015.csprojResolveAssemblyReference.cache
+C:\Users\Monica\Documents\Visual Studio 2013\Projects\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\obj\Debug\DataSS_Controller_2015.MainFRM.resources
+C:\Users\Monica\Documents\Visual Studio 2013\Projects\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\obj\Debug\DataSS_Controller_2015.Properties.Resources.resources
+C:\Users\Monica\Documents\Visual Studio 2013\Projects\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\obj\Debug\DataSS Controller 2015.csproj.GenerateResource.Cache
+C:\Users\Monica\Documents\Visual Studio 2013\Projects\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\bin\Debug\DataSS Controller 2015.exe
+C:\Users\Monica\Documents\Visual Studio 2013\Projects\ROV2015\C#\DataSS Controller 2015\DataSS Controller 2015\bin\Debug\DataSS Controller 2015.pdb

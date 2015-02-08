@@ -11,6 +11,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
+using System.Web.Script.Serialization;
 
 using DataSS_Controller_2015.Classes;
 
@@ -26,6 +27,8 @@ namespace DataSS_Controller_2015
         {
             InitializeComponent();
             button2.Enabled = false;
+            IPcBox.DataSource = GetAddresses();
+            portcBox.DataSource = GetPorts();
         }
 
         #region Main Form Events
@@ -36,9 +39,10 @@ namespace DataSS_Controller_2015
 
         private void button1_Click(object sender, EventArgs e)
         {
-            connection = new TcpConnection("169.254.60.110", 13000);
+            connection = new TcpConnection(IPcBox.Text, Int32.Parse(portcBox.Text));
             button2.Enabled = true;
             connected = true;
+            connection.Send("connected");
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -81,6 +85,21 @@ namespace DataSS_Controller_2015
             Application.Exit();
         }
         #endregion
+
+        private List<String> GetAddresses()
+        {
+            List<string> ips = new List<string>();
+            ips.Add("169.254.60.110"); //works on mac
+            ips.Add("192.168.137.2");
+            return ips;
+        }
+
+        private List<int> GetPorts()
+        {
+            List<int> ports = new List<int>();
+            ports.Add(13000);
+            return ports;
+        }
 
         void controller_InputChanged(object sender, EventArgs e)
         {
@@ -136,8 +155,11 @@ namespace DataSS_Controller_2015
                     sending.Start = (byte)controller.Start;
                     sending.Back = (byte)controller.Back;
 
+                    JavaScriptSerializer jsonSer = new JavaScriptSerializer();
+                    string obj = jsonSer.Serialize(sending);
+
                     BinaryFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(connection.Stream, sending);
+                    formatter.Serialize(connection.Stream, obj);
                 }
             });
 

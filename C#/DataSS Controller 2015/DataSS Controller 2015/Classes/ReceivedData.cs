@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
 
 namespace DataSS_Controller_2015.Classes
 {
-    public class ReceivedData : ISerializable
+    public class ReceivedData
     {
         public float GyroX;
         public float GyroY;

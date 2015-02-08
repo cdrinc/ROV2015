@@ -1,3 +1,6 @@
 C:\Users\Matt\Dropbox\ROV\2015\Code\C#\TCPConsoleROVClient\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe.config
 C:\Users\Matt\Dropbox\ROV\2015\Code\C#\TCPConsoleROVClient\ConsoleApplication1\obj\Debug\ConsoleApplication1.exe
 C:\Users\Matt\Dropbox\ROV\2015\Code\C#\TCPConsoleROVClient\ConsoleApplication1\obj\Debug\ConsoleApplication1.pdb
+C:\Users\Monica\Documents\Visual Studio 2013\Projects\ROV2015\C#\TCPConsoleROVClient\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe.config
+C:\Users\Monica\Documents\Visual Studio 2013\Projects\ROV2015\C#\TCPConsoleROVClient\ConsoleApplication1\obj\Debug\ConsoleApplication1.exe
+C:\Users\Monica\Documents\Visual Studio 2013\Projects\ROV2015\C#\TCPConsoleROVClient\ConsoleApplication1\obj\Debug\ConsoleApplication1.pdb
