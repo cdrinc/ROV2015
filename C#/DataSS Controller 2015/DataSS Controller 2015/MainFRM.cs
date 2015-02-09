@@ -10,6 +10,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Json;
 using System.Windows.Forms;
 using System.Web.Script.Serialization;
 
@@ -160,6 +161,9 @@ namespace DataSS_Controller_2015
 
                     BinaryFormatter formatter = new BinaryFormatter();
                     formatter.Serialize(connection.Stream, obj);
+
+                    //DataContractJsonSerializer jSerializer = new DataContractJsonSerializer(typeof(SentData));
+                    //jSerializer.WriteObject(connection.Stream, sending);
                 }
             });
 
