@@ -25,11 +25,25 @@
 // gateway and subnet are optional:
 byte mac[] = {  
   0x90, 0xA2, 0xDA, 0x0F, 0x43, 0xB2 };
-IPAddress ip(169, 254, 60, 110); //169.254.60.110
+//IPAddress ip(169, 254, 60, 110); //169.254.60.110 works on mac
+IPAddress ip(192, 168, 137, 2);
+
 
 //port set to 13000 for tcp comms with c#
 EthernetServer server(13000);
 boolean alreadyConnected = false; // whether or not the client was connected previously
+
+//control characters
+//byte stx[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+//byte etx[] = { 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE};
+char stx[] = { '{', '{', '{', '{', '{', '{', '{' };
+char etx[] = { '}', '}', '}', '}', '}', '}', '}' };
+
+
+//data packet
+byte packet[20];
+char header[7];
+char footer[7];
 
 void setup() {
   // initialize the ethernet device
@@ -47,6 +61,27 @@ void setup() {
   Serial.println(Ethernet.localIP());
 }
 
+bool checkHeader(char checkByte[], bool start)
+{
+  if (start)
+  {
+    if (checkByte == etx)
+      return true; 
+  }
+  else if(!start)
+  {
+    if (checkByte == stx)
+      return true;
+  }
+  return false;
+}
+
+void processPacket(byte packet[])
+{
+  Serial.println(packet[7]);
+}
+  
+
 void loop() {
   // wait for a new client:
   EthernetClient client = server.available();
@@ -63,13 +98,40 @@ void loop() {
 
     while (client.available() > 0) {
       // read the bytes incoming from the client:
-      char thisChar = client.read();
+      //char thisChar = client.read();
+      //if (checkHeader(thisByte, true))
+      byte thisByte = 0x00;
+      if (client.find(stx))
+      {
+         Serial.println("Header Found");
+         //client.readBytes(header, 7);
+         //Serial.println(header);
+         /*for (int i = 0; client.available() > 0 && i < 20; i++)
+         {
+            thisByte = client.read();
+            packet[i] = thisByte;
+         }*/
+         client.read(packet, 20);
+         //Serial.print(packet[6]);
+         for (int i = 0; i < 20; i++)
+         {
+            Serial.print(packet[i]);
+         }
+         client.readBytes(footer, 7);
+         if (!checkHeader(footer, false))
+         {
+           break;
+         }
+         //client.read(packet, 20);
+         
+         //processPacket(packet);
+      }
       // echo the bytes to the server as well:
-      Serial.write(thisChar);
+      //Serial.write(thisByte);
     }
     // echo the bytes back to the client:
-    Serial.println("\nFinished reading message or client connected!");
-    server.write("Data read!");
+    //Serial.println("\nFinished reading message or client connected!");
+    //server.write("Data read!");
   }
 }
 

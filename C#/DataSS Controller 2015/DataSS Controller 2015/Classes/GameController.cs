@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
+using System.Web.Script.Serialization;
 
 namespace DataSS_Controller_2015.Classes
 {
@@ -12,12 +13,11 @@ namespace DataSS_Controller_2015.Classes
     {
 
         private GamePadState padState;
-
         Thread poll;
 
-        public GameController()
+        public GameController(TcpConnection con)
         {
-            
+            connection = con;
         }
 
         public override void BeginPolling()
@@ -43,10 +43,27 @@ namespace DataSS_Controller_2015.Classes
 
         void polling()
         {
+            JavaScriptSerializer jSer = new JavaScriptSerializer();
+            string incomingData = null;
+            string jsonData;
             for (; ; )
             {
                 padState = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One);
                 bool flag = false;
+                if (connection != null)
+                    incomingData = connection.ReadAllAvailable();
+                if (incomingData != null && incomingData != "")
+                {
+                    flag = true;
+                    try
+                    {
+                        jsonData = jSer.Deserialize<string>(incomingData);
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                }
                 #region Sticks
                 if (LS != padState.ThumbSticks.Left)
                 {

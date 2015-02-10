@@ -51,6 +51,17 @@ namespace DataSS_Controller_2015.Classes
             Writer.Flush();
         }
 
+        public void Send(byte message)
+        {
+            byte[] toSend = { message };
+            Stream.Write(toSend, 0, 1);
+        }
+
+        public void Send(byte[] message)
+        {
+            Stream.Write(message, 0, message.Length);
+        }
+
         public string ReadAllAvailable()
         {
             List<byte> data = new List<byte>();

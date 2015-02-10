@@ -10,6 +10,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Formatters.Soap;
 using System.Runtime.Serialization.Json;
 using System.Windows.Forms;
 using System.Web.Script.Serialization;
@@ -23,6 +24,8 @@ namespace DataSS_Controller_2015
         TcpConnection connection;
         Controller controller;
         bool connected = false;
+        byte[] stx = { 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B };
+        byte[] etx = { 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D };
 
         public MainFRM()
         {
@@ -41,9 +44,11 @@ namespace DataSS_Controller_2015
         private void button1_Click(object sender, EventArgs e)
         {
             connection = new TcpConnection(IPcBox.Text, Int32.Parse(portcBox.Text));
+            if (controller != null)
+                controller.connection = this.connection;
             button2.Enabled = true;
             connected = true;
-            connection.Send("connected");
+            connection.Send(stx);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -68,7 +73,7 @@ namespace DataSS_Controller_2015
             }
             if (gameRadioButton.Checked)
             {
-                controller = new Classes.GameController();
+                controller = new Classes.GameController(connection);
                 controller.InputChanged += new Controller.ControllerHandler(controller_InputChanged);
                 ((GameController)controller).BeginPolling();
             }
@@ -105,9 +110,9 @@ namespace DataSS_Controller_2015
         void controller_InputChanged(object sender, EventArgs e)
         {
             forwardNum.Invoke((Action)delegate { forwardNum.Value = (decimal)controller.LS.Y * 100; });
-            translateNum.Invoke((Action)delegate { translateNum.Value = (decimal)controller.LS.X*100; });
-            upDownNum.Invoke((Action)delegate { upDownNum.Value = (decimal)controller.RS.Y*100; });
-            yawNum.Invoke((Action)delegate { yawNum.Value = (decimal)controller.RS.X*100; });
+            translateNum.Invoke((Action)delegate { translateNum.Value = (decimal)controller.LS.X * 100; });
+            upDownNum.Invoke((Action)delegate { upDownNum.Value = (decimal)controller.RS.Y * 100; });
+            yawNum.Invoke((Action)delegate { yawNum.Value = (decimal)controller.RS.X * 100; });
 
             aNum.Invoke((Action)delegate { aNum.Value = controller.A; });
             bNum.Invoke((Action)delegate { bNum.Value = controller.B; });
@@ -116,8 +121,8 @@ namespace DataSS_Controller_2015
             rbNum.Invoke((Action)delegate { rbNum.Value = controller.RB; });
             lbNum.Invoke((Action)delegate { lbNum.Value = controller.LB; });
 
-            rtNum.Invoke((Action)delegate { rtNum.Value = (decimal)controller.RT*100; });
-            ltNum.Invoke((Action)delegate { ltNum.Value = (decimal)controller.LT*100; });
+            rtNum.Invoke((Action)delegate { rtNum.Value = (decimal)controller.RT * 100; });
+            ltNum.Invoke((Action)delegate { ltNum.Value = (decimal)controller.LT * 100; });
 
             rsNum.Invoke((Action)delegate { rsNum.Value = controller.RSClick; });
             lsNum.Invoke((Action)delegate { lsNum.Value = controller.LSClick; });
@@ -156,11 +161,16 @@ namespace DataSS_Controller_2015
                     sending.Start = (byte)controller.Start;
                     sending.Back = (byte)controller.Back;
 
-                    JavaScriptSerializer jsonSer = new JavaScriptSerializer();
-                    string obj = jsonSer.Serialize(sending);
+                    //JavaScriptSerializer jsonSer = new JavaScriptSerializer();
+                    //string obj = jsonSer.Serialize(sending);
 
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(connection.Stream, obj);
+                    //BinaryFormatter formatter = new BinaryFormatter();
+                    //formatter.Serialize(connection.Stream, stx);
+                    //formatter.Serialize(connection.Stream, sending.serialize());
+                    //formatter.Serialize(connection.Stream, etx);
+                    connection.Send(stx);
+                    connection.Send(sending.serialize());
+                    connection.Send(etx);
 
                     //DataContractJsonSerializer jSerializer = new DataContractJsonSerializer(typeof(SentData));
                     //jSerializer.WriteObject(connection.Stream, sending);
