@@ -21,5 +21,31 @@ namespace DataSS_Controller_2015.Classes
         {
             return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
         }
+
+        public static bool ContainsSequence<T>(this List<T> outer, List<T> inner)
+        {
+            var innerCount = inner.Count;
+            if (innerCount > outer.Count)
+                return false;
+
+            for (int i = 0; i <= outer.Count - innerCount; i++)
+            {
+                bool isMatch = true;
+                for (int x = 0; x < innerCount; x++)
+                {
+                    if (!outer[i + x].Equals(inner[x]))
+                    {
+                        isMatch = false;
+                        break;
+                    }
+                }
+
+                if (isMatch) return true;
+            }
+
+            return false;
+        }
     }
+
+
 }

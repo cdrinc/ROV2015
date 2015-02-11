@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.button1 = new System.Windows.Forms.Button();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.ethernetListenListBox = new System.Windows.Forms.ListBox();
             this.button2 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
@@ -121,14 +121,14 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // listBox1
+            // ethernetListenListBox
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(9, 291);
-            this.listBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(722, 121);
-            this.listBox1.TabIndex = 1;
+            this.ethernetListenListBox.FormattingEnabled = true;
+            this.ethernetListenListBox.Location = new System.Drawing.Point(9, 291);
+            this.ethernetListenListBox.Margin = new System.Windows.Forms.Padding(2);
+            this.ethernetListenListBox.Name = "ethernetListenListBox";
+            this.ethernetListenListBox.Size = new System.Drawing.Size(722, 121);
+            this.ethernetListenListBox.TabIndex = 1;
             // 
             // button2
             // 
@@ -188,6 +188,7 @@
             // gameRadioButton
             // 
             this.gameRadioButton.AutoSize = true;
+            this.gameRadioButton.Checked = true;
             this.gameRadioButton.Location = new System.Drawing.Point(4, 36);
             this.gameRadioButton.Margin = new System.Windows.Forms.Padding(2);
             this.gameRadioButton.Name = "gameRadioButton";
@@ -205,7 +206,6 @@
             this.keyboardRadioButton.Name = "keyboardRadioButton";
             this.keyboardRadioButton.Size = new System.Drawing.Size(70, 17);
             this.keyboardRadioButton.TabIndex = 0;
-            this.keyboardRadioButton.TabStop = true;
             this.keyboardRadioButton.Text = "Keyboard";
             this.keyboardRadioButton.UseVisualStyleBackColor = true;
             // 
@@ -883,7 +883,7 @@
             this.Controls.Add(this.button3);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button2);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.ethernetListenListBox);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -926,7 +926,7 @@
         #endregion
 
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox ethernetListenListBox;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button button3;

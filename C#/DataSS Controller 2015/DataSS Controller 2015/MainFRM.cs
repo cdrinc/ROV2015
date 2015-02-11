@@ -21,11 +21,11 @@ namespace DataSS_Controller_2015
 {
     public partial class MainFRM : Form
     {
-        TcpConnection connection;
-        Controller controller;
-        bool connected = false;
-        byte[] stx = { 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B };
-        byte[] etx = { 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D };
+        public TcpConnection connection;
+        public Controller controller;
+        private bool connected = false;
+
+        
 
         public MainFRM()
         {
@@ -38,23 +38,27 @@ namespace DataSS_Controller_2015
         #region Main Form Events
         private void MainFRM_Load(object sender, EventArgs e)
         {
-
+            InitializeController(gameRadioButton.Checked);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            ethernetListenListBox.Items.Add("Initializing Connection with " + IPcBox.Text + "...");
             connection = new TcpConnection(IPcBox.Text, Int32.Parse(portcBox.Text));
+
             if (controller != null)
                 controller.connection = this.connection;
             button2.Enabled = true;
             connected = true;
-            connection.Send(stx);
+            ethernetListenListBox.Items.Add("Connected!");
+
+            connection.Handshake();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             connection.Send(textBox1.Text);
-            listBox1.Items.Add(connection.ReadAllAvailable());
+            ethernetListenListBox.Items.Add(connection.ReadAllAvailable());
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -65,18 +69,7 @@ namespace DataSS_Controller_2015
 
         private void controllerStartButton_Click(object sender, EventArgs e)
         {
-            if (keyboardRadioButton.Checked)
-            {
-                controller = new Classes.KeyboardController();
-                controller.InputChanged += new Controller.ControllerHandler(controller_InputChanged);
-                ((KeyboardController)controller).BeginPolling();
-            }
-            if (gameRadioButton.Checked)
-            {
-                controller = new Classes.GameController(connection);
-                controller.InputChanged += new Controller.ControllerHandler(controller_InputChanged);
-                ((GameController)controller).BeginPolling();
-            }
+            InitializeController(gameRadioButton.Checked);
         }
 
         private void MainFRM_FormClosed(object sender, FormClosedEventArgs e)
@@ -92,11 +85,31 @@ namespace DataSS_Controller_2015
         }
         #endregion
 
+        private void InitializeController(bool isGamepad)
+        {
+            if (isGamepad)
+            {
+                controller = new Classes.GameController(connection);
+                controller.InputChanged += new Controller.ControllerHandler(controller_InputChanged);
+                controller.IncomingData += new Controller.ReceiveHandler(controller_IncomingData);
+                ((GameController)controller).BeginPolling();
+                controllerStartButton.Text = "Gamepad";
+            }
+            else
+            {
+                controller = new Classes.KeyboardController();
+                controller.InputChanged += new Controller.ControllerHandler(controller_InputChanged);
+                ((KeyboardController)controller).BeginPolling();
+                controllerStartButton.Text = "Keyboard";
+            }
+            controllerStartButton.Enabled = false;
+        }
+
         private List<String> GetAddresses()
         {
             List<string> ips = new List<string>();
+            ips.Add("192.168.137.2"); //works on pc
             ips.Add("169.254.60.110"); //works on mac
-            ips.Add("192.168.137.2");
             return ips;
         }
 
@@ -105,6 +118,27 @@ namespace DataSS_Controller_2015
             List<int> ports = new List<int>();
             ports.Add(13000);
             return ports;
+        }
+
+        void controller_IncomingData(object sender, ControllerEventArgs e)
+        {
+            this.Invoke((Action)delegate 
+            {
+                string message;
+                if (connection == null)
+                {
+                    return;
+                }
+
+                if (connection.DataAvailable())
+                {
+                    message = connection.ReadPacket();
+
+                    ethernetListenListBox.Items.Add(message);
+                    ethernetListenListBox.SelectedIndex = ethernetListenListBox.Items.Count - 1;
+                }
+                return;
+            });
         }
 
         void controller_InputChanged(object sender, EventArgs e)
@@ -161,19 +195,23 @@ namespace DataSS_Controller_2015
                     sending.Start = (byte)controller.Start;
                     sending.Back = (byte)controller.Back;
 
+                    //no longer using Json
                     //JavaScriptSerializer jsonSer = new JavaScriptSerializer();
                     //string obj = jsonSer.Serialize(sending);
 
+                    //don't need to serialize a byte array
                     //BinaryFormatter formatter = new BinaryFormatter();
-                    //formatter.Serialize(connection.Stream, stx);
+                    //formatter.Serialize(connection.Stream, STX);
                     //formatter.Serialize(connection.Stream, sending.serialize());
-                    //formatter.Serialize(connection.Stream, etx);
-                    connection.Send(stx);
-                    connection.Send(sending.serialize());
-                    connection.Send(etx);
+                    //formatter.Serialize(connection.Stream, ETX);
 
-                    //DataContractJsonSerializer jSerializer = new DataContractJsonSerializer(typeof(SentData));
-                    //jSerializer.WriteObject(connection.Stream, sending);
+                    byte[] sendData = sending.serialize();
+                    connection.SendPacket(sendData);
+
+                    //now concatenating arrays before sending
+                    //connection.Send(STX);
+                    //connection.Send(sending.serialize());
+                    //connection.Send(ETX);
                 }
             });
 

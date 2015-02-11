@@ -43,27 +43,17 @@ namespace DataSS_Controller_2015.Classes
 
         void polling()
         {
-            JavaScriptSerializer jSer = new JavaScriptSerializer();
-            string incomingData = null;
-            string jsonData;
             for (; ; )
             {
                 padState = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One);
                 bool flag = false;
-                if (connection != null)
-                    incomingData = connection.ReadAllAvailable();
-                if (incomingData != null && incomingData != "")
-                {
-                    flag = true;
-                    try
-                    {
-                        jsonData = jSer.Deserialize<string>(incomingData);
-                    }
-                    catch (Exception ex)
-                    {
-                        
-                    }
-                }
+                //if (connection != null)
+                //    incomingData = connection.ReadPacket();
+                //if (incomingData != null && incomingData != "")
+                //{
+                //    OnIncomingData();
+                //}
+                OnIncomingData();
                 #region Sticks
                 if (LS != padState.ThumbSticks.Left)
                 {
@@ -168,7 +158,16 @@ namespace DataSS_Controller_2015.Classes
 
     public class ControllerEventArgs : EventArgs
     {
-        public ControllerEventArgs() :
-            base() { }
+        public string Message;
+
+        public ControllerEventArgs()
+        {
+            Message = "";
+        }
+
+        public ControllerEventArgs(string message)
+        {
+            this.Message = message;
+        }
     }
 }

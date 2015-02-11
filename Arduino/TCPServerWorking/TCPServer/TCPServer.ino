@@ -34,16 +34,16 @@ EthernetServer server(13000);
 boolean alreadyConnected = false; // whether or not the client was connected previously
 
 //control characters
-//byte stx[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
-//byte etx[] = { 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE};
-char stx[] = { '{', '{', '{', '{', '{', '{', '{' };
-char etx[] = { '}', '}', '}', '}', '}', '}', '}' };
+byte stx[] = { 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B};
+byte etx[] = { 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D};
+//char stx[] = { '{', '{', '{', '{', '{', '{', '{' };
+//char etx[] = { '}', '}', '}', '}', '}', '}', '}' };
 
 
 //data packet
 byte packet[20];
-char header[7];
-char footer[7];
+byte header[7];
+byte footer[7];
 
 void setup() {
   // initialize the ethernet device
@@ -61,7 +61,7 @@ void setup() {
   Serial.println(Ethernet.localIP());
 }
 
-bool checkHeader(char checkByte[], bool start)
+bool checkHeader(byte checkByte[], bool start)
 {
   if (start)
   {
@@ -80,6 +80,25 @@ void processPacket(byte packet[])
 {
   Serial.println(packet[7]);
 }
+
+void sendData(byte data[], EthernetClient& client)
+{
+  byte sendPacket[14 + sizeof(data)];
+  for (int i = 0; i < 7; i++)
+  {
+     sendPacket[i] = stx[i]; 
+  }
+  for (int i = 0; i < sizeof(data); i++)
+  {
+     sendPacket[i + 7] = data[i];
+  }
+  for (int i = 0; i < 7; i++)
+  {
+     sendPacket[i + 7 + sizeof(data)] = etx[i]; 
+  }
+  
+  client.print((char*)sendPacket);
+}
   
 
 void loop() {
@@ -92,36 +111,75 @@ void loop() {
       // clead out the input buffer:
       // client.flush();    
       Serial.println("We have a new client");
-      client.println("Hello, client!"); 
+      //byte test[] = { 0x32, 0x33 };
+      //sendData(test, client);
+      //client.print((char*)stx);
+      //client.print((char*)test);
+      //client.print((char*)etx); 
       alreadyConnected = true;
+      client.print("{{{{{{{Client connected}}}}}}}");
     } 
 
     while (client.available() > 0) {
       // read the bytes incoming from the client:
       //char thisChar = client.read();
-      //if (checkHeader(thisByte, true))
       byte thisByte = 0x00;
-      if (client.find(stx))
+      if (client.find((char*)stx))
       {
-         Serial.println("Header Found");
+         //Serial.println("Header Found");
+         //client.println("Header Found");
+         //sendData((byte*)"Header Found", client);
          //client.readBytes(header, 7);
          //Serial.println(header);
-         /*for (int i = 0; client.available() > 0 && i < 20; i++)
+         /*for (int i = 0; client.available() > 0 && i < 7; i++)
+         {
+            thisByte = client.read();
+            header[i] = thisByte;
+         }*/
+         for (int i = 0; client.available() > 0 && i < 20; i++)
          {
             thisByte = client.read();
             packet[i] = thisByte;
+         }
+         for (int i = 0; client.available() > 0 && i < 7; i++)
+         {
+            thisByte = client.read();
+            footer[i] = thisByte;
+         }
+         //Serial.println((char*)header);
+         /*for (int i = 0; i < 20; i++)
+         {
+            //Serial.print(packet[i]);
+            //Serial.print('|');
+            client.print( packet[i]);
+            client.print('|');
          }*/
-         client.read(packet, 20);
-         //Serial.print(packet[6]);
-         for (int i = 0; i < 20; i++)
+         //client.write('{{{{{{{' + packet + '}}}}}}}', 34);
+         client.write("{{{{{{{");
+         client.write(packet, 20);
+         client.write("}}}}}}}");
+         //Serial.println("");
+         //client.println("{{{{{{{}}}}}}}");
+         /*for (int i = 0; i < 7; i++)
          {
-            Serial.print(packet[i]);
-         }
-         client.readBytes(footer, 7);
-         if (!checkHeader(footer, false))
+            //Serial.print(footer[i]);
+            //Serial.print('|');
+            client.print(footer[i]);
+            client.print('|');
+         }*/
+         //Serial.println("");
+         //client.println("");
+         //Serial.println((char*)footer);
+         //client.readBytes(footer, 7);
+         /*if ((char*)footer == (char*)etx)
          {
-           break;
-         }
+           //Serial.println("Footer Found");
+           client.println("{{{{{{{Footer Found}}}}}}}");
+         }/*
+         /*if (checkHeader(footer, false))
+         {
+           Serial.println("Footer Found");
+         }*/
          //client.read(packet, 20);
          
          //processPacket(packet);

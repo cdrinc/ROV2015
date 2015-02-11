@@ -11,6 +11,10 @@ namespace DataSS_Controller_2015.Classes
     {
         public delegate void ControllerHandler(object sender, ControllerEventArgs e);
         public event ControllerHandler InputChanged;
+
+        public delegate void ReceiveHandler(object sender, ControllerEventArgs e);
+        public event ReceiveHandler IncomingData;
+
         public TcpConnection connection;
 
         //public fields that are updated with control values as polling is done
@@ -62,7 +66,12 @@ namespace DataSS_Controller_2015.Classes
         protected virtual void OnInputChanged()
         {
             //if (InputChanged != null)
-                InputChanged(this, new ControllerEventArgs());
+            InputChanged(this, new ControllerEventArgs());
+        }
+
+        protected virtual void OnIncomingData()
+        {
+            IncomingData(this, new ControllerEventArgs());
         }
     }
 }
