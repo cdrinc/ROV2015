@@ -56,8 +56,6 @@ namespace DataSS_Controller_2015.Classes
 
         public byte[] serialize()
         {
-            //able to be sent directly but harder to interpret
-            //byte pipe = (byte)'|';
             List<byte> byteList = new List<byte>() { LSY, LSX, RSY, RSX, LT, RT, A, B, X, Y, RB, LB, DUp, DDown, DRight, DLeft, LSClick, RSClick, Start, Back };
             byte[] byteArr = byteList.ToArray();
             return byteArr;

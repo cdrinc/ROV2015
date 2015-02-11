@@ -26,7 +26,7 @@ namespace DataSS_Controller_2015.Classes
             set { }
         }
         //"Standard Footer" end of each message
-        //same as above
+        //similar to header
         public byte[] etx = { 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D };
         public byte[] Footer
         {
