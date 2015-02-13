@@ -10,6 +10,10 @@ using System.Text.RegularExpressions;
 
 namespace DataSS_Controller_2015.Classes
 {
+
+    /// <summary>
+    /// Encapsulates a TcpClient and provides various methods to read, write, and interpret data.
+    /// </summary>
     public class TcpConnection
     {
         public TcpClient Client;
@@ -112,6 +116,39 @@ namespace DataSS_Controller_2015.Classes
         }
 
         /// <summary>
+        /// Reads a packet from the microcontroller and return it encased in the appropriate type.
+        /// </summary>
+        /// <returns></returns>
+        public ReceivedData GetResponse()
+        {
+            byte[] data;
+
+            if (DataAvailable())
+            {
+                data = ReadPacket();
+            }
+            else
+            {
+                data = null;
+                return new ReceivedData(data);
+            }
+
+            if (data[0] == 0x00)
+            {
+                return new TestingPacket(data);
+            }
+            else if (data[0] == 0x01)
+            {
+                return new PacketResponse(data);
+            }
+            else
+            {
+                return new ReceivedData(data);
+            }
+            
+        }
+
+        /// <summary>
         /// Sends a string to the connected device.
         /// </summary>
         /// <param name="message">String to send.</param>
@@ -156,7 +193,7 @@ namespace DataSS_Controller_2015.Classes
         /// Reads all data available and returns a string representation. NB: Deprecated in favor of ReadPacket()
         /// </summary>
         /// <returns>Returns a string representation of the bytes read from the stream.</returns>
-        public string ReadAllAvailable()
+        private string ReadAllAvailable()
         {
             List<byte> data = new List<byte>();
             while (Stream.DataAvailable)
@@ -167,10 +204,9 @@ namespace DataSS_Controller_2015.Classes
         /// <summary>
         /// Reads a full packet, consisting of a header, data, and a footer, from the stream.
         /// </summary>
-        /// <returns>Returns a string representation of the data suitable for display in the UI.</returns>
-        public string ReadPacket()
+        /// <returns>Returns the packet as a byte array.</returns>
+        private byte[] ReadPacket()
         {
-            int i = 0;
             List<byte> data = new List<byte>();
             List<byte> footerList = Footer.ToList<byte>();
 
@@ -191,22 +227,7 @@ namespace DataSS_Controller_2015.Classes
                 }
             }
 
-            string parsedData = "";
-            if (data.Count == 20 && data[7] < 2)
-            {
-                foreach (byte b in data)
-                {
-                    parsedData += b.ToString();
-                    parsedData += "|";
-                }
-                parsedData = parsedData.Remove(parsedData.Length - 1);
-            }
-            else
-            {
-                parsedData = System.Text.Encoding.ASCII.GetString(data.ToArray());
-            }
-
-            return parsedData;
+            return data.ToArray();
         }
     }
 }

@@ -20,12 +20,18 @@ namespace DataSS_Controller_2015.Classes
             connection = con;
         }
 
+        /// <summary>
+        /// Begins polling of the connected gamepad on another thread.
+        /// </summary>
         public override void BeginPolling()
         {
-            poll = new Thread(new ThreadStart(polling));
+            poll = new Thread(new ThreadStart(Polling));
             poll.Start();
         }
 
+        /// <summary>
+        /// Stops polling of the connected gamepad.
+        /// </summary>
         public override void EndPolling()
         {
             if (poll != null)
@@ -33,6 +39,10 @@ namespace DataSS_Controller_2015.Classes
                     poll.Abort();
         }
 
+        /// <summary>
+        /// Determins whether or not the Polling method is running.
+        /// </summary>
+        /// <returns>Returns a boolean value indicating whether or not the Polling method is running.</returns>
         public override bool IsPolling()
         {
             if (poll != null)
@@ -41,18 +51,15 @@ namespace DataSS_Controller_2015.Classes
                 return false;
         }
 
-        void polling()
+        /// <summary>
+        /// Polls the gamepad to detect state changes.
+        /// </summary>
+        void Polling()
         {
             for (; ; )
             {
                 padState = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One);
                 bool flag = false;
-                //if (connection != null)
-                //    incomingData = connection.ReadPacket();
-                //if (incomingData != null && incomingData != "")
-                //{
-                //    OnIncomingData();
-                //}
                 OnIncomingData();
                 #region Sticks
                 if (LS != padState.ThumbSticks.Left)

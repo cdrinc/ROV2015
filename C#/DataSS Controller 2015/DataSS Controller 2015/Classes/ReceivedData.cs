@@ -9,19 +9,26 @@ using System.Web.Script.Serialization;
 
 namespace DataSS_Controller_2015.Classes
 {
+    /// <summary>
+    /// A generic base class for a packet received from the connected microcontroller.
+    /// </summary>
     public class ReceivedData
     {
-        public float GyroX;
-        public float GyroY;
-        public float GyroZ;
-        public float AccelX;
-        public float AccelY;
-        public float AccelZ;
-        public float MagnetX;
-        public float MagnetY;
-        public float MagnetZ;
-        public float Voltage;
-        public float Length;
-        public float Depth;
+        private byte[] ReceivedPacket;
+
+        public ReceivedData()
+        {
+            ReceivedPacket = null;
+        }
+
+        public ReceivedData(byte[] data)
+        {
+            ReceivedPacket = data;
+        }
+
+        public override string ToString()
+        {
+            return null;
+        }
     }
 }
