@@ -57,8 +57,8 @@ namespace DataSS_Controller_2015
 
         private void button2_Click(object sender, EventArgs e)
         {
-            connection.Send(textBox1.Text);
-            ethernetListenListBox.Items.Add(connection.ReadAllAvailable());
+            //connection.Send(textBox1.Text);
+            //ethernetListenListBox.Items.Add(connection.ReadAllAvailable());
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -85,6 +85,10 @@ namespace DataSS_Controller_2015
         }
         #endregion
 
+        /// <summary>
+        /// Initializes the controller (gamepad or keyboard).
+        /// </summary>
+        /// <param name="isGamepad"></param>
         private void InitializeController(bool isGamepad)
         {
             if (isGamepad)
@@ -105,7 +109,11 @@ namespace DataSS_Controller_2015
             controllerStartButton.Enabled = false;
         }
 
-        private List<String> GetAddresses()
+        /// <summary>
+        /// Composes a list of IP addresses predetermined to be valid.
+        /// </summary>
+        /// <returns>Returns a predetermined list of IP address strings.</returns>
+        private List<string> GetAddresses()
         {
             List<string> ips = new List<string>();
             ips.Add("169.254.60.110"); //works on mac 1st port
@@ -114,6 +122,10 @@ namespace DataSS_Controller_2015
             return ips;
         }
 
+        /// <summary>
+        /// Composes a list of ports predetermined to be valid.
+        /// </summary>
+        /// <returns>Returns a predetermined list of port ints.</returns>
         private List<int> GetPorts()
         {
             List<int> ports = new List<int>();
@@ -123,9 +135,9 @@ namespace DataSS_Controller_2015
 
         void controller_IncomingData(object sender, ControllerEventArgs e)
         {
-            this.Invoke((Action)delegate 
+            this.Invoke((Action)delegate
             {
-                string message;
+                ReceivedData data;
                 if (connection == null)
                 {
                     return;
@@ -133,9 +145,9 @@ namespace DataSS_Controller_2015
 
                 if (connection.DataAvailable())
                 {
-                    message = connection.ReadPacket();
+                    data = connection.GetResponse();
 
-                    ethernetListenListBox.Items.Add(message);
+                    ethernetListenListBox.Items.Add(data.ToString());
                     ethernetListenListBox.SelectedIndex = ethernetListenListBox.Items.Count - 1;
                 }
                 return;

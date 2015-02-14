@@ -9,28 +9,8 @@ using System.Runtime.Serialization;
 namespace DataSS_Controller_2015.Classes
 {
     /// <summary>
-    /// 0   -   ls y
-    /// 1   -   ls x
-    /// 2   -   rs y
-    /// 3   -   rs x
-    /// 4   -   lt
-    /// 5   -   rt
-    /// 6   -   a
-    /// 7   -   b
-    /// 8   -   x
-    /// 9   -   y
-    /// 10  -   rb
-    /// 11  -   lb
-    /// 12  -   dup
-    /// 13  -   ddown
-    /// 14  -   dleft
-    /// 15  -   dright
-    /// 16  -   lsclick
-    /// 17  -   rsclick
-    /// 18  -   start
-    /// 19  -   back
+    /// Stores and serializes the packet data for transmission through the Connection class.
     /// </summary>
-    [Serializable()]
     public class SentData
     {
         public byte LSY;
