@@ -145,10 +145,10 @@ namespace DataSS_Controller_2015
 
                 if (connection.DataAvailable())
                 {
-                    data = connection.GetResponse();
+                    //data = connection.GetResponse();
 
-                    ethernetListenListBox.Items.Add(data.ToString());
-                    ethernetListenListBox.SelectedIndex = ethernetListenListBox.Items.Count - 1;
+                    //ethernetListenListBox.Items.Add(data.ToString());
+                    //ethernetListenListBox.SelectedIndex = ethernetListenListBox.Items.Count - 1;
                 }
                 return;
             });

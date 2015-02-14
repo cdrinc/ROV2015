@@ -23,7 +23,6 @@ namespace DataSS_Controller_2015.Classes
         public float Voltage;
         public float Length;
         public float Depth;
-
         
         private List<float> FloatList;
 

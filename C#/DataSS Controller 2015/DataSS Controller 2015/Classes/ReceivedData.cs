@@ -28,7 +28,7 @@ namespace DataSS_Controller_2015.Classes
 
         public override string ToString()
         {
-            return null;
+            return System.Text.ASCIIEncoding.ASCII.GetString(ReceivedPacket);
         }
     }
 }

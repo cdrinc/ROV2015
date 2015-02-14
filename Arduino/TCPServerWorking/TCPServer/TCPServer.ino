@@ -60,11 +60,23 @@ bool checkHeader(byte checkByte[], bool start)
 
 void processPacket(byte packet[])
 {
-  byte val = packet[0];
-  //0xAA,	0x0D,	0x05,	0x00,	0x32
-  Serial.print(0x85);
-  Serial.print(0x00);
-  Serial.print(0x32);
+  int i = 0;
+  byte deviceNumber = 0x0D; //lets order the device numbers based on the order of bytes in the packet to reduce variable usage and make logic easier
+  byte val = packet[i];
+  Serial.print(0x85); //command byte
+  Serial.print(deviceNumber); //device number
+  //insert logic to handle direction based on device number
+  //this is just an implementation of the forward/back ls stick so we know 0-126 is neg and 127-255 is pos
+  byte dir = val <= 126 ? 0x06 : 0x05;
+  byte minInitialRange = dir == 0x06 ? 0 : 128; //gets the initial min for mapping based on direction
+  byte maxInitialRange = dir == 0x06 ? 126 : 255; //gets the initial max for mapping based on direction
+  int motorSpeed = map(val,minInitialRange,maxInitialRange,0,3200);
+  motorSpeed = val == 127 ? 0 : val;
+  byte speed1 = motorSpeed % 32; //how to get the first 5 bits
+  byte speed2 = motorSpeed / 32; //how to get the last 7 bits
+  Serial.print(dir);
+  Serial.print(speed1);
+  Serial.print(speed2);
   //Serial.println(packet[7]);
 }
 
