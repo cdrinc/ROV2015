@@ -108,8 +108,9 @@ namespace DataSS_Controller_2015
         private List<String> GetAddresses()
         {
             List<string> ips = new List<string>();
+            ips.Add("169.254.60.110"); //works on mac 1st port
+            ips.Add("169.254.180.60"); //works on mac 2nd port
             ips.Add("192.168.137.2"); //works on pc
-            ips.Add("169.254.60.110"); //works on mac
             return ips;
         }
 

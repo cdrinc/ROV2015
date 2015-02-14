@@ -1,22 +1,3 @@
-/*
- Chat  Server
- 
- A simple server that distributes any incoming messages to all
- connected clients.  To use telnet to  your device's IP address and type.
- You can see the client's input in the serial monitor as well.
- Using an Arduino Wiznet Ethernet shield. 
- 
- Circuit:
- * Ethernet shield attached to pins 10, 11, 12, 13
- * Analog inputs attached to pins A0 through A5 (optional)
- 
- created 18 Dec 2009
- by David A. Mellis
- modified 9 Apr 2012
- by Tom Igoe
- 
- */
-
 #include <SPI.h>
 #include <Ethernet.h>
 
@@ -26,7 +7,8 @@
 byte mac[] = {  
   0x90, 0xA2, 0xDA, 0x0F, 0x43, 0xB2 };
 //IPAddress ip(169, 254, 60, 110); //169.254.60.110 works on mac
-IPAddress ip(192, 168, 137, 2);
+IPAddress ip(169, 254, 180, 60); //169.254.180.60 works on mac port 2
+//IPAddress ip(192, 168, 137, 2);
 
 
 //port set to 13000 for tcp comms with c#
@@ -48,7 +30,7 @@ byte footer[7];
 void setup() {
   // initialize the ethernet device
   Ethernet.begin(mac, ip);
-  // start listening for clients
+  // start listening for clientss
   server.begin();
  // Open serial communications and wait for port to open:
   Serial.begin(9600);
@@ -78,7 +60,12 @@ bool checkHeader(byte checkByte[], bool start)
 
 void processPacket(byte packet[])
 {
-  Serial.println(packet[7]);
+  byte val = packet[0];
+  //0xAA,	0x0D,	0x05,	0x00,	0x32
+  Serial.print(0x85);
+  Serial.print(0x00);
+  Serial.print(0x32);
+  //Serial.println(packet[7]);
 }
 
 void sendData(byte data[], EthernetClient& client)
@@ -182,7 +169,7 @@ void loop() {
          }*/
          //client.read(packet, 20);
          
-         //processPacket(packet);
+         processPacket(packet);
       }
       // echo the bytes to the server as well:
       //Serial.write(thisByte);
