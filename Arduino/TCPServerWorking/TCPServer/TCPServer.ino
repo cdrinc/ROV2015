@@ -81,7 +81,6 @@ void processPacket(byte packet[])
   for (int i = 0; i < sizeof(controllers); i++)
   {
     deviceNumber = controllers[i]; //lets order the device numbers based on the order of bytes in the packet to reduce variable usage and make logic easier
-    val = packet[i];
     
     controllerPacket[0] = 0xAA; //auto-detect baud rate
     controllerPacket[1] = deviceNumber; //device number
@@ -96,12 +95,14 @@ void processPacket(byte packet[])
     }
     else
     {
+      //handles setting the speed if val is a byte (0-255) e.g. bound to packet[0] (LSY)
       byte dir = val <= 126 ? 0x06 : 0x05;
       byte minInitialRange = dir == 0x06 ? 1 : 128; //gets the initial min for mapping based on direction
       byte maxInitialRange = dir == 0x06 ? 127 : 255; //gets the initial max for mapping based on direction
       int motorSpeed = map(val,minInitialRange,maxInitialRange,0,3200);
-      //motorSpeed = val == 127 ? 0 : val;
-      //int motorSpeed = val;
+      //this handles setting the motor speed if val is binary (one or zero) e.g. bound to packet[6] (A)
+      /*byte dir = 0x05;
+      int motorSpeed = val == 0 ? 0 : 1000;*/
       controllerPacket[2] = dir;
       controllerPacket[3] = motorSpeed % 32; //how to get the first 5 bits
       controllerPacket[4] = motorSpeed / 32; //how to get the last 7 bits
