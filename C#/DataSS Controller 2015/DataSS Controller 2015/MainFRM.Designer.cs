@@ -28,11 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            this.connectButton = new System.Windows.Forms.Button();
             this.ethernetListenListBox = new System.Windows.Forms.ListBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button3 = new System.Windows.Forms.Button();
+            this.disconnectButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.controllerStartButton = new System.Windows.Forms.Button();
             this.gameRadioButton = new System.Windows.Forms.RadioButton();
@@ -110,55 +108,37 @@
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // button1
+            // connectButton
             // 
-            this.button1.Location = new System.Drawing.Point(494, 145);
-            this.button1.Margin = new System.Windows.Forms.Padding(2);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(237, 38);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Connect to ROV";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.connectButton.Location = new System.Drawing.Point(494, 174);
+            this.connectButton.Margin = new System.Windows.Forms.Padding(2);
+            this.connectButton.Name = "connectButton";
+            this.connectButton.Size = new System.Drawing.Size(237, 38);
+            this.connectButton.TabIndex = 0;
+            this.connectButton.Text = "Connect to ROV";
+            this.connectButton.UseVisualStyleBackColor = true;
+            this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
             // 
             // ethernetListenListBox
             // 
             this.ethernetListenListBox.FormattingEnabled = true;
+            this.ethernetListenListBox.HorizontalScrollbar = true;
             this.ethernetListenListBox.Location = new System.Drawing.Point(9, 291);
             this.ethernetListenListBox.Margin = new System.Windows.Forms.Padding(2);
             this.ethernetListenListBox.Name = "ethernetListenListBox";
             this.ethernetListenListBox.Size = new System.Drawing.Size(722, 121);
             this.ethernetListenListBox.TabIndex = 1;
             // 
-            // button2
+            // disconnectButton
             // 
-            this.button2.Location = new System.Drawing.Point(494, 214);
-            this.button2.Margin = new System.Windows.Forms.Padding(2);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(66, 24);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Send Data";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(564, 217);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(167, 20);
-            this.textBox1.TabIndex = 3;
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(494, 242);
-            this.button3.Margin = new System.Windows.Forms.Padding(2);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(237, 24);
-            this.button3.TabIndex = 4;
-            this.button3.Text = "Close Stream";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.disconnectButton.Location = new System.Drawing.Point(494, 243);
+            this.disconnectButton.Margin = new System.Windows.Forms.Padding(2);
+            this.disconnectButton.Name = "disconnectButton";
+            this.disconnectButton.Size = new System.Drawing.Size(237, 24);
+            this.disconnectButton.TabIndex = 4;
+            this.disconnectButton.Text = "Close Stream";
+            this.disconnectButton.UseVisualStyleBackColor = true;
+            this.disconnectButton.Click += new System.EventHandler(this.disconnectButton_Click);
             // 
             // groupBox1
             // 
@@ -838,7 +818,7 @@
             // IPcBox
             // 
             this.IPcBox.FormattingEnabled = true;
-            this.IPcBox.Location = new System.Drawing.Point(520, 188);
+            this.IPcBox.Location = new System.Drawing.Point(520, 217);
             this.IPcBox.Name = "IPcBox";
             this.IPcBox.Size = new System.Drawing.Size(105, 21);
             this.IPcBox.TabIndex = 33;
@@ -846,7 +826,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(495, 192);
+            this.label21.Location = new System.Drawing.Point(495, 220);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(20, 13);
             this.label21.TabIndex = 34;
@@ -855,7 +835,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(631, 191);
+            this.label22.Location = new System.Drawing.Point(631, 220);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(29, 13);
             this.label22.TabIndex = 35;
@@ -864,7 +844,7 @@
             // portcBox
             // 
             this.portcBox.FormattingEnabled = true;
-            this.portcBox.Location = new System.Drawing.Point(658, 188);
+            this.portcBox.Location = new System.Drawing.Point(658, 217);
             this.portcBox.Name = "portcBox";
             this.portcBox.Size = new System.Drawing.Size(73, 21);
             this.portcBox.TabIndex = 36;
@@ -880,11 +860,9 @@
             this.Controls.Add(this.IPcBox);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.disconnectButton);
             this.Controls.Add(this.ethernetListenListBox);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.connectButton);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -925,11 +903,9 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button connectButton;
         private System.Windows.Forms.ListBox ethernetListenListBox;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button disconnectButton;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button controllerStartButton;
         private System.Windows.Forms.RadioButton gameRadioButton;

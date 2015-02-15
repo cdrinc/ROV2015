@@ -15,8 +15,6 @@ namespace DataSS_Controller_2015.Classes
         public delegate void ReceiveHandler(object sender, ControllerEventArgs e);
         public event ReceiveHandler IncomingData;
 
-        public TcpConnection connection;
-
         //public fields that are updated with control values as polling is done
         //all integers are either zero or one, false and true respectively
         //all floats are between 0 and 1

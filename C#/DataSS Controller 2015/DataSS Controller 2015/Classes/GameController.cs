@@ -15,10 +15,7 @@ namespace DataSS_Controller_2015.Classes
         private GamePadState padState;
         Thread poll;
 
-        public GameController(TcpConnection con)
-        {
-            connection = con;
-        }
+        public GameController() { }
 
         /// <summary>
         /// Begins polling of the connected gamepad on another thread.

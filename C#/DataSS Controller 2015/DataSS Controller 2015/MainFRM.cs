@@ -30,7 +30,7 @@ namespace DataSS_Controller_2015
         public MainFRM()
         {
             InitializeComponent();
-            button2.Enabled = false;
+            disconnectButton.Enabled = false;
             IPcBox.DataSource = GetAddresses();
             portcBox.DataSource = GetPorts();
         }
@@ -41,30 +41,35 @@ namespace DataSS_Controller_2015
             InitializeController(gameRadioButton.Checked);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void connectButton_Click(object sender, EventArgs e)
         {
             ethernetListenListBox.Items.Add("Initializing Connection with " + IPcBox.Text + "...");
             connection = new TcpConnection(IPcBox.Text, Int32.Parse(portcBox.Text));
 
-            if (controller != null)
-                controller.connection = this.connection;
-            button2.Enabled = true;
+            bool success;
+            string message;
+            connection.Connect(out success, out message);
+            if (!success)
+            {
+                connection = null;
+                ethernetListenListBox.Items.Add(message);
+                return;
+            }
+
+            connectButton.Enabled = false;
+            disconnectButton.Enabled = true;
             connected = true;
             ethernetListenListBox.Items.Add("Connected!");
 
             connection.Handshake();
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //connection.Send(textBox1.Text);
-            //ethernetListenListBox.Items.Add(connection.ReadAllAvailable());
-        }
-
-        private void button3_Click(object sender, EventArgs e)
+        private void disconnectButton_Click(object sender, EventArgs e)
         {
             connection.Close();
             connected = false;
+            disconnectButton.Enabled = false;
+            connectButton.Enabled = true;
         }
 
         private void controllerStartButton_Click(object sender, EventArgs e)
@@ -93,7 +98,7 @@ namespace DataSS_Controller_2015
         {
             if (isGamepad)
             {
-                controller = new Classes.GameController(connection);
+                controller = new Classes.GameController();
                 controller.InputChanged += new Controller.ControllerHandler(controller_InputChanged);
                 controller.IncomingData += new Controller.ReceiveHandler(controller_IncomingData);
                 ((GameController)controller).BeginPolling();
@@ -145,10 +150,10 @@ namespace DataSS_Controller_2015
 
                 if (connection.DataAvailable())
                 {
-                    //data = connection.GetResponse();
-
-                    //ethernetListenListBox.Items.Add(data.ToString());
-                    //ethernetListenListBox.SelectedIndex = ethernetListenListBox.Items.Count - 1;
+                    
+                    data = connection.GetResponse();
+                    ethernetListenListBox.Items.Add(data.ToString());
+                    ethernetListenListBox.SelectedIndex = ethernetListenListBox.Items.Count - 1;
                 }
                 return;
             });
@@ -195,10 +200,10 @@ namespace DataSS_Controller_2015
                     sending.LB = (byte)controller.LB;
                     sending.RT = (byte)Processing.Map(controller.RT, 0, 1, 0, 255);
                     sending.LT = (byte)Processing.Map(controller.LT, 0, 1, 0, 255);
-                    sending.LSY = (byte)Processing.Map(controller.LS.Y, 0, 1, 0, 255);
-                    sending.LSX = (byte)Processing.Map(controller.LS.X, 0, 1, 0, 255);
-                    sending.RSY = (byte)Processing.Map(controller.RS.Y, 0, 1, 0, 255);
-                    sending.RSX = (byte)Processing.Map(controller.RS.X, 0, 1, 0, 255);
+                    sending.LSY = (byte)Processing.MapStick(controller.LS.Y);
+                    sending.LSX = (byte)Processing.MapStick(controller.LS.X);
+                    sending.RSY = (byte)Processing.MapStick(controller.RS.Y);
+                    sending.RSX = (byte)Processing.MapStick(controller.RS.X);
                     sending.DUp = (byte)controller.DUp;
                     sending.DDown = (byte)controller.DDown;
                     sending.DLeft = (byte)controller.DLeft;

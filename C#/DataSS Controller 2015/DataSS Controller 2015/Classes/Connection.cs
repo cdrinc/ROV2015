@@ -20,6 +20,9 @@ namespace DataSS_Controller_2015.Classes
         public StreamWriter Writer;
         public NetworkStream Stream;
 
+        private string IpAddress;
+        private int Port;
+
         //"Standard Header" byte array that marks the beginning of each message
         //is 7 bytes because the packet structure includes all values that can be above 1 (RS, RT, etc.), of which there are 6, consecutively
         //that way it shouldn't be be able to be replicated in the packet itself
@@ -45,28 +48,15 @@ namespace DataSS_Controller_2015.Classes
 
         public TcpConnection(string ipAddress, int port)
         {
-            try
-            {
-                // Create a TcpClient. 
-                // Note, for this client to work you need to have a TcpServer  
-                // connected to the same address as specified by the server, port 
-                // combination.
-                Client = new TcpClient();
-                Client.Connect(ipAddress, port);
-
-                // Get a client stream for reading and writing. 
-                // Stream stream = client.GetStream();
-                Stream = Client.GetStream();
-
-                //create a writer for the network stream
-                Writer = new StreamWriter(Stream);
-            }
-            catch (Exception ex)
-            {
-                System.Windows.Forms.MessageBox.Show("It's fucked.\n\n"+ex.Message, "Fucked it is.", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-            }
+            // Create a TcpClient
+            Client = new TcpClient();
+            this.IpAddress = ipAddress;
+            this.Port = port;
         }
 
+        /// <summary>
+        /// Closes the active connection.
+        /// </summary>
         public void Close()
         {
             Writer.Close();
@@ -99,6 +89,38 @@ namespace DataSS_Controller_2015.Classes
         }
 
         /// <summary>
+        /// Attemps to connect to the indicated IP address and port.
+        /// </summary>
+        /// <param name="success">Indicates whether or not the connection attempt was successful.</param>
+        /// <param name="message">Exception returned if the connectionw attempt was unsuccessful.</param>
+        public void Connect(out bool success, out string message)
+        {
+            try
+            {
+                // Note, for this client to work you need to have a TcpServer  
+                // connected to the same address as specified by the server, port 
+                // combination.
+                Client.Connect(IpAddress, Port);
+
+                // Get a client stream for reading and writing. 
+                Stream = Client.GetStream();
+
+                //create a writer for the network stream
+                Writer = new StreamWriter(Stream);
+
+                success = true;
+                message = null;
+                return;
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                message = ex.Message;
+                return;
+            }
+        }
+
+        /// <summary>
         /// Exchanges a blank packet with the connected device.
         /// </summary>
         public void Handshake()
@@ -112,7 +134,21 @@ namespace DataSS_Controller_2015.Classes
         /// <returns>Returns a boolean value that indicates whether or not data is available.</returns>
         public bool DataAvailable()
         {
-            return Stream.DataAvailable;
+            try
+            {
+                return Stream.DataAvailable;
+            }
+
+            catch (Exception ex)
+            {
+                if (ex is ObjectDisposedException) { }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("An exception has occured while attempting to read data from the connection:" + ex.Message);
+                }
+                return false;
+            }
+
         }
 
         /// <summary>
@@ -121,29 +157,33 @@ namespace DataSS_Controller_2015.Classes
         /// <returns></returns>
         public ReceivedData GetResponse()
         {
-            byte[] data;
+            //byte[] data;
+            List<byte> data = new List<byte>();
 
             if (DataAvailable())
             {
-                data = ReadPacket();
+                data = ReadPacket().ToList<byte>();
             }
             else
             {
                 data = null;
-                return new ReceivedData(data);
+                return new ReceivedData(data.ToArray());
             }
 
             if (data[0] == 0x00)
             {
-                return new TestingPacket(data);
+                data.RemoveAt(0);
+                return new TestingPacket(data.ToArray());
             }
             else if (data[0] == 0x01)
             {
-                return new PacketResponse(data);
+                data.RemoveAt(0);
+                return new PacketResponse(data.ToArray());
             }
             else
             {
-                return new ReceivedData(data);
+                data.RemoveAt(0);
+                return new ReceivedData(data.ToArray());
             }
             
         }
@@ -212,7 +252,7 @@ namespace DataSS_Controller_2015.Classes
 
             if (Find(Header))
             {
-                System.Threading.Thread.Sleep(2);
+                System.Threading.Thread.Sleep(5);
                 while (Stream.DataAvailable)
                 {
                     data.Add((byte)Stream.ReadByte());

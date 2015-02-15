@@ -22,6 +22,27 @@ namespace DataSS_Controller_2015.Classes
             return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
         }
 
+        public static float MapStick(float val)
+        {
+            float f;
+            if (val < 0)
+            {
+                val = Math.Abs(val);
+                f = Map(val, 0, 1, 1, 127);
+            }
+            else if (val > 0)
+            {
+                f = Map(val, 0, 1, 128, 255);
+            }
+            else
+            {
+                f = 0;
+            }
+            return f;
+        }
+
+        //public static 
+
         /// <summary>
         /// Searches the outer list for the exact sequence contained in the passed list.
         /// </summary>
