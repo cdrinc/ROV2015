@@ -65,7 +65,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Connection.cs" />
+    <Compile Include="Classes\Connection.cs">
+      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="Classes\PacketResponse.cs" />
     <Compile Include="Classes\ReceivedData.cs" />
     <Compile Include="Classes\SentData.cs" />

@@ -1,57 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
-
-namespace DataSS_Controller_2015.Classes
+﻿namespace DataSS_Controller_2015.Classes
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Sockets;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Encapsulates a TcpClient and provides various methods to read, write, and interpret data.
     /// </summary>
     public class TcpConnection
     {
-        public TcpClient Client;
-        public StreamWriter Writer;
-        public NetworkStream Stream;
+        private TcpClient client;
+        private StreamWriter writer;
+        private NetworkStream stream;
 
-        private string IpAddress;
-        private int Port;
+        private string ipAddress;
+        private int port;
 
-        //"Standard Header" byte array that marks the beginning of each message
-        //is 7 bytes because the packet structure includes all values that can be above 1 (RS, RT, etc.), of which there are 6, consecutively
-        //that way it shouldn't be be able to be replicated in the packet itself
-        private byte[] stx = { 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B };
-        public byte[] Header
-        {
-            get { return stx; }
-            set { }
-        }
-        //"Standard Footer" end of each message
-        //similar to header
-        public byte[] etx = { 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D };
-        public byte[] Footer
-        {
-            get { return etx; }
-            set { }
-        }
-
-        //blank byte to send as handshake
+        // blank byte to send as handshake
         private byte[] blankData = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-        //this holds the data each time ReadPacket() is called
+
+        // this holds the data each time ReadPacket() is called
         private byte[] packet = new byte[34];
 
+        private byte[] stx = { 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B };
+
+        private byte[] etx = { 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D };
+
+        /// <summary>
+        /// Initializes a new instance of the TcpConnection class and sets the IP Address and Port of the connection.
+        /// </summary>
+        /// <param name="ipAddress">IP Address to connect to.</param>
+        /// <param name="port">Port to connect to.</param>
         public TcpConnection(string ipAddress, int port)
         {
             // Create a TcpClient
-            Client = new TcpClient();
-            this.IpAddress = ipAddress;
-            this.Port = port;
+            this.client = new TcpClient();
+            this.ipAddress = ipAddress;
+            this.port = port;
+        }
+
+        // "Standard Header" byte array that marks the beginning of each message
+        // is 7 bytes because the packet structure includes all values that can be above 1 (RS, RT, etc.), of which there are 6, consecutively
+        // that way it shouldn't be be able to be replicated in the packet itself
+
+        /// <summary>
+        /// Gets or sets the standard header to send at the beginning of each message
+        /// </summary>
+        public byte[] Header
+        {
+            get { return this.stx; }
+            set { }
+        }
+
+        /// <summary>
+        /// Gets or sets the standard footer to send at the end of each message
+        /// </summary>
+        public byte[] Footer
+        {
+            get { return this.etx; }
+            set { }
         }
 
         /// <summary>
@@ -59,40 +72,15 @@ namespace DataSS_Controller_2015.Classes
         /// </summary>
         public void Close()
         {
-            Writer.Close();
-            Client.Close();
+            writer.Close();
+            client.Close();
         }
 
         /// <summary>
-        /// Searches the stream for a byte array (buffer), reads the buffer, and advances the stream to whatever follows.
-        /// </summary>
-        /// <param name="buffer">Byte array to search for.</param>
-        /// <returns>Returns a boolean value that indicates whether or not buffer was found in the stream.</returns>
-        private bool Find(byte[] buffer)
-        {
-            int i = 0;
-            List<byte> data = new List<byte>();
-            byte[] dataArray;
-            while (Stream.DataAvailable && i < 100)
-            {
-                i++;
-                data.Add((byte)Stream.ReadByte());
-                if (data.Count > buffer.Length)
-                    data.RemoveAt(0);
-                dataArray = data.ToArray();
-                if (dataArray.SequenceEqual(buffer))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Attemps to connect to the indicated IP address and port.
+        /// Attempts to connect to the indicated IP address and port.
         /// </summary>
         /// <param name="success">Indicates whether or not the connection attempt was successful.</param>
-        /// <param name="message">Exception returned if the connectionw attempt was unsuccessful.</param>
+        /// <param name="message">Exception returned if the connection attempt was unsuccessful.</param>
         public void Connect(out bool success, out string message)
         {
             try
@@ -100,13 +88,13 @@ namespace DataSS_Controller_2015.Classes
                 // Note, for this client to work you need to have a TcpServer  
                 // connected to the same address as specified by the server, port 
                 // combination.
-                Client.Connect(IpAddress, Port);
+                client.Connect(ipAddress, port);
 
                 // Get a client stream for reading and writing. 
-                Stream = Client.GetStream();
+                stream = client.GetStream();
 
-                //create a writer for the network stream
-                Writer = new StreamWriter(Stream);
+                // create a writer for the network stream
+                writer = new StreamWriter(stream);
 
                 success = true;
                 message = null;
@@ -129,16 +117,15 @@ namespace DataSS_Controller_2015.Classes
         }
 
         /// <summary>
-        /// Determins whether data is available to be read.
+        /// Determines whether data is available to be read.
         /// </summary>
         /// <returns>Returns a boolean value that indicates whether or not data is available.</returns>
         public bool DataAvailable()
         {
             try
             {
-                return Stream.DataAvailable;
+                return stream.DataAvailable;
             }
-
             catch (Exception ex)
             {
                 if (ex is ObjectDisposedException) { }
@@ -146,18 +133,17 @@ namespace DataSS_Controller_2015.Classes
                 {
                     System.Windows.Forms.MessageBox.Show("An exception has occured while attempting to read data from the connection:" + ex.Message);
                 }
+
                 return false;
             }
-
         }
 
         /// <summary>
         /// Reads a packet from the microcontroller and return it encased in the appropriate type.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns a ReceivedData object that can be converted into a string for display.</returns>
         public ReceivedData GetResponse()
         {
-            //byte[] data;
             List<byte> data = new List<byte>();
 
             if (DataAvailable())
@@ -185,7 +171,6 @@ namespace DataSS_Controller_2015.Classes
                 data.RemoveAt(0);
                 return new ReceivedData(data.ToArray());
             }
-            
         }
 
         /// <summary>
@@ -194,27 +179,8 @@ namespace DataSS_Controller_2015.Classes
         /// <param name="message">String to send.</param>
         public void Send(string message)
         {
-            Writer.Write(message);
-            Writer.Flush();
-        }
-
-        /// <summary>
-        /// Sends a single byte to the connected device.
-        /// </summary>
-        /// <param name="message">Single byte to send.</param>
-        private void Send(byte message)
-        {
-            byte[] toSend = { message };
-            Stream.Write(toSend, 0, 1);
-        }
-
-        /// <summary>
-        /// Sends a byte array to the connected device.
-        /// </summary>
-        /// <param name="message">Byte array to send.</param>
-        private void Send(byte[] message)
-        {
-            Stream.Write(message, 0, message.Length);
+            writer.Write(message);
+            writer.Flush();
         }
 
         /// <summary>
@@ -230,14 +196,40 @@ namespace DataSS_Controller_2015.Classes
         }
 
         /// <summary>
+        /// Searches the stream for a byte array (buffer), reads the buffer, and advances the stream to whatever follows.
+        /// </summary>
+        /// <param name="buffer">Byte array to search for.</param>
+        /// <returns>Returns a boolean value that indicates whether or not buffer was found in the stream.</returns>
+        private bool Find(byte[] buffer)
+        {
+            int i = 0;
+            List<byte> data = new List<byte>();
+            byte[] dataArray;
+            while (stream.DataAvailable && i < 100)
+            {
+                i++;
+                data.Add((byte)stream.ReadByte());
+                if (data.Count > buffer.Length)
+                    data.RemoveAt(0);
+                dataArray = data.ToArray();
+                if (dataArray.SequenceEqual(buffer))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Reads all data available and returns a string representation. NB: Deprecated in favor of ReadPacket()
         /// </summary>
         /// <returns>Returns a string representation of the bytes read from the stream.</returns>
         private string ReadAllAvailable()
         {
             List<byte> data = new List<byte>();
-            while (Stream.DataAvailable)
-                data.Add((byte)Stream.ReadByte());
+            while (stream.DataAvailable)
+                data.Add((byte)stream.ReadByte());
             return System.Text.Encoding.ASCII.GetString(data.ToArray());
         }
 
@@ -253,21 +245,41 @@ namespace DataSS_Controller_2015.Classes
             if (Find(Header))
             {
                 System.Threading.Thread.Sleep(5);
-                while (Stream.DataAvailable)
+                while (stream.DataAvailable)
                 {
-                    data.Add((byte)Stream.ReadByte());
+                    data.Add((byte)stream.ReadByte());
                     if (data.ContainsSequence(footerList))
                     {
                         foreach (byte bracket in footerList)
                         {
                             data.Remove(bracket);
                         }
+
                         break;
                     }
                 }
             }
 
             return data.ToArray();
+        }
+
+        /// <summary>
+        /// Sends a single byte to the connected device.
+        /// </summary>
+        /// <param name="message">Single byte to send.</param>
+        private void Send(byte message)
+        {
+            byte[] toSend = { message };
+            stream.Write(toSend, 0, 1);
+        }
+
+        /// <summary>
+        /// Sends a byte array to the connected device.
+        /// </summary>
+        /// <param name="message">Byte array to send.</param>
+        private void Send(byte[] message)
+        {
+            stream.Write(message, 0, message.Length);
         }
     }
 }
