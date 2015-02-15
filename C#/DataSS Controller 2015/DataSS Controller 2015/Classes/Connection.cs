@@ -16,7 +16,6 @@
     public class TcpConnection
     {
         private TcpClient client;
-        private StreamWriter writer;
         private NetworkStream stream;
 
         private string ipAddress;
@@ -43,6 +42,14 @@
             this.client = new TcpClient();
             this.ipAddress = ipAddress;
             this.port = port;
+
+            this.client.SendTimeout = 1000;
+        }
+
+        public bool Connected
+        {
+            get { return client.Connected; }
+            set { }
         }
 
         // "Standard Header" byte array that marks the beginning of each message
@@ -72,7 +79,6 @@
         /// </summary>
         public void Close()
         {
-            writer.Close();
             client.Close();
         }
 
@@ -93,9 +99,6 @@
                 // Get a client stream for reading and writing. 
                 stream = client.GetStream();
 
-                // create a writer for the network stream
-                writer = new StreamWriter(stream);
-
                 success = true;
                 message = null;
                 return;
@@ -111,9 +114,10 @@
         /// <summary>
         /// Exchanges a blank packet with the connected device.
         /// </summary>
-        public void Handshake()
+        public void Handshake(out bool success, out string errorMessage)
         {
-            SendPacket(blankData);
+            SendPacket(blankData, out success, out errorMessage);
+            return;
         }
 
         /// <summary>
@@ -174,25 +178,16 @@
         }
 
         /// <summary>
-        /// Sends a string to the connected device.
-        /// </summary>
-        /// <param name="message">String to send.</param>
-        public void Send(string message)
-        {
-            writer.Write(message);
-            writer.Flush();
-        }
-
-        /// <summary>
         /// Sends a packet, consisting of a  header, data, and footer, to the connected device.
         /// </summary>
         /// <param name="data">Byte array of data to send. NB: at this time, packet MUST be 20 bytes.</param>
-        public void SendPacket(byte[] data)
+        public void SendPacket(byte[] data, out bool success, out string errorMessage)
         {
             Header.CopyTo(packet, 0);
             data.CopyTo(packet, Header.Length);
             Footer.CopyTo(packet, Header.Length + data.Length);
-            Send(packet);
+            Send(packet, out success, out errorMessage);
+            return;
         }
 
         /// <summary>
@@ -267,19 +262,32 @@
         /// Sends a single byte to the connected device.
         /// </summary>
         /// <param name="message">Single byte to send.</param>
-        private void Send(byte message)
+        private void Send(byte message, out bool success, out string errorMessage)
         {
             byte[] toSend = { message };
-            stream.Write(toSend, 0, 1);
+            Send(message, out success, out errorMessage);
+            return;
         }
 
         /// <summary>
         /// Sends a byte array to the connected device.
         /// </summary>
         /// <param name="message">Byte array to send.</param>
-        private void Send(byte[] message)
+        private void Send(byte[] message, out bool success, out string errorMessage)
         {
-            stream.Write(message, 0, message.Length);
+            try
+            {
+                stream.Write(message, 0, message.Length);
+                success = true;
+                errorMessage = string.Empty;
+                return;
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                errorMessage = ex.Message;
+                return;
+            }
         }
     }
 }

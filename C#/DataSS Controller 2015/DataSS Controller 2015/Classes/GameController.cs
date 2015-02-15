@@ -181,22 +181,6 @@ namespace DataSS_Controller_2015.Classes
 
     public class ControllerEventArgs : EventArgs
     {
-        private string message;
-
-        public ControllerEventArgs()
-        {
-            Message = string.Empty;
-        }
-
-        public ControllerEventArgs(string message)
-        {
-            this.Message = message;
-        }
-
-        public string Message
-        {
-            get { return message; }
-            set { }
-        }
+        public ControllerEventArgs() { }
     }
 }

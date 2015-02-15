@@ -51,25 +51,27 @@ namespace DataSS_Controller_2015
             connection.Connect(out success, out message);
             if (!success)
             {
-                connection = null;
-                ethernetListenListBox.Items.Add(message);
+                ethernetListenListBox.AddToEnd(message);
+                return;
+            }
+
+            connection.Handshake(out success, out message);
+            if (!success)
+            {
+                connection.Close();
+                ethernetListenListBox.AddToEnd(message);
                 return;
             }
 
             connectButton.Enabled = false;
             disconnectButton.Enabled = true;
             connected = true;
-            ethernetListenListBox.Items.Add("Connected!");
-
-            connection.Handshake();
+            ethernetListenListBox.AddToEnd("Connected!");
         }
 
         private void disconnectButton_Click(object sender, EventArgs e)
         {
-            connection.Close();
-            connected = false;
-            disconnectButton.Enabled = false;
-            connectButton.Enabled = true;
+            EndConnection();
         }
 
         private void controllerStartButton_Click(object sender, EventArgs e)
@@ -89,6 +91,14 @@ namespace DataSS_Controller_2015
             Application.Exit();
         }
         #endregion
+
+        private void EndConnection()
+        {
+            connection.Close();
+            connected = false;
+            disconnectButton.Enabled = false;
+            connectButton.Enabled = true;
+        }
 
         /// <summary>
         /// Initializes the controller (gamepad or keyboard).
@@ -143,17 +153,13 @@ namespace DataSS_Controller_2015
             this.Invoke((Action)delegate
             {
                 ReceivedData data;
-                if (connection == null)
+                if (connection != null)
                 {
-                    return;
-                }
-
-                if (connection.DataAvailable())
-                {
-                    
-                    data = connection.GetResponse();
-                    ethernetListenListBox.Items.Add(data.ToString());
-                    ethernetListenListBox.SelectedIndex = ethernetListenListBox.Items.Count - 1;
+                    if (connection.Connected && connection.DataAvailable())
+                    {
+                        data = connection.GetResponse();
+                        ethernetListenListBox.AddToEnd(data.ToString());
+                    }
                 }
                 return;
             });
@@ -198,12 +204,12 @@ namespace DataSS_Controller_2015
                     sending.Y = (byte)controller.Y;
                     sending.RB = (byte)controller.RB;
                     sending.LB = (byte)controller.LB;
-                    sending.RT = (byte)Processing.Map(controller.RT, 0, 1, 0, 255);
-                    sending.LT = (byte)Processing.Map(controller.LT, 0, 1, 0, 255);
-                    sending.LSY = (byte)Processing.MapStick(controller.LS.Y);
-                    sending.LSX = (byte)Processing.MapStick(controller.LS.X);
-                    sending.RSY = (byte)Processing.MapStick(controller.RS.Y);
-                    sending.RSX = (byte)Processing.MapStick(controller.RS.X);
+                    sending.RT = (byte)Utilities.Map(controller.RT, 0, 1, 0, 255);
+                    sending.LT = (byte)Utilities.Map(controller.LT, 0, 1, 0, 255);
+                    sending.LSY = (byte)Utilities.MapStick(controller.LS.Y);
+                    sending.LSX = (byte)Utilities.MapStick(controller.LS.X);
+                    sending.RSY = (byte)Utilities.MapStick(controller.RS.Y);
+                    sending.RSX = (byte)Utilities.MapStick(controller.RS.X);
                     sending.DUp = (byte)controller.DUp;
                     sending.DDown = (byte)controller.DDown;
                     sending.DLeft = (byte)controller.DLeft;
@@ -213,23 +219,16 @@ namespace DataSS_Controller_2015
                     sending.Start = (byte)controller.Start;
                     sending.Back = (byte)controller.Back;
 
-                    //no longer using Json
-                    //JavaScriptSerializer jsonSer = new JavaScriptSerializer();
-                    //string obj = jsonSer.Serialize(sending);
-
-                    //don't need to serialize a byte array
-                    //BinaryFormatter formatter = new BinaryFormatter();
-                    //formatter.Serialize(connection.Stream, STX);
-                    //formatter.Serialize(connection.Stream, sending.serialize());
-                    //formatter.Serialize(connection.Stream, ETX);
-
+                    bool success;
+                    string errorMessage;
                     byte[] sendData = sending.serialize();
-                    connection.SendPacket(sendData);
+                    connection.SendPacket(sendData, out success, out errorMessage);
 
-                    //now concatenating arrays before sending
-                    //connection.Send(STX);
-                    //connection.Send(sending.serialize());
-                    //connection.Send(ETX);
+                    if (!success)
+                    {
+                        ethernetListenListBox.AddToEnd(errorMessage);
+                        EndConnection();
+                    }
                 }
             });
 
