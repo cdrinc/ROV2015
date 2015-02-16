@@ -1,15 +1,15 @@
-﻿namespace DataSS_Controller_2015.Classes
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Sockets;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
+namespace DataSS_Controller_2015.Classes
+{
     /// <summary>
     /// Encapsulates a TcpClient and provides various methods to read, write, and interpret data.
     /// </summary>
@@ -32,7 +32,7 @@
         private byte[] etx = { 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D };
 
         /// <summary>
-        /// Initializes a new instance of the TcpConnection class and sets the IP Address and Port of the connection.
+        /// Initializes a new instance of the <see cref="TcpConnection"/> class and sets the IP Address and Port of the connection.
         /// </summary>
         /// <param name="ipAddress">IP Address to connect to.</param>
         /// <param name="port">Port to connect to.</param>
@@ -46,6 +46,9 @@
             this.client.SendTimeout = 1000;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether or not the underlying TcpClient has an active connection.
+        /// </summary>
         public bool Connected
         {
             get { return client.Connected; }
@@ -85,9 +88,9 @@
         /// <summary>
         /// Attempts to connect to the indicated IP address and port.
         /// </summary>
-        /// <param name="success">Indicates whether or not the connection attempt was successful.</param>
-        /// <param name="message">Exception returned if the connection attempt was unsuccessful.</param>
-        public void Connect(out bool success, out string message)
+        /// <param name="success">A boolean value, passed by reference, indicating whether or not the operation was successful.</param>
+        /// <param name="errorMessage">A string, passed by reference, containing any error message.</param>
+        public void Connect(out bool success, out string errorMessage)
         {
             try
             {
@@ -100,13 +103,13 @@
                 stream = client.GetStream();
 
                 success = true;
-                message = null;
+                errorMessage = null;
                 return;
             }
             catch (Exception ex)
             {
                 success = false;
-                message = ex.Message;
+                errorMessage = ex.Message;
                 return;
             }
         }
@@ -114,6 +117,8 @@
         /// <summary>
         /// Exchanges a blank packet with the connected device.
         /// </summary>
+        /// <param name="success">A boolean value, passed by reference, indicating whether or not the operation was successful.</param>
+        /// <param name="errorMessage">A string, passed by reference, containing any error message.</param>
         public void Handshake(out bool success, out string errorMessage)
         {
             SendPacket(blankData, out success, out errorMessage);
@@ -181,6 +186,8 @@
         /// Sends a packet, consisting of a  header, data, and footer, to the connected device.
         /// </summary>
         /// <param name="data">Byte array of data to send. NB: at this time, packet MUST be 20 bytes.</param>
+        /// <param name="success">A boolean value, passed by reference, indicating whether or not the operation was successful.</param>
+        /// <param name="errorMessage">A string, passed by reference, containing any error message.</param>
         public void SendPacket(byte[] data, out bool success, out string errorMessage)
         {
             Header.CopyTo(packet, 0);
@@ -262,6 +269,8 @@
         /// Sends a single byte to the connected device.
         /// </summary>
         /// <param name="message">Single byte to send.</param>
+        /// <param name="success">A boolean value, passed by reference, indicating whether or not the operation was successful.</param>
+        /// <param name="errorMessage">A string, passed by reference, containing any error message.</param>
         private void Send(byte message, out bool success, out string errorMessage)
         {
             byte[] toSend = { message };
@@ -273,6 +282,8 @@
         /// Sends a byte array to the connected device.
         /// </summary>
         /// <param name="message">Byte array to send.</param>
+        /// <param name="success">A boolean value, passed by reference, indicating whether or not the operation was successful.</param>
+        /// <param name="errorMessage">A string, passed by reference, containing any error message.</param>
         private void Send(byte[] message, out bool success, out string errorMessage)
         {
             try

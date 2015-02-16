@@ -9,13 +9,35 @@ using Microsoft.Xna.Framework.Input;
 
 namespace DataSS_Controller_2015.Classes
 {
+    /// <summary>
+    /// Provides functionality for a connected gamepad.
+    /// </summary>
     public class GameController : Controller
     {
         private GamePadState padState;
         private Thread poll;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GameController"/> class.
+        /// </summary>
         public GameController() 
         {
+            this.ls = Vector2.Zero;
+            this.rs = Vector2.Zero;
+            this.A = 0;
+            this.B = 0;
+            this.X = 0;
+            this.Y = 0;
+            this.RB = 0;
+            this.LB = 0;
+            this.DUp = 0;
+            this.DLeft = 0;
+            this.DRight = 0;
+            this.DDown = 0;
+            this.LSClick = 0;
+            this.RSClick = 0;
+            this.Start = 0;
+            this.Back = 0;
         }
 
         /// <summary>
@@ -54,21 +76,21 @@ namespace DataSS_Controller_2015.Classes
         /// </summary>
         private void Polling()
         {
-            while(true)
+            while (true)
             {
                 padState = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One);
                 bool flag = false;
                 OnIncomingData();
                 #region Sticks
-                if (LS != padState.ThumbSticks.Left)
+                if (ls != padState.ThumbSticks.Left)
                 {
-                    LS = padState.ThumbSticks.Left;
+                    ls = padState.ThumbSticks.Left;
                     flag = true;
                 }
 
-                if (RS != padState.ThumbSticks.Right)
+                if (rs != padState.ThumbSticks.Right)
                 {
-                    RS = padState.ThumbSticks.Right;
+                    rs = padState.ThumbSticks.Right;
                     flag = true;
                 }
 
@@ -177,10 +199,5 @@ namespace DataSS_Controller_2015.Classes
                     OnInputChanged();
             }
         }
-    }
-
-    public class ControllerEventArgs : EventArgs
-    {
-        public ControllerEventArgs() { }
     }
 }

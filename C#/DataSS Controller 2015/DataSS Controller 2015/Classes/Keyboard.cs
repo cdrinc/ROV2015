@@ -47,64 +47,64 @@ namespace DataSS_Controller_2015.Classes
                 //A uses that other way as a test
                 if (newState.IsKeyDown(Keys.A))
                 {
-                    LS.X = -1;
+                    ls.X = -1;
                     flag = true;
                 }
                 if (newState.IsKeyDown(Keys.D))
                 {
-                    LS.X = 1;
+                    ls.X = 1;
                     flag = true;
                 }
                 if (newState.IsKeyDown(Keys.W))
                 {
-                    LS.Y = 1;
+                    ls.Y = 1;
                     flag = true;
                 }
                 if (newState.IsKeyDown(Keys.S))
                 {
-                    LS.Y = -1;
+                    ls.Y = -1;
                     flag = true;
                 }
                 if (newState.IsKeyUp(Keys.A) && newState.IsKeyUp(Keys.D) && LS.X != 0)
                 {
-                    LS.X = 0;
+                    ls.X = 0;
                     flag = true;
                 }
                 if (newState.IsKeyUp(Keys.W) && newState.IsKeyUp(Keys.S) && LS.Y != 0)
                 {
-                    LS.Y = 0;
+                    ls.Y = 0;
                     flag = true;
                 }
                 #endregion
                 #region right stick equivalents
                 if (newState.IsKeyDown(Keys.Left))
                 {
-                    RS.X = -1;
+                    rs.X = -1;
                     flag = true;
                 }
                 if (newState.IsKeyDown(Keys.Right))
                 {
-                    RS.X = 1;
+                    rs.X = 1;
                     flag = true;
                 }
                 if (newState.IsKeyDown(Keys.Up))
                 {
-                    RS.Y = 1;
+                    rs.Y = 1;
                     flag = true;
                 }
                 if (newState.IsKeyDown(Keys.Down))
                 {
-                    RS.Y = -1;
+                    rs.Y = -1;
                     flag = true;
                 }
-                if (newState.IsKeyUp(Keys.Left) && newState.IsKeyUp(Keys.Right) && RS.X != 0)
+                if (newState.IsKeyUp(Keys.Left) && newState.IsKeyUp(Keys.Right) && rs.X != 0)
                 {
-                    RS.X = 0;
+                    rs.X = 0;
                     flag = true;
                 }
-                if (newState.IsKeyUp(Keys.Down) && newState.IsKeyUp(Keys.Up) && RS.Y != 0)
+                if (newState.IsKeyUp(Keys.Down) && newState.IsKeyUp(Keys.Up) && rs.Y != 0)
                 {
-                    RS.Y = 0;
+                    rs.Y = 0;
                     flag = true;
                 }
                 #endregion

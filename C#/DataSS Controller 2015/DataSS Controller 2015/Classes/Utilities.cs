@@ -6,22 +6,30 @@ using System.Threading.Tasks;
 
 namespace DataSS_Controller_2015.Classes
 {
+    /// <summary>
+    /// Contains extension methods and provides low-level computation utilities.
+    /// </summary>
     public static class Utilities
     {
         /// <summary>
-        /// Borrowed from arduino, maps a value within one range to a corresponding value in a different range.
+        /// Maps a value within one range to a corresponding value in a different range.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="in_min"></param>
-        /// <param name="in_max"></param>
-        /// <param name="out_min"></param>
-        /// <param name="out_max"></param>
+        /// <param name="x">Variable to be mapped.</param>
+        /// <param name="in_min">Minimum possible value of the variable, pre-map.</param>
+        /// <param name="in_max">Maximum possible value of the variable, pre-map.</param>
+        /// <param name="out_min">Minimum possible value of the variable, post-map.</param>
+        /// <param name="out_max">Maximum possible value of the variable, post-map.</param>
         /// <returns>Returns the newly mapped value.</returns>
         public static float Map(float x, float in_min, float in_max, float out_min, float out_max)
         {
-            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+            return (((x - in_min) * (out_max - out_min)) / (in_max - in_min)) + out_min;
         }
 
+        /// <summary>
+        /// Encapsulates the Map function to correctly map variable-speed, variable-direction motor values.
+        /// </summary>
+        /// <param name="val">Value to be mapped.</param>
+        /// <returns>Returns the mapped value.</returns>
         public static float MapStick(float val)
         {
             float f;
@@ -38,18 +46,17 @@ namespace DataSS_Controller_2015.Classes
             {
                 f = 0;
             }
+
             return f;
         }
-
-        //public static 
 
         /// <summary>
         /// Searches the outer list for the exact sequence contained in the passed list.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">Type contained in the list.</typeparam>
         /// <param name="outer">The list to be searched.</param>
         /// <param name="inner">The list containing the exact sequence to be searched for.</param>
-        /// <returns></returns>
+        /// <returns>Returns a boolean value indicating whether or not the list contains the designated sequence.</returns>
         public static bool ContainsSequence<T>(this List<T> outer, List<T> inner)
         {
             var innerCount = inner.Count;

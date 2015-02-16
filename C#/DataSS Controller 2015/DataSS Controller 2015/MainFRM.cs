@@ -3,30 +3,34 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
 using System.Runtime.Serialization.Json;
-using System.Windows.Forms;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web.Script.Serialization;
+using System.Windows.Forms;
 
 using DataSS_Controller_2015.Classes;
 
 namespace DataSS_Controller_2015
 {
+    /// <summary>
+    /// The main form.
+    /// </summary>
     public partial class MainFRM : Form
     {
-        public TcpConnection connection;
-        public Controller controller;
+        private TcpConnection connection;
+        private Controller controller;
         private bool connected = false;
 
-        
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainFRM"/> class.
+        /// </summary>
         public MainFRM()
         {
             InitializeComponent();
@@ -36,15 +40,27 @@ namespace DataSS_Controller_2015
         }
 
         #region Main Form Events
+        /// <summary>
+        /// Executes on loading of the MainFRM object.
+        /// </summary>
+        /// <param name="sender">The object raising the event.</param>
+        /// <param name="e">The arguments passed by the event.</param>
         private void MainFRM_Load(object sender, EventArgs e)
         {
             InitializeController(gameRadioButton.Checked);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:ElementMustBeginWithUpperCaseLetter", Justification = "Reviewed. Suppression is OK here.")]
+        
+        /// <summary>
+        /// Attempts to initialize a connection with a connected device.
+        /// </summary>
+        /// <param name="sender">The object raising the event.</param>
+        /// <param name="e">The arguments passed by the event.</param>
         private void connectButton_Click(object sender, EventArgs e)
         {
             ethernetListenListBox.Items.Add("Initializing Connection with " + IPcBox.Text + "...");
-            connection = new TcpConnection(IPcBox.Text, Int32.Parse(portcBox.Text));
+            connection = new TcpConnection(IPcBox.Text, int.Parse(portcBox.Text));
 
             bool success;
             string message;
@@ -69,16 +85,35 @@ namespace DataSS_Controller_2015
             ethernetListenListBox.AddToEnd("Connected!");
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:ElementMustBeginWithUpperCaseLetter", Justification = "Reviewed. Suppression is OK here.")]
+
+        /// <summary>
+        /// Attempts to disconnect from a connected device.
+        /// </summary>
+        /// <param name="sender">The object raising the event.</param>
+        /// <param name="e">The arguments passed by the event.</param>
         private void disconnectButton_Click(object sender, EventArgs e)
         {
             EndConnection();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:ElementMustBeginWithUpperCaseLetter", Justification = "Reviewed. Suppression is OK here.")]
+
+        /// <summary>
+        /// Calls the InitializeController method with either a keyboard or gamepad, depending on the state of the form's radio button.
+        /// </summary>
+        /// <param name="sender">The object raising the event.</param>
+        /// <param name="e">The arguments passed by the event.</param>
         private void controllerStartButton_Click(object sender, EventArgs e)
         {
             InitializeController(gameRadioButton.Checked);
         }
 
+        /// <summary>
+        /// Terminates the thread that is polling the controller.
+        /// </summary>
+        /// <param name="sender">The object raising the event.</param>
+        /// <param name="e">The arguments passed by the event.</param>
         private void MainFRM_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (controller != null)
@@ -86,12 +121,22 @@ namespace DataSS_Controller_2015
                     ((GameController)controller).EndPolling();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:ElementMustBeginWithUpperCaseLetter", Justification = "Reviewed. Suppression is OK here.")]
+
+        /// <summary>
+        /// Exits the application.
+        /// </summary>
+        /// <param name="sender">The object raising the event.</param>
+        /// <param name="e">The arguments passed by the event.</param>
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
         #endregion
 
+        /// <summary>
+        /// Closes the connection and enables and disables the appropriate buttons.
+        /// </summary>
         private void EndConnection()
         {
             connection.Close();
@@ -103,7 +148,7 @@ namespace DataSS_Controller_2015
         /// <summary>
         /// Initializes the controller (gamepad or keyboard).
         /// </summary>
-        /// <param name="isGamepad"></param>
+        /// <param name="isGamepad">Boolean value indicating whether or not the controller should be a gamepad.</param>
         private void InitializeController(bool isGamepad)
         {
             if (isGamepad)
@@ -121,6 +166,7 @@ namespace DataSS_Controller_2015
                 ((KeyboardController)controller).BeginPolling();
                 controllerStartButton.Text = "Keyboard";
             }
+
             controllerStartButton.Enabled = false;
         }
 
@@ -131,16 +177,16 @@ namespace DataSS_Controller_2015
         private List<string> GetAddresses()
         {
             List<string> ips = new List<string>();
-            ips.Add("169.254.60.110"); //works on mac 1st port
-            ips.Add("169.254.180.60"); //works on mac 2nd port
-            ips.Add("192.168.137.2"); //works on pc
+            ips.Add("169.254.60.110"); // works on mac 1st port
+            ips.Add("169.254.180.60"); // works on mac 2nd port
+            ips.Add("192.168.137.2"); // works on pc
             return ips;
         }
 
         /// <summary>
         /// Composes a list of ports predetermined to be valid.
         /// </summary>
-        /// <returns>Returns a predetermined list of port ints.</returns>
+        /// <returns>Returns a predetermined list of port integers.</returns>
         private List<int> GetPorts()
         {
             List<int> ports = new List<int>();
@@ -148,7 +194,14 @@ namespace DataSS_Controller_2015
             return ports;
         }
 
-        void controller_IncomingData(object sender, ControllerEventArgs e)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:ElementMustBeginWithUpperCaseLetter", Justification = "Reviewed. Suppression is OK here.")]
+
+        /// <summary>
+        /// Adds incoming data to the form's listbox.
+        /// </summary>
+        /// <param name="sender">The object raising the event.</param>
+        /// <param name="e">The arguments passed by the event.</param>
+        private void controller_IncomingData(object sender, ControllerEventArgs e)
         {
             this.Invoke((Action)delegate
             {
@@ -161,11 +214,19 @@ namespace DataSS_Controller_2015
                         ethernetListenListBox.AddToEnd(data.ToString());
                     }
                 }
+
                 return;
             });
         }
 
-        void controller_InputChanged(object sender, EventArgs e)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:ElementMustBeginWithUpperCaseLetter", Justification = "Reviewed. Suppression is OK here.")]
+
+        /// <summary>
+        /// Attempts to send the new controller state across the connection.
+        /// </summary>
+        /// <param name="sender">The object raising the event.</param>
+        /// <param name="e">The arguments passed by the event.</param>
+        private void controller_InputChanged(object sender, EventArgs e)
         {
             forwardNum.Invoke((Action)delegate { forwardNum.Value = (decimal)controller.LS.Y * 100; });
             translateNum.Invoke((Action)delegate { translateNum.Value = (decimal)controller.LS.X * 100; });
@@ -221,7 +282,7 @@ namespace DataSS_Controller_2015
 
                     bool success;
                     string errorMessage;
-                    byte[] sendData = sending.serialize();
+                    byte[] sendData = sending.Serialize();
                     connection.SendPacket(sendData, out success, out errorMessage);
 
                     if (!success)
@@ -231,7 +292,6 @@ namespace DataSS_Controller_2015
                     }
                 }
             });
-
         }
     }
 }
