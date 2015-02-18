@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
+using System.Windows.Threading;
 
 using DataSS_Controller_2015.Classes;
 
@@ -201,11 +202,11 @@ namespace DataSS_Controller_2015
         /// </summary>
         /// <param name="sender">The object raising the event.</param>
         /// <param name="e">The arguments passed by the event.</param>
-        private void controller_IncomingData(object sender, ControllerEventArgs e)
+        private void controller_IncomingData(object sender, EventArgs e)
         {
             this.Invoke((Action)delegate
             {
-                ReceivedData data;
+                PacketResponse data;
                 if (connection != null)
                 {
                     if (connection.Connected && connection.DataAvailable())
@@ -217,6 +218,12 @@ namespace DataSS_Controller_2015
 
                 return;
             });
+        }
+
+        // will be used when switched to wpf
+        public void OnIncomingData(object sender, ControllerEventArgs e)
+        {
+            ControllerData data = e.Data;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:ElementMustBeginWithUpperCaseLetter", Justification = "Reviewed. Suppression is OK here.")]

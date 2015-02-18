@@ -22,22 +22,24 @@ namespace DataSS_Controller_2015.Classes
         /// </summary>
         public GameController() 
         {
-            this.ls = Vector2.Zero;
-            this.rs = Vector2.Zero;
-            this.A = 0;
-            this.B = 0;
-            this.X = 0;
-            this.Y = 0;
-            this.RB = 0;
-            this.LB = 0;
-            this.DUp = 0;
-            this.DLeft = 0;
-            this.DRight = 0;
-            this.DDown = 0;
-            this.LSClick = 0;
-            this.RSClick = 0;
-            this.Start = 0;
-            this.Back = 0;
+            //ControllerData gamepadData = new ControllerData();
+
+            //gamepadData.LS = Vector2.Zero;
+            //gamepadData.RS = Vector2.Zero;
+            //gamepadData.A = 0;
+            //gamepadData.B = 0;
+            //gamepadData.X = 0;
+            //gamepadData.Y = 0;
+            //gamepadData.RB = 0;
+            //gamepadData.LB = 0;
+            //gamepadData.DUp = 0;
+            //gamepadData.DLeft = 0;
+            //gamepadData.DRight = 0;
+            //gamepadData.DDown = 0;
+            //gamepadData.LSClick = 0;
+            //gamepadData.RSClick = 0;
+            //gamepadData.Start = 0;
+            //gamepadData.Back = 0;
         }
 
         /// <summary>
@@ -76,127 +78,128 @@ namespace DataSS_Controller_2015.Classes
         /// </summary>
         private void Polling()
         {
+            ControllerData gamepadData = new ControllerData();
             while (true)
             {
                 padState = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One);
                 bool flag = false;
                 OnIncomingData();
                 #region Sticks
-                if (ls != padState.ThumbSticks.Left)
+                if (gamepadData.LS != padState.ThumbSticks.Left)
                 {
-                    ls = padState.ThumbSticks.Left;
+                    gamepadData.LS = padState.ThumbSticks.Left;
                     flag = true;
                 }
 
-                if (rs != padState.ThumbSticks.Right)
+                if (gamepadData.RS != padState.ThumbSticks.Right)
                 {
-                    rs = padState.ThumbSticks.Right;
+                    gamepadData.RS = padState.ThumbSticks.Right;
                     flag = true;
                 }
 
                 #endregion
                 #region Triggers
-                if (LT != padState.Triggers.Left)
+                if (gamepadData.LT != padState.Triggers.Left)
                 {
-                    LT = padState.Triggers.Left;
+                    gamepadData.LT = padState.Triggers.Left;
                     flag = true;
                 }
 
-                if (RT != padState.Triggers.Right)
+                if (gamepadData.RT != padState.Triggers.Right)
                 {
-                    RT = padState.Triggers.Right;
+                    gamepadData.RT = padState.Triggers.Right;
                     flag = true;
                 }
 
                 #endregion
                 #region Buttons, Shoulders, DPad, Stick Clicks, Start/Select
-                if (A != (int)padState.Buttons.A)
+                if (gamepadData.A != (int)padState.Buttons.A)
                 {
-                    A = (int)padState.Buttons.A;
+                    gamepadData.A = (int)padState.Buttons.A;
                     flag = true;
                 }
 
-                if (B != (int)padState.Buttons.B)
+                if (gamepadData.B != (int)padState.Buttons.B)
                 {
-                    B = (int)padState.Buttons.B;
+                    gamepadData.B = (int)padState.Buttons.B;
                     flag = true;
                 }
 
-                if (X != (int)padState.Buttons.X)
+                if (gamepadData.X != (int)padState.Buttons.X)
                 {
-                    X = (int)padState.Buttons.X;
+                    gamepadData.X = (int)padState.Buttons.X;
                     flag = true;
                 }
 
-                if (Y != (int)padState.Buttons.Y)
+                if (gamepadData.Y != (int)padState.Buttons.Y)
                 {
-                    Y = (int)padState.Buttons.Y;
+                    gamepadData.Y = (int)padState.Buttons.Y;
                     flag = true;
                 }
 
-                if (LB != (int)padState.Buttons.LeftShoulder)
+                if (gamepadData.LB != (int)padState.Buttons.LeftShoulder)
                 {
-                    LB = (int)padState.Buttons.LeftShoulder;
+                    gamepadData.LB = (int)padState.Buttons.LeftShoulder;
                     flag = true;
                 }
 
-                if (RB != (int)padState.Buttons.RightShoulder)
+                if (gamepadData.RB != (int)padState.Buttons.RightShoulder)
                 {
-                    RB = (int)padState.Buttons.RightShoulder;
+                    gamepadData.RB = (int)padState.Buttons.RightShoulder;
                     flag = true;
                 }
 
-                if (LSClick != (int)padState.Buttons.LeftStick)
+                if (gamepadData.LSClick != (int)padState.Buttons.LeftStick)
                 {
-                    LSClick = (int)padState.Buttons.LeftStick;
+                    gamepadData.LSClick = (int)padState.Buttons.LeftStick;
                     flag = true;
                 }
 
-                if (RSClick != (int)padState.Buttons.RightStick)
+                if (gamepadData.RSClick != (int)padState.Buttons.RightStick)
                 {
-                    RSClick = (int)padState.Buttons.RightStick;
+                    gamepadData.RSClick = (int)padState.Buttons.RightStick;
                     flag = true;
                 }
 
-                if (DUp != (int)padState.DPad.Up)
+                if (gamepadData.DUp != (int)padState.DPad.Up)
                 {
-                    DUp = (int)padState.DPad.Up;
+                    gamepadData.DUp = (int)padState.DPad.Up;
                     flag = true;
                 }
 
-                if (DLeft != (int)padState.DPad.Left)
+                if (gamepadData.DLeft != (int)padState.DPad.Left)
                 {
-                    DLeft = (int)padState.DPad.Left;
+                    gamepadData.DLeft = (int)padState.DPad.Left;
                     flag = true;
                 }
 
-                if (DRight != (int)padState.DPad.Right)
+                if (gamepadData.DRight != (int)padState.DPad.Right)
                 {
-                    DRight = (int)padState.DPad.Right;
+                    gamepadData.DRight = (int)padState.DPad.Right;
                     flag = true;
                 }
 
-                if (DDown != (int)padState.DPad.Down)
+                if (gamepadData.DDown != (int)padState.DPad.Down)
                 {
-                    DDown = (int)padState.DPad.Down;
-                    flag = true;
-                } 
-
-                if (Start != (int)padState.Buttons.Start)
-                {
-                    Start = (int)padState.Buttons.Start;
+                    gamepadData.DDown = (int)padState.DPad.Down;
                     flag = true;
                 }
 
-                if (Back != (int)padState.Buttons.Back)
+                if (gamepadData.Start != (int)padState.Buttons.Start)
                 {
-                    Back = (int)padState.Buttons.Back;
+                    gamepadData.Start = (int)padState.Buttons.Start;
+                    flag = true;
+                }
+
+                if (gamepadData.Back != (int)padState.Buttons.Back)
+                {
+                    gamepadData.Back = (int)padState.Buttons.Back;
                     flag = true;
                 }
 
                 #endregion
                 if (flag)
-                    OnInputChanged();
+                    OnInputChanged(gamepadData);
             }
         }
     }

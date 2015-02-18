@@ -164,7 +164,7 @@ namespace DataSS_Controller_2015.Classes
                 #endregion
                 if (flag)
                 {
-                    OnInputChanged();
+                    OnInputChanged(new ControllerData());
                 }
                 OldState = newState;
             }

@@ -151,7 +151,7 @@ namespace DataSS_Controller_2015.Classes
         /// Reads a packet from the microcontroller and return it encased in the appropriate type.
         /// </summary>
         /// <returns>Returns a ReceivedData object that can be converted into a string for display.</returns>
-        public ReceivedData GetResponse()
+        public PacketResponse GetResponse()
         {
             List<byte> data = new List<byte>();
 
@@ -162,7 +162,7 @@ namespace DataSS_Controller_2015.Classes
             else
             {
                 data = null;
-                return new ReceivedData(data.ToArray());
+                return new PacketResponse(data.ToArray());
             }
 
             if (data[0] == 0x00)
@@ -173,12 +173,12 @@ namespace DataSS_Controller_2015.Classes
             else if (data[0] == 0x01)
             {
                 data.RemoveAt(0);
-                return new PacketResponse(data.ToArray());
+                return new SensorData(data.ToArray());
             }
             else
             {
                 data.RemoveAt(0);
-                return new ReceivedData(data.ToArray());
+                return new PacketResponse(data.ToArray());
             }
         }
 

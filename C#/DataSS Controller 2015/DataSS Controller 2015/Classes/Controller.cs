@@ -34,7 +34,7 @@ namespace DataSS_Controller_2015.Classes
         /// </summary>
         /// <param name="sender">The object raising the event.</param>
         /// <param name="e">The arguments passed by the event.</param>
-        public delegate void ReceiveHandler(object sender, ControllerEventArgs e);
+        public delegate void ReceiveHandler(object sender, EventArgs e);
 
         /// <summary>
         /// An event that indicates that the controller's state has changed.
@@ -106,9 +106,9 @@ namespace DataSS_Controller_2015.Classes
         /// <summary>
         /// Fires the InputChanged event.
         /// </summary>
-        protected virtual void OnInputChanged()
+        protected virtual void OnInputChanged(ControllerData data)
         {
-            InputChanged(this, new ControllerEventArgs());
+            InputChanged(this, new ControllerEventArgs(data));
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace DataSS_Controller_2015.Classes
         /// </summary>
         protected virtual void OnIncomingData()
         {
-            IncomingData(this, new ControllerEventArgs());
+            IncomingData(this, new EventArgs());
         }
     }
 }

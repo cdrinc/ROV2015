@@ -63,21 +63,23 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Connection.cs">
       <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
     </Compile>
+    <Compile Include="Classes\ControllerData.cs" />
     <Compile Include="Classes\ControllerEventArgs.cs" />
+    <Compile Include="Classes\SensorData.cs" />
     <Compile Include="Classes\PacketResponse.cs" />
-    <Compile Include="Classes\ReceivedData.cs" />
     <Compile Include="Classes\SentData.cs" />
     <Compile Include="Classes\GameController.cs" />
     <Compile Include="Classes\Controller.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Classes\Keyboard.cs" />
-    <Compile Include="Classes\Processing.cs" />
+    <Compile Include="Classes\Processor.cs" />
     <Compile Include="Classes\TestingPacket.cs" />
     <Compile Include="Classes\Utilities.cs" />
     <Compile Include="MainFRM.cs">

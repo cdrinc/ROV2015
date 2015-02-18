@@ -9,7 +9,7 @@ namespace DataSS_Controller_2015.Classes
     /// <summary>
     /// An object that corresponds to the standard testing response from the connected microcontroller.
     /// </summary>
-    class TestingPacket : ReceivedData
+    class TestingPacket : PacketResponse
     {
         public string Value { get; set; }
 
