@@ -7,8 +7,8 @@
 byte mac[] = {  
   0x90, 0xA2, 0xDA, 0x0F, 0x43, 0xB2 };
 //IPAddress ip(169, 254, 60, 110); //169.254.60.110 works on mac
-//IPAddress ip(169, 254, 180, 60); //169.254.180.60 works on mac port 2
-IPAddress ip(192, 168, 137, 2); //works on windows
+IPAddress ip(169, 254, 180, 60); //169.254.180.60 works on mac port 2
+//IPAddress ip(192, 168, 137, 2); //works on windows
 
 
 //port set to 13000 for tcp comms with c#
@@ -35,6 +35,7 @@ byte header[7];
 byte footer[7];
 
 void setup() {
+  //digitalWrite(53,LOW);
   // initialize the ethernet device
   Ethernet.begin(mac, ip);
   // start listening for clientss
@@ -112,23 +113,24 @@ void processPacket(byte packet[])
   }
 }
 
-void sendData(byte data[], EthernetClient& client)
+void sendTestPacket(byte data[], EthernetClient& client)
 {
-  byte sendPacket[14 + sizeof(data)];
+  byte sendPacket[35];
   for (int i = 0; i < 7; i++)
   {
-     sendPacket[i] = stx[i]; 
+    sendPacket[i] = 123;
   }
-  for (int i = 0; i < sizeof(data); i++)
+  sendPacket[7] = testByte;
+  for (int i = 0; i < 20; i++)
   {
-     sendPacket[i + 7] = data[i];
+    sendPacket[i + 8] = data[i];
   }
   for (int i = 0; i < 7; i++)
   {
-     sendPacket[i + 7 + sizeof(data)] = etx[i]; 
+    sendPacket[i + 28] = 125;
   }
   
-  client.print((char*)sendPacket);
+  client.write(sendPacket, 35);
 }
   
 
@@ -163,11 +165,11 @@ void loop() {
             footer[i] = thisByte;
          }
          
-         client.write("{{{{{{{");
-         client.write(testByte);
-         client.write(packet, 20);
-         client.write("}}}}}}}");
-         
+         //client.write("{{{{{{{");
+         //client.write(testByte);
+         //client.write(packet, 20);
+         //client.write("}}}}}}}");
+         sendTestPacket(packet, client);
          processPacket(packet);
       }
     }

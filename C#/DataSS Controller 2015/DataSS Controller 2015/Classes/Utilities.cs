@@ -36,7 +36,7 @@ namespace DataSS_Controller_2015.Classes
             if (val < 0)
             {
                 val = Math.Abs(val);
-                f = Map(val, 0, 1, 1, 127);
+                f = Map(val, 0, 1, 1, 126);
             }
             else if (val > 0)
             {
