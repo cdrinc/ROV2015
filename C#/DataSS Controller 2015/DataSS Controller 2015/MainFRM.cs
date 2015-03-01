@@ -300,5 +300,15 @@ namespace DataSS_Controller_2015
                 }
             });
         }
+
+        private void errButton_Click(object sender, EventArgs e)
+        {
+            List<byte> sending = new List<byte>();
+            sending.Add(0x01);
+            sending.AddRange(System.Text.Encoding.ASCII.GetBytes("RST"));
+            bool success;
+            string message;
+            connection.SendPacket(sending.ToArray(), out success, out message);
+        }
     }
 }

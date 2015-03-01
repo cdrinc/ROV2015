@@ -16,6 +16,11 @@ namespace DataSS_Controller_2015.Classes
     /// </summary>
     public class SentData
     {
+        public byte Meta 
+        {
+            get { return 0x00; }
+            set {  } 
+        }
         public byte LSY { get; set; }
         public byte LSX { get; set; }
         public byte RSY { get; set; }
@@ -43,7 +48,7 @@ namespace DataSS_Controller_2015.Classes
         /// <returns>A byte array containing the data to be sent.</returns>
         public byte[] Serialize()
         {
-            List<byte> byteList = new List<byte>() { LSY, LSX, RSY, RSX, LT, RT, A, B, X, Y, RB, LB, DUp, DDown, DRight, DLeft, LSClick, RSClick, Start, Back };
+            List<byte> byteList = new List<byte>() { Meta, LSY, LSX, RSY, RSX, LT, RT, A, B, X, Y, RB, LB, DUp, DDown, DRight, DLeft, LSClick, RSClick, Start, Back };
             byte[] byteArr = byteList.ToArray();
             return byteArr;
         }

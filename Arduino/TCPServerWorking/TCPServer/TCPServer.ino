@@ -35,8 +35,11 @@ byte header[7];
 byte footer[7];
 
 void setup() {
-  digitalWrite(8,LOW);
+  pinMode(8, INPUT);
+  pinMode(9, OUTPUT);
+  pinMode(7, OUTPUT);
   digitalWrite(9, HIGH);
+  digitalWrite(7, HIGH);
   // initialize the ethernet device
   Ethernet.begin(mac, ip);
   // start listening for clientss
@@ -138,16 +141,6 @@ void sendTestPacket(byte data[], EthernetClient& client)
 void loop() {
   // wait for a new client:
   EthernetClient client = server.available();
-  if (digitalRead(8) == HIGH)
-  {
-    client.print("{{{{{{{");
-    client.write(stringByte);
-    client.print("Error Detected}}}}}}}");
-    digitalWrite(9, LOW);
-    delay(5);
-    digitalWrite(9, HIGH);
-    exitSafeStart();
-  }
 
   // when the client sends the first byte, say hello:
   if (client.connected()) {
@@ -158,31 +151,39 @@ void loop() {
       client.write(stringByte);
       client.print("Client connected}}}}}}}");
       exitSafeStart();
-    } 
+    }
 
     while (client.available() > 0) {
       // read the bytes incoming from the client:
       byte thisByte = 0x00;
       if (client.find("{{{{{{{"))
       {
-         for (int i = 0; client.available() > 0 && i < 20; i++)
+         thisByte = client.read();
+         if (thisByte == 0x00)
          {
-            thisByte = client.read();
-            packet[i] = thisByte;
+           for (int i = 0; client.available() > 0 && i < 20; i++)
+           {
+              thisByte = client.read();
+              packet[i] = thisByte;
+           }
+           for (int i = 0; client.available() > 0 && i < 7; i++)
+           {
+              thisByte = client.read();
+              footer[i] = thisByte;
+           }
+           
+           sendTestPacket(packet, client);
+           processPacket(packet);
          }
-         for (int i = 0; client.available() > 0 && i < 7; i++)
+         else if (thisByte == 0x01)
          {
-            thisByte = client.read();
-            footer[i] = thisByte;
+           client.print("{{{{{{{");
+           client.write(stringByte);
+           client.print("Throwing Error...}}}}}}}");
+           pinMode(8, OUTPUT);
+           digitalWrite(8, HIGH);
+           delay(25);
          }
-         
-         //client.write("{{{{{{{");
-         //client.write(testByte);
-         //client.write(packet, 20);
-         //client.write("}}}}}}}");
-         
-         sendTestPacket(packet, client);
-         processPacket(packet);
       }
     }
   }

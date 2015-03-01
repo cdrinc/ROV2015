@@ -84,6 +84,7 @@
             this.label22 = new System.Windows.Forms.Label();
             this.portcBox = new System.Windows.Forms.ComboBox();
             this.dataListenBox = new System.Windows.Forms.ListBox();
+            this.errButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.forwardNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rtNum)).BeginInit();
@@ -860,11 +861,23 @@
             this.dataListenBox.Size = new System.Drawing.Size(361, 121);
             this.dataListenBox.TabIndex = 37;
             // 
+            // errButton
+            // 
+            this.errButton.Location = new System.Drawing.Point(494, 132);
+            this.errButton.Margin = new System.Windows.Forms.Padding(2);
+            this.errButton.Name = "errButton";
+            this.errButton.Size = new System.Drawing.Size(131, 38);
+            this.errButton.TabIndex = 38;
+            this.errButton.Text = "Send Error";
+            this.errButton.UseVisualStyleBackColor = true;
+            this.errButton.Click += new System.EventHandler(this.errButton_Click);
+            // 
             // MainFRM
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(741, 423);
+            this.Controls.Add(this.errButton);
             this.Controls.Add(this.dataListenBox);
             this.Controls.Add(this.portcBox);
             this.Controls.Add(this.label22);
@@ -971,6 +984,7 @@
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.ComboBox portcBox;
         private System.Windows.Forms.ListBox dataListenBox;
+        private System.Windows.Forms.Button errButton;
     }
 }
 
