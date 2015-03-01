@@ -211,7 +211,7 @@ namespace DataSS_Controller_2015
                     if (connection.Connected && connection.DataAvailable())
                     {
                         data = connection.GetResponse();
-                        if (data is PacketResponse)
+                        if (data is PacketResponse||data is TestingPacket)
                         {
                             dataListenBox.AddToEnd(data.ToString());
                         }

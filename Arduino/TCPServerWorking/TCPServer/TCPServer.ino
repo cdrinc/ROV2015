@@ -35,6 +35,8 @@ byte header[7];
 byte footer[7];
 
 void setup() {
+  digitalWrite(8,LOW);
+  digitalWrite(9, HIGH);
   // initialize the ethernet device
   Ethernet.begin(mac, ip);
   // start listening for clientss
@@ -112,32 +114,43 @@ void processPacket(byte packet[])
   }
 }
 
-void sendData(byte data[], EthernetClient& client)
+void sendTestPacket(byte data[], EthernetClient& client)
 {
-  byte sendPacket[14 + sizeof(data)];
+  byte sendPacket[35];
   for (int i = 0; i < 7; i++)
   {
-     sendPacket[i] = stx[i]; 
+     sendPacket[i] = '{'; 
   }
-  for (int i = 0; i < sizeof(data); i++)
+  sendPacket[7] = testByte;
+  for (int i = 0; i < 20; i++)
   {
-     sendPacket[i + 7] = data[i];
+     sendPacket[i + 8] = data[i];
   }
   for (int i = 0; i < 7; i++)
   {
-     sendPacket[i + 7 + sizeof(data)] = etx[i]; 
+     sendPacket[i + 28] = '}'; 
   }
   
-  client.print((char*)sendPacket);
+  client.write(sendPacket, 35);
 }
   
 
 void loop() {
   // wait for a new client:
   EthernetClient client = server.available();
+  if (digitalRead(8) == HIGH)
+  {
+    client.print("{{{{{{{");
+    client.write(stringByte);
+    client.print("Error Detected}}}}}}}");
+    digitalWrite(9, LOW);
+    delay(5);
+    digitalWrite(9, HIGH);
+    exitSafeStart();
+  }
 
   // when the client sends the first byte, say hello:
-  if (client) {
+  if (client.connected()) {
     if (!alreadyConnected) {
       Serial.println("We have a new client"); 
       alreadyConnected = true;
@@ -163,11 +176,12 @@ void loop() {
             footer[i] = thisByte;
          }
          
-         client.write("{{{{{{{");
-         client.write(testByte);
-         client.write(packet, 20);
-         client.write("}}}}}}}");
+         //client.write("{{{{{{{");
+         //client.write(testByte);
+         //client.write(packet, 20);
+         //client.write("}}}}}}}");
          
+         sendTestPacket(packet, client);
          processPacket(packet);
       }
     }

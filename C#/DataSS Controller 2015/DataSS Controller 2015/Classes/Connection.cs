@@ -157,7 +157,7 @@ namespace DataSS_Controller_2015.Classes
 
             if (DataAvailable())
             {
-                data = ReadPacket().ToList<byte>();
+                data = ReadPacket();
             }
             else
             {
@@ -239,7 +239,7 @@ namespace DataSS_Controller_2015.Classes
         /// Reads a full packet, consisting of a header, data, and a footer, from the stream.
         /// </summary>
         /// <returns>Returns the packet as a byte array.</returns>
-        private byte[] ReadPacket()
+        private List<byte> ReadPacket()
         {
             List<byte> data = new List<byte>();
             List<byte> footerList = Footer.ToList<byte>();
@@ -262,7 +262,7 @@ namespace DataSS_Controller_2015.Classes
                 }
             }
 
-            return data.ToArray();
+            return data;
         }
 
         /// <summary>
