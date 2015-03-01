@@ -211,7 +211,14 @@ namespace DataSS_Controller_2015
                     if (connection.Connected && connection.DataAvailable())
                     {
                         data = connection.GetResponse();
-                        ethernetListenListBox.AddToEnd(data.ToString());
+                        if (data is PacketResponse)
+                        {
+                            dataListenBox.AddToEnd(data.ToString());
+                        }
+                        else
+                        {
+                            ethernetListenListBox.AddToEnd(data.ToString());
+                        }
                     }
                 }
 

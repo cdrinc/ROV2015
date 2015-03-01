@@ -1,3 +1,5 @@
+#include <PololuWheelEncoders.h>
+
 #include <SPI.h>
 #include <Ethernet.h>
 
@@ -112,6 +114,14 @@ void processPacket(byte packet[])
   }
 }
 
+void Respond(byte data[], EthernetClient& client)
+{
+   client.write("{{{{{{{");
+   client.write(testByte);
+   client.write(data, 20);
+   client.write("}}}}}}}");
+}
+
 void sendData(byte data[], EthernetClient& client)
 {
   byte sendPacket[14 + sizeof(data)];
@@ -163,12 +173,8 @@ void loop() {
             footer[i] = thisByte;
          }
          
-         client.write("{{{{{{{");
-         client.write(testByte);
-         client.write(packet, 20);
-         client.write("}}}}}}}");
-         
          processPacket(packet);
+         Respond(packet, client);
       }
     }
   }
