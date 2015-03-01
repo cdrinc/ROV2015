@@ -83,6 +83,7 @@
             this.label21 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
             this.portcBox = new System.Windows.Forms.ComboBox();
+            this.dataListenBox = new System.Windows.Forms.ListBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.forwardNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rtNum)).BeginInit();
@@ -126,7 +127,7 @@
             this.ethernetListenListBox.Location = new System.Drawing.Point(9, 291);
             this.ethernetListenListBox.Margin = new System.Windows.Forms.Padding(2);
             this.ethernetListenListBox.Name = "ethernetListenListBox";
-            this.ethernetListenListBox.Size = new System.Drawing.Size(722, 121);
+            this.ethernetListenListBox.Size = new System.Drawing.Size(361, 121);
             this.ethernetListenListBox.TabIndex = 1;
             // 
             // disconnectButton
@@ -849,11 +850,22 @@
             this.portcBox.Size = new System.Drawing.Size(73, 21);
             this.portcBox.TabIndex = 36;
             // 
+            // dataListenBox
+            // 
+            this.dataListenBox.FormattingEnabled = true;
+            this.dataListenBox.HorizontalScrollbar = true;
+            this.dataListenBox.Location = new System.Drawing.Point(374, 291);
+            this.dataListenBox.Margin = new System.Windows.Forms.Padding(2);
+            this.dataListenBox.Name = "dataListenBox";
+            this.dataListenBox.Size = new System.Drawing.Size(361, 121);
+            this.dataListenBox.TabIndex = 37;
+            // 
             // MainFRM
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(741, 423);
+            this.Controls.Add(this.dataListenBox);
             this.Controls.Add(this.portcBox);
             this.Controls.Add(this.label22);
             this.Controls.Add(this.label21);
@@ -958,6 +970,7 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.ComboBox portcBox;
+        private System.Windows.Forms.ListBox dataListenBox;
     }
 }
 
