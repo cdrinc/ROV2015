@@ -164,7 +164,23 @@ void loop() {
       if (client.find("{{{{{{{"))
       {
          thisByte = client.read();
-         if (thisByte == 0x01)
+         if (thisByte == 0x00)
+         {
+           for (int i = 0; client.available() > 0 && i < 11; i++)
+           {
+              thisByte = client.read();
+              packet[i] = thisByte;
+           }
+           for (int i = 0; client.available() > 0 && i < 7; i++)
+           {
+              thisByte = client.read();
+              footer[i] = thisByte;
+           }
+           
+           sendTestPacket(packet, client);
+           processPacket(packet);
+         }
+         else if (thisByte == 0x01)
          {
            for (int i = 0; client.available() > 0 && i < 20; i++)
            {
