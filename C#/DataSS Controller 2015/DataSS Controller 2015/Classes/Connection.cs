@@ -22,10 +22,11 @@ namespace DataSS_Controller_2015.Classes
         private int port;
 
         // blank byte to send as handshake
-        private byte[] blankData = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+        private byte[] blankData = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
         // this holds the data each time ReadPacket() is called
-        private byte[] packet = new byte[35];
+        //private byte[] packet = new byte[35];
+        //private List<byte> packet;
 
         private byte[] stx = { 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B };
 
@@ -44,6 +45,8 @@ namespace DataSS_Controller_2015.Classes
             this.port = port;
 
             this.client.SendTimeout = 1000;
+
+            //packet = new List<byte>();
         }
 
         /// <summary>
@@ -190,10 +193,15 @@ namespace DataSS_Controller_2015.Classes
         /// <param name="errorMessage">A string, passed by reference, containing any error message.</param>
         public void SendPacket(byte[] data, out bool success, out string errorMessage)
         {
-            Header.CopyTo(packet, 0);
+            /*Header.CopyTo(packet, 0);
             data.CopyTo(packet, Header.Length);
             Footer.CopyTo(packet, Header.Length + data.Length);
-            Send(packet, out success, out errorMessage);
+            Send(packet, out success, out errorMessage);*/
+            List<byte> packet = new List<byte>();
+            packet.AddRange(Header);
+            packet.AddRange(data);
+            packet.AddRange(Footer);
+            Send(packet.ToArray(), out success, out errorMessage);
             return;
         }
 

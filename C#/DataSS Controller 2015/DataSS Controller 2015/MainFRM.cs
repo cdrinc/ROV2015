@@ -265,7 +265,7 @@ namespace DataSS_Controller_2015
             {
                 if (connected)
                 {
-                    SentData sending = new SentData();
+                    RawSentData sending = new RawSentData();
                     sending.A = (byte)controller.A;
                     sending.B = (byte)controller.B;
                     sending.X = (byte)controller.X;
@@ -304,7 +304,7 @@ namespace DataSS_Controller_2015
         private void errButton_Click(object sender, EventArgs e)
         {
             List<byte> sending = new List<byte>();
-            sending.Add(0x01);
+            sending.Add(0x02);
             sending.AddRange(System.Text.Encoding.ASCII.GetBytes("RST"));
             bool success;
             string message;

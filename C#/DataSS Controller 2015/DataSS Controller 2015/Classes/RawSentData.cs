@@ -14,11 +14,11 @@ namespace DataSS_Controller_2015.Classes
     /// <summary>
     /// Stores and serializes the packet data for transmission through the Connection class.
     /// </summary>
-    public class SentData
+    public class RawSentData
     {
         public byte Meta 
         {
-            get { return 0x00; }
+            get { return 0x01; }
             set {  } 
         }
         public byte LSY { get; set; }

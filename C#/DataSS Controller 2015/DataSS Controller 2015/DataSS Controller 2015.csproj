@@ -65,13 +65,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\CommandData.cs" />
     <Compile Include="Classes\Connection.cs">
       <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Classes\ControllerEventArgs.cs" />
     <Compile Include="Classes\PacketResponse.cs" />
     <Compile Include="Classes\ReceivedData.cs" />
-    <Compile Include="Classes\SentData.cs" />
+    <Compile Include="Classes\RawSentData.cs" />
     <Compile Include="Classes\GameController.cs" />
     <Compile Include="Classes\Controller.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>

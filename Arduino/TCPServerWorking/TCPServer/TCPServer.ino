@@ -22,12 +22,12 @@ byte testByte =  0x00;
 byte packetByte = 0x01;
 byte stringByte = 0x02;
 
-byte exitSafe[] = { 0xAA, 0x0D, 0x03 };
+//byte exitSafe[] = { 0xAA, 0x0D, 0x03 };
 //char stx[] = { '{', '{', '{', '{', '{', '{', '{' };
 //char etx[] = { '}', '}', '}', '}', '}', '}', '}' };
 
 //byte values of connected controllers
-byte controllers[] = { 0x0D };
+byte controllers[] = { 0x0D, 0x0E };
 
 //data packet
 byte packet[20];
@@ -72,21 +72,26 @@ bool checkHeader(byte checkByte[], bool start)
 
 void exitSafeStart()
 {
-  
-  Serial.write(exitSafe, 3);
+  byte exitSafe[] = { 0xAA, 0x00, 0x03 };
+  for (int i = 0; i < sizeof(controllers); i++)
+  {
+    exitSafe[1] = controllers[i];
+    Serial.write(exitSafe, 3);
+  }
 }
 
 void processPacket(byte packet[])
 {
-  int i = 0;
   byte deviceNumber; //lets order the device numbers based on the order of bytes in the packet to reduce variable usage and make logic easier
   byte command; //motor forward
-  byte val = packet[i];
+  byte val = packet[0];
   byte controllerPacket[5];
   for (int i = 0; i < sizeof(controllers); i++)
   {
     deviceNumber = controllers[i]; //lets order the device numbers based on the order of bytes in the packet to reduce variable usage and make logic easier
-    
+    //just for now
+    val = packet[i];
+        
     controllerPacket[0] = 0xAA; //auto-detect baud rate
     controllerPacket[1] = deviceNumber; //device number
     controllerPacket[2] = command; //command byte
@@ -94,7 +99,7 @@ void processPacket(byte packet[])
     //this is just an implementation of the forward/back ls stick so we know 1-127 is neg and 128-255 is pos
     if (val == 0x00)
     {
-      controllerPacket[2] = 0x05;;
+      controllerPacket[2] = 0x05;
       controllerPacket[3] = 0x00;
       controllerPacket[4] = 0x00;
     }
@@ -159,7 +164,7 @@ void loop() {
       if (client.find("{{{{{{{"))
       {
          thisByte = client.read();
-         if (thisByte == 0x00)
+         if (thisByte == 0x01)
          {
            for (int i = 0; client.available() > 0 && i < 20; i++)
            {
@@ -175,7 +180,7 @@ void loop() {
            sendTestPacket(packet, client);
            processPacket(packet);
          }
-         else if (thisByte == 0x01)
+         else if (thisByte == 0x02)
          {
            client.print("{{{{{{{");
            client.write(stringByte);
