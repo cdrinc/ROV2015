@@ -78,7 +78,7 @@
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Classes\Keyboard.cs" />
-    <Compile Include="Classes\Processing.cs" />
+    <Compile Include="Classes\Processor.cs" />
     <Compile Include="Classes\TestingPacket.cs" />
     <Compile Include="Classes\Utilities.cs" />
     <Compile Include="MainFRM.cs">

@@ -17,9 +17,8 @@ namespace DataSS_Controller_2015.Classes
         public byte ForwardFR { get; set; }
         public byte ForwardBL { get; set; }
         public byte ForwardBR { get; set; }
-        public byte StrafeF { get; set; }
-        public byte StrafeB { get; set; }
         public byte VerticalF { get; set; }
+        public byte VerticalM { get; set; }
         public byte VerticalB { get; set; }
         public byte Pump { get; set; }
         public byte Valve { get; set; }
@@ -31,7 +30,7 @@ namespace DataSS_Controller_2015.Classes
         /// <returns>A byte array containing the data to be sent.</returns>
         public byte[] Serialize()
         {
-            List<byte> byteList = new List<byte>() { Meta, ForwardFL, ForwardFR, ForwardBL, ForwardBR, StrafeF, StrafeB, VerticalF, VerticalB, Pump, Valve, Length };
+            List<byte> byteList = new List<byte>() { Meta, ForwardFL, ForwardFR, ForwardBL, ForwardBR, VerticalF, VerticalM, VerticalB, Pump, Valve, Length };
             byte[] byteArr = byteList.ToArray();
             return byteArr;
         }

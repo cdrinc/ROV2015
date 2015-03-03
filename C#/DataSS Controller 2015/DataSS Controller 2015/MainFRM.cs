@@ -235,7 +235,7 @@ namespace DataSS_Controller_2015
         /// <param name="e">The arguments passed by the event.</param>
         private void controller_InputChanged(object sender, EventArgs e)
         {
-            forwardNum.Invoke((Action)delegate { forwardNum.Value = (decimal)controller.LS.Y * 100; });
+            /*forwardNum.Invoke((Action)delegate { forwardNum.Value = (decimal)controller.LS.Y * 100; });
             translateNum.Invoke((Action)delegate { translateNum.Value = (decimal)controller.LS.X * 100; });
             upDownNum.Invoke((Action)delegate { upDownNum.Value = (decimal)controller.RS.Y * 100; });
             yawNum.Invoke((Action)delegate { yawNum.Value = (decimal)controller.RS.X * 100; });
@@ -259,10 +259,36 @@ namespace DataSS_Controller_2015
             upNum.Invoke((Action)delegate { upNum.Value = controller.DUp; });
             leftNum.Invoke((Action)delegate { leftNum.Value = controller.DLeft; });
             rightNum.Invoke((Action)delegate { rightNum.Value = controller.DRight; });
-            downNum.Invoke((Action)delegate { downNum.Value = controller.DDown; });
+            downNum.Invoke((Action)delegate { downNum.Value = controller.DDown; });*/
 
             this.Invoke((Action)delegate
             {
+                forwardNum.Value = (decimal)controller.LS.Y * 100;
+                translateNum.Value = (decimal)controller.LS.X * 100;
+                upDownNum.Value = (decimal)controller.RS.Y * 100;
+                yawNum.Value = (decimal)controller.RS.X * 100;
+
+                aNum.Value = controller.A;
+                bNum.Value = controller.B;
+                xNum.Value = controller.X;
+                yNum.Value = controller.Y;
+
+                rbNum.Value = controller.RB;
+                lbNum.Value = controller.LB;
+                rtNum.Value = (decimal)controller.RT * 100;
+                ltNum.Value = (decimal)controller.LT * 100;
+
+                rsNum.Value = controller.RSClick;
+                lsNum.Value = controller.LSClick;
+
+                startNum.Value = controller.Start;
+                backNum.Value = controller.Back;
+
+                upNum.Value = controller.DUp;
+                leftNum.Value = controller.DLeft;
+                rightNum.Value = controller.DRight;
+                downNum.Value = controller.DDown;
+
                 if (connected)
                 {
                     RawSentData sending = new RawSentData();
