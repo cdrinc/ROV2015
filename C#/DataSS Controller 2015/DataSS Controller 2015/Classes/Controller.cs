@@ -15,6 +15,8 @@ namespace DataSS_Controller_2015.Classes
     /// </summary>
     public class Controller
     {
+        private Processor processor;
+
         // protected fields that hold values for value-type properties (Vector2)
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "For simplicity, it is easier if derived classes can access this field directly.")]
         protected Vector2 ls;
@@ -49,6 +51,9 @@ namespace DataSS_Controller_2015.Classes
         // public properties that are updated with control values as polling is done
         // all integers are either zero or one, false and true respectively
         // all floats are between 0 and 1
+
+        public Processor Processor { get; set; }
+
         public Vector2 LS 
         {
             get { return ls; }

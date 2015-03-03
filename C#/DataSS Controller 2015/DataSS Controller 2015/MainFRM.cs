@@ -235,32 +235,6 @@ namespace DataSS_Controller_2015
         /// <param name="e">The arguments passed by the event.</param>
         private void controller_InputChanged(object sender, EventArgs e)
         {
-            /*forwardNum.Invoke((Action)delegate { forwardNum.Value = (decimal)controller.LS.Y * 100; });
-            translateNum.Invoke((Action)delegate { translateNum.Value = (decimal)controller.LS.X * 100; });
-            upDownNum.Invoke((Action)delegate { upDownNum.Value = (decimal)controller.RS.Y * 100; });
-            yawNum.Invoke((Action)delegate { yawNum.Value = (decimal)controller.RS.X * 100; });
-
-            aNum.Invoke((Action)delegate { aNum.Value = controller.A; });
-            bNum.Invoke((Action)delegate { bNum.Value = controller.B; });
-            xNum.Invoke((Action)delegate { xNum.Value = controller.X; });
-            yNum.Invoke((Action)delegate { yNum.Value = controller.Y; });
-            rbNum.Invoke((Action)delegate { rbNum.Value = controller.RB; });
-            lbNum.Invoke((Action)delegate { lbNum.Value = controller.LB; });
-
-            rtNum.Invoke((Action)delegate { rtNum.Value = (decimal)controller.RT * 100; });
-            ltNum.Invoke((Action)delegate { ltNum.Value = (decimal)controller.LT * 100; });
-
-            rsNum.Invoke((Action)delegate { rsNum.Value = controller.RSClick; });
-            lsNum.Invoke((Action)delegate { lsNum.Value = controller.LSClick; });
-
-            startNum.Invoke((Action)delegate { startNum.Value = controller.Start; });
-            backNum.Invoke((Action)delegate { backNum.Value = controller.Back; });
-
-            upNum.Invoke((Action)delegate { upNum.Value = controller.DUp; });
-            leftNum.Invoke((Action)delegate { leftNum.Value = controller.DLeft; });
-            rightNum.Invoke((Action)delegate { rightNum.Value = controller.DRight; });
-            downNum.Invoke((Action)delegate { downNum.Value = controller.DDown; });*/
-
             this.Invoke((Action)delegate
             {
                 forwardNum.Value = (decimal)controller.LS.Y * 100;
@@ -291,7 +265,7 @@ namespace DataSS_Controller_2015
 
                 if (connected)
                 {
-                    RawSentData sending = new RawSentData();
+                    /*RawSentData sending = new RawSentData();
                     sending.A = (byte)controller.A;
                     sending.B = (byte)controller.B;
                     sending.X = (byte)controller.X;
@@ -311,7 +285,9 @@ namespace DataSS_Controller_2015
                     sending.LSClick = (byte)controller.LSClick;
                     sending.RSClick = (byte)controller.RSClick;
                     sending.Start = (byte)controller.Start;
-                    sending.Back = (byte)controller.Back;
+                    sending.Back = (byte)controller.Back;*/
+
+                    CommandData sending = new CommandData();
 
                     bool success;
                     string errorMessage;

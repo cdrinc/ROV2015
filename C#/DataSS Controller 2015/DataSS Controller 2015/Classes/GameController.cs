@@ -76,6 +76,7 @@ namespace DataSS_Controller_2015.Classes
         /// </summary>
         private void Polling()
         {
+            this.Processor = new Processor();
             while (true)
             {
                 padState = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One);
