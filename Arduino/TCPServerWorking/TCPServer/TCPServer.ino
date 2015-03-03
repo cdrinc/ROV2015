@@ -14,6 +14,8 @@ IPAddress ip(192, 168, 137, 2); //works on windows
 //port set to 13000 for tcp comms with c#
 EthernetServer server(13000);
 boolean alreadyConnected = false; // whether or not the client was connected previously
+EthernetClient client;
+EthernetClient altClient;
 
 //control characters
 byte stx[] = { 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B};
@@ -78,6 +80,7 @@ void exitSafeStart()
     exitSafe[1] = controllers[i];
     Serial.write(exitSafe, 3);
   }
+  delay(25);
 }
 
 void processPacket(byte packet[])
@@ -145,7 +148,10 @@ void sendTestPacket(byte data[], EthernetClient& client)
 
 void loop() {
   // wait for a new client:
-  EthernetClient client = server.available();
+  if (!client || server.available())
+  {
+    client = server.available();
+  }
 
   // when the client sends the first byte, say hello:
   if (client.connected()) {
@@ -155,6 +161,14 @@ void loop() {
       client.print("{{{{{{{");
       client.write(stringByte);
       client.print("Client connected}}}}}}}");
+      exitSafeStart();
+    }
+    
+    if (digitalRead(8) == HIGH)
+    {
+      client.print("{{{{{{{");
+      client.write(stringByte);
+      client.print("Error Detected}}}}}}}");
       exitSafeStart();
     }
 
@@ -192,7 +206,6 @@ void loop() {
               thisByte = client.read();
               footer[i] = thisByte;
            }
-           
            sendTestPacket(packet, client);
            processPacket(packet);
          }
@@ -203,7 +216,8 @@ void loop() {
            client.print("Throwing Error...}}}}}}}");
            pinMode(8, OUTPUT);
            digitalWrite(8, HIGH);
-           delay(25);
+           delay(30);
+           pinMode(8, INPUT);
          }
       }
     }
