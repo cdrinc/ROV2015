@@ -32,16 +32,15 @@ byte stringByte = 0x02;
 byte controllers[] = { 0x0D, 0x0E };
 
 //data packet
-byte packet[20];
+byte testingPacket[20];
+byte prodPacket[11];
 byte header[7];
 byte footer[7];
 
 void setup() {
   pinMode(8, INPUT);
   pinMode(9, OUTPUT);
-  pinMode(7, OUTPUT);
   digitalWrite(9, HIGH);
-  digitalWrite(7, HIGH);
   // initialize the ethernet device
   Ethernet.begin(mac, ip);
   // start listening for clientss
@@ -86,10 +85,44 @@ void exitSafeStart()
 void processPacket(byte packet[])
 {
   byte deviceNumber; //lets order the device numbers based on the order of bytes in the packet to reduce variable usage and make logic easier
-  byte command; //motor forward
-  byte val = packet[0];
+  byte command; //motor forward/backward
+  byte val;
   byte controllerPacket[5];
-  for (int i = 0; i < sizeof(controllers); i++)
+  byte n = 0; //holds controller number
+  //handles the four translate motors, which are the first four in the controllers array
+  for (int i = n; i < 4 && i < sizeof(controllers); i++)
+  {
+    deviceNumber = controllers[i];
+    val = packet[i];
+    
+    controllerPacket[0] = 0xAA; //auto-detect baud rate
+    controllerPacket[1] = deviceNumber; //device number
+    controllerPacket[2] = command; //command byte
+    //insert logic to handle direction based on device number
+    //this is just an implementation of the forward/back ls stick so we know 1-127 is neg and 128-255 is pos
+    if (val == 0x00)
+    {
+      controllerPacket[2] = 0x05;
+      controllerPacket[3] = 0x00;
+      controllerPacket[4] = 0x00;
+    }
+    else
+    {
+      //handles setting the speed if val is a byte (0-255) e.g. bound to packet[0] (LSY)
+      byte dir = val <= 126 ? 0x06 : 0x05;
+      byte minInitialRange = dir == 0x06 ? 1 : 128; //gets the initial min for mapping based on direction
+      byte maxInitialRange = dir == 0x06 ? 127 : 255; //gets the initial max for mapping based on direction
+      int motorSpeed = map(val,minInitialRange,maxInitialRange,0,3200);
+      //this handles setting the motor speed if val is binary (one or zero) e.g. bound to packet[6] (A)
+      //byte dir = 0x05;
+      //int motorSpeed = val == 0 ? 0 : 1000;
+      controllerPacket[2] = dir;
+      controllerPacket[3] = motorSpeed % 32; //how to get the first 5 bits
+      controllerPacket[4] = motorSpeed / 32; //how to get the last 7 bits
+    }
+    Serial.write(controllerPacket, 5);
+  }
+  /*for (int i = 0; i < sizeof(controllers); i++)
   {
     deviceNumber = controllers[i]; //lets order the device numbers based on the order of bytes in the packet to reduce variable usage and make logic easier
     //just for now
@@ -114,15 +147,15 @@ void processPacket(byte packet[])
       byte maxInitialRange = dir == 0x06 ? 127 : 255; //gets the initial max for mapping based on direction
       int motorSpeed = map(val,minInitialRange,maxInitialRange,0,3200);
       //this handles setting the motor speed if val is binary (one or zero) e.g. bound to packet[6] (A)
-      /*byte dir = 0x05;
-      int motorSpeed = val == 0 ? 0 : 1000;*/
+      //byte dir = 0x05;
+      //int motorSpeed = val == 0 ? 0 : 1000;
       controllerPacket[2] = dir;
       controllerPacket[3] = motorSpeed % 32; //how to get the first 5 bits
       controllerPacket[4] = motorSpeed / 32; //how to get the last 7 bits
     }
-   // Serial.print(dir);
+    // Serial.print(dir);
     Serial.write(controllerPacket, 5);
-  }
+  }*/
 }
 
 void sendTestPacket(byte data[], EthernetClient& client)
@@ -183,7 +216,7 @@ void loop() {
            for (int i = 0; client.available() > 0 && i < 11; i++)
            {
               thisByte = client.read();
-              packet[i] = thisByte;
+              prodPacket[i] = thisByte;
            }
            for (int i = 0; client.available() > 0 && i < 7; i++)
            {
@@ -191,23 +224,23 @@ void loop() {
               footer[i] = thisByte;
            }
            
-           sendTestPacket(packet, client);
-           processPacket(packet);
+           sendTestPacket(prodPacket, client);
+           processPacket(prodPacket);
          }
          else if (thisByte == 0x01)
          {
            for (int i = 0; client.available() > 0 && i < 20; i++)
            {
               thisByte = client.read();
-              packet[i] = thisByte;
+              testingPacket[i] = thisByte;
            }
            for (int i = 0; client.available() > 0 && i < 7; i++)
            {
               thisByte = client.read();
               footer[i] = thisByte;
            }
-           sendTestPacket(packet, client);
-           processPacket(packet);
+           sendTestPacket(testingPacket, client);
+           processPacket(testingPacket);
          }
          else if (thisByte == 0x02)
          {
