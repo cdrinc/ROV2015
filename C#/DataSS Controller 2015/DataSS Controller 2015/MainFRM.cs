@@ -25,7 +25,8 @@ namespace DataSS_Controller_2015
     public partial class MainFRM : Form
     {
         private TcpConnection connection;
-        private Controller controller;
+        //private Controller controller;
+        private Processor DataProcessor;
         private bool connected = false;
 
         /// <summary>
@@ -116,9 +117,8 @@ namespace DataSS_Controller_2015
         /// <param name="e">The arguments passed by the event.</param>
         private void MainFRM_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (controller != null)
-                if (controller is GameController)
-                    ((GameController)controller).EndPolling();
+            if (DataProcessor != null)
+                DataProcessor.End();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:ElementMustBeginWithUpperCaseLetter", Justification = "Reviewed. Suppression is OK here.")]
@@ -153,20 +153,25 @@ namespace DataSS_Controller_2015
         {
             if (isGamepad)
             {
-                controller = new Classes.GameController();
-                controller.InputChanged += new Controller.ControllerHandler(controller_InputChanged);
-                controller.IncomingData += new Controller.ReceiveHandler(controller_IncomingData);
-                ((GameController)controller).BeginPolling();
+                //controller = new Classes.GameController();
+                //controller.InputChanged += new Controller.ControllerHandler(controller_InputChanged);
+                //controller.IncomingData += new Controller.ReceiveHandler(controller_IncomingData);
+                //((GameController)controller).BeginPolling();
                 controllerStartButton.Text = "Gamepad";
+                DataProcessor = new Processor(true, connection);
             }
             else
             {
-                controller = new Classes.KeyboardController();
-                controller.InputChanged += new Controller.ControllerHandler(controller_InputChanged);
-                ((KeyboardController)controller).BeginPolling();
+                //controller = new Classes.KeyboardController();
+                //controller.InputChanged += new Controller.ControllerHandler(controller_InputChanged);
+                //((KeyboardController)controller).BeginPolling();
                 controllerStartButton.Text = "Keyboard";
+                DataProcessor = new Processor(false, connection);
             }
-
+            
+            DataProcessor.InputChanged += new Processor.ProcessorHandler(controller_InputChanged);
+            DataProcessor.IncomingData += new Processor.ReceiveHandler(controller_IncomingData);
+            DataProcessor.Begin();
             controllerStartButton.Enabled = false;
         }
 
@@ -221,8 +226,6 @@ namespace DataSS_Controller_2015
                         }
                     }
                 }
-
-                return;
             });
         }
 
@@ -237,31 +240,31 @@ namespace DataSS_Controller_2015
         {
             this.Invoke((Action)delegate
             {
-                forwardNum.Value = (decimal)controller.LS.Y * 100;
-                translateNum.Value = (decimal)controller.LS.X * 100;
-                upDownNum.Value = (decimal)controller.RS.Y * 100;
-                yawNum.Value = (decimal)controller.RS.X * 100;
+                forwardNum.Value = (decimal)DataProcessor.Controller.LS.Y * 100;
+                translateNum.Value = (decimal)DataProcessor.Controller.LS.X * 100;
+                upDownNum.Value = (decimal)DataProcessor.Controller.RS.Y * 100;
+                yawNum.Value = (decimal)DataProcessor.Controller.RS.X * 100;
 
-                aNum.Value = controller.A;
-                bNum.Value = controller.B;
-                xNum.Value = controller.X;
-                yNum.Value = controller.Y;
+                aNum.Value = DataProcessor.Controller.A;
+                bNum.Value = DataProcessor.Controller.B;
+                xNum.Value = DataProcessor.Controller.X;
+                yNum.Value = DataProcessor.Controller.Y;
 
-                rbNum.Value = controller.RB;
-                lbNum.Value = controller.LB;
-                rtNum.Value = (decimal)controller.RT * 100;
-                ltNum.Value = (decimal)controller.LT * 100;
+                rbNum.Value = DataProcessor.Controller.RB;
+                lbNum.Value = DataProcessor.Controller.LB;
+                rtNum.Value = (decimal)DataProcessor.Controller.RT * 100;
+                ltNum.Value = (decimal)DataProcessor.Controller.LT * 100;
 
-                rsNum.Value = controller.RSClick;
-                lsNum.Value = controller.LSClick;
+                rsNum.Value = DataProcessor.Controller.RSClick;
+                lsNum.Value = DataProcessor.Controller.LSClick;
 
-                startNum.Value = controller.Start;
-                backNum.Value = controller.Back;
+                startNum.Value = DataProcessor.Controller.Start;
+                backNum.Value = DataProcessor.Controller.Back;
 
-                upNum.Value = controller.DUp;
-                leftNum.Value = controller.DLeft;
-                rightNum.Value = controller.DRight;
-                downNum.Value = controller.DDown;
+                upNum.Value = DataProcessor.Controller.DUp;
+                leftNum.Value = DataProcessor.Controller.DLeft;
+                rightNum.Value = DataProcessor.Controller.DRight;
+                downNum.Value = DataProcessor.Controller.DDown;
 
                 if (connected)
                 {
@@ -287,7 +290,7 @@ namespace DataSS_Controller_2015
                     sending.Start = (byte)controller.Start;
                     sending.Back = (byte)controller.Back;*/
 
-                    CommandData sending = new CommandData();
+                    CommandData sending = DataProcessor.Sending;
 
                     bool success;
                     string errorMessage;
