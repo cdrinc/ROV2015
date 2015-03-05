@@ -169,8 +169,8 @@ namespace DataSS_Controller_2015
                 DataProcessor = new Processor(false, connection);
             }
             
-            DataProcessor.InputChanged += new Processor.ProcessorHandler(controller_InputChanged);
-            DataProcessor.IncomingData += new Processor.ReceiveHandler(controller_IncomingData);
+            DataProcessor.InputChanged += new Processor.ProcessorHandler(processor_InputChanged);
+            DataProcessor.IncomingData += new Processor.ReceiveHandler(processor_IncomingData);
             DataProcessor.Begin();
             controllerStartButton.Enabled = false;
         }
@@ -206,25 +206,19 @@ namespace DataSS_Controller_2015
         /// </summary>
         /// <param name="sender">The object raising the event.</param>
         /// <param name="e">The arguments passed by the event.</param>
-        private void controller_IncomingData(object sender, ControllerEventArgs e)
+        private void processor_IncomingData(object sender, ProcessorEventArgs e)
         {
             this.Invoke((Action)delegate
             {
-                ReceivedData data;
-                if (connection != null)
+                ReceivedData data = e.Data;
+                
+                if (data is PacketResponse||data is TestingPacket)
                 {
-                    if (connection.Connected && connection.DataAvailable())
-                    {
-                        data = connection.GetResponse();
-                        if (data is PacketResponse||data is TestingPacket)
-                        {
-                            dataListenBox.AddToEnd(data.ToString());
-                        }
-                        else
-                        {
-                            ethernetListenListBox.AddToEnd(data.ToString());
-                        }
-                    }
+                    dataListenBox.AddToEnd(data.ToString());
+                }
+                else
+                {
+                    ethernetListenListBox.AddToEnd(data.ToString());
                 }
             });
         }
@@ -236,7 +230,7 @@ namespace DataSS_Controller_2015
         /// </summary>
         /// <param name="sender">The object raising the event.</param>
         /// <param name="e">The arguments passed by the event.</param>
-        private void controller_InputChanged(object sender, EventArgs e)
+        private void processor_InputChanged(object sender, ProcessorEventArgs e)
         {
             this.Invoke((Action)delegate
             {
@@ -290,7 +284,7 @@ namespace DataSS_Controller_2015
                     sending.Start = (byte)controller.Start;
                     sending.Back = (byte)controller.Back;*/
 
-                    CommandData sending = DataProcessor.Sending;
+                    CommandData sending = DataProcessor.SendData;
 
                     bool success;
                     string errorMessage;

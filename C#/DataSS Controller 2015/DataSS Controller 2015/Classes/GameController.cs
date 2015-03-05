@@ -71,7 +71,7 @@ namespace DataSS_Controller_2015.Classes
                 return false;
         }
 
-        public void Poll()
+        public override void Poll()
         {
             padState = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One);
             bool flag = false;

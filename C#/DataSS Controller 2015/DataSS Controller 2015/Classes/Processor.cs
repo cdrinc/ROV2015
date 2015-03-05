@@ -13,7 +13,7 @@ namespace DataSS_Controller_2015.Classes
     /// </summary>
     public class Processor
     {
-        private CommandData sending;
+        private CommandData sendData;
         private Controller controller;
         private PacketResponse incoming;
         private TcpConnection Connection;
@@ -24,14 +24,14 @@ namespace DataSS_Controller_2015.Classes
         /// </summary>
         /// <param name="sender">The object raising the event.</param>
         /// <param name="e">The arguments passed by the event.</param>
-        public delegate void ProcessorHandler(object sender, ControllerEventArgs e);
+        public delegate void ProcessorHandler(object sender, ProcessorEventArgs e);
 
         /// <summary>
         /// A delegate representing a method to be called when the IncomingData event is fired.
         /// </summary>
         /// <param name="sender">The object raising the event.</param>
         /// <param name="e">The arguments passed by the event.</param>
-        public delegate void ReceiveHandler(object sender, ControllerEventArgs e);
+        public delegate void ReceiveHandler(object sender, ProcessorEventArgs e);
 
         /// <summary>
         /// An event that indicates that the controller's state has changed.
@@ -43,12 +43,9 @@ namespace DataSS_Controller_2015.Classes
         /// </summary>
         public event ReceiveHandler IncomingData;
 
-        private delegate ReceivedData Recieve();
-        private Recieve ReadData;
-
-        public CommandData Sending
+        public CommandData SendData
         {
-            get { return this.sending; }
+            get { return this.sendData; }
             set { }
         }
 
@@ -67,7 +64,6 @@ namespace DataSS_Controller_2015.Classes
         public Processor(bool gamePad, TcpConnection connection)
         {
             this.Connection = connection;
-            ReadData += Connection.GetResponse;
             if (gamePad)
             {
                 controller = new GameController();
@@ -80,29 +76,147 @@ namespace DataSS_Controller_2015.Classes
 
         public void Begin()
         {
-
+            PollThread = new Thread(new ThreadStart(Poll));
+            PollThread.Start();
         }
 
         public void End()
         {
-
+            if (PollThread != null)
+                if (PollThread.IsAlive)
+                    PollThread.Abort();
         }
 
         public void Poll()
         {
-            controller.Poll();
-            ReceivedData sensorData = (ReceivedData)MainFRM.ActiveForm.Invoke(ReadData);
+            while (true)
+            {
+                controller.Poll();
+                ReceivedData sensorData = null;
+                // shouldnt use activeform
+                MainFRM.ActiveForm.Invoke((Action)delegate
+                {
+                    if (Connection != null)
+                    {
+                        if (Connection.Connected && Connection.DataAvailable())
+                        {
+                            sensorData = Connection.GetResponse();
+                            ReportData(sensorData);
+                        }
+                    }
+                });
 
+                this.sendData = Transform(controller, sensorData);
+                ReportController();
+            }
+            //bool success;
+            //string errorMessage;
+            //Connection.SendPacket(sending.Serialize(), out success, out errorMessage);
+
+            //if (!success)
+            //{
+            //    ReceivedData error = new ReceivedData(System.Text.Encoding.ASCII.GetBytes(errorMessage));
+            //    ReportData(error);
+            //    MainFRM.ActiveForm.Invoke((Action)delegate
+            //    {
+            //        Connection.Close();
+            //    });
+            //}
+
+        }
+
+        private void ReportData(ReceivedData data)
+        {
+            IncomingData(this, new ProcessorEventArgs(data));
         }
 
         public CommandData Transform(Controller controller, ReceivedData sensorData)
         {
+            CommandData data = new CommandData();
+            data.Pump = (byte)controller.A;
+            #region Length
+            if (controller.DLeft != 0)
+            {
+                data.Length = 1;
+            }
+            else if (controller.DRight != 0)
+            {
+                data.Length = 2;
+            }
+            else
+            {
+                data.Length = 0;
+            }
+            #endregion
 
+            #region Valve
+            if (controller.DUp != 0)
+            {
+                data.Valve = 1;
+            }
+            else if (controller.DDown != 0)
+            {
+                data.Valve = 2;
+            }
+            else
+            {
+                data.Valve = 0;
+            }
+            #endregion
+
+            data.VerticalB = Utilities.MapStick(controller.RS.Y);
+            data.VerticalM = Utilities.MapStick(controller.RS.Y);
+            data.VerticalF = Utilities.MapStick(controller.RS.Y);
+
+            //if (controller.LS.X > 0 && controller.LS.Y > 0)
+            //{
+            //    data.TranslateFL = Utilities.MapStick(controller.LS.Length());
+            //    data.TranslateBR = Utilities.MapStick(-1 * controller.LS.Length());
+            //}
+            //else if (controller.LS.X < 0 && controller.LS.Y < 0)
+            //{
+            //    data.TranslateFL = Utilities.MapStick(-1 * controller.LS.Length());
+            //    data.TranslateBR = Utilities.MapStick(controller.LS.Length());
+            //}
+            // this might work
+            // idk
+            if (Math.Sign(controller.LS.X) == Math.Sign(controller.LS.Y))
+            {
+                data.TranslateFL = Utilities.MapStick(Math.Sign(controller.LS.Y) * controller.LS.Length());
+                data.TranslateBR = Utilities.MapStick(Math.Sign(controller.LS.Y) * controller.LS.Length());
+
+                data.TranslateFR = Utilities.MapStick(controller.LS.Y - controller.LS.X);
+                data.TranslateBL = Utilities.MapStick(controller.LS.Y - controller.LS.X);
+            }
+            else if (controller.LS.X == 0)
+            {
+                data.TranslateFL = Utilities.MapStick(controller.LS.Y);
+                data.TranslateFR = Utilities.MapStick(controller.LS.Y);
+                data.TranslateBL = Utilities.MapStick(controller.LS.Y);
+                data.TranslateBL = Utilities.MapStick(controller.LS.Y);
+            }
+            else if (controller.LS.Y == 0)
+            {
+                data.TranslateFL = Utilities.MapStick(controller.LS.X);
+                data.TranslateFR = Utilities.MapStick(controller.LS.X);
+                data.TranslateBL = Utilities.MapStick(controller.LS.X);
+                data.TranslateBL = Utilities.MapStick(controller.LS.X);
+            }
+            else
+            {
+                data.TranslateFL = Utilities.MapStick(controller.LS.Y - controller.LS.X);
+                data.TranslateBR = Utilities.MapStick(controller.LS.Y - controller.LS.X);
+
+                data.TranslateFR = Utilities.MapStick(Math.Sign(controller.LS.Y) * controller.LS.Length());
+                data.TranslateBL = Utilities.MapStick(Math.Sign(controller.LS.Y) * controller.LS.Length());
+            }
+
+            return data;
         }
 
-        public void Update()
+        private void ReportController()
         {
-            InputChanged(this, new ControllerEventArgs());
+            InputChanged(this, new ProcessorEventArgs());
         }
 
     }

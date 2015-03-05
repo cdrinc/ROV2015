@@ -9,7 +9,7 @@ namespace DataSS_Controller_2015.Classes
     /// <summary>
     /// An object that corresponds to a standard, data-containing packet response from the microcontroller.
     /// </summary>
-    class PacketResponse : ReceivedData
+    public class PacketResponse : ReceivedData
     {
         public float GyroX;
         public float GyroY;
