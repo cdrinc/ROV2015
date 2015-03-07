@@ -16,6 +16,7 @@ namespace DataSS_Controller_2015.Classes
         private CommandData sendData;
         private Controller controller;
         private PacketResponse incoming;
+        private ReceivedData sensorData;
         private TcpConnection Connection;
         private Thread PollThread;
 
@@ -60,6 +61,12 @@ namespace DataSS_Controller_2015.Classes
             get { return this.incoming; }
             set { }
         }
+        
+        public ReceivedData SensorData
+        {
+            get { return this.sensorData; }
+            set { this.sensorData = value; }
+        }
 
         public Processor(bool gamePad, TcpConnection connection)
         {
@@ -91,23 +98,21 @@ namespace DataSS_Controller_2015.Classes
         {
             while (true)
             {
-                controller.Poll();
-                ReceivedData sensorData = null;
-                // shouldnt use activeform
-                MainFRM.ActiveForm.Invoke((Action)delegate
-                {
-                    if (Connection != null)
-                    {
-                        if (Connection.Connected && Connection.DataAvailable())
-                        {
-                            sensorData = Connection.GetResponse();
-                            ReportData(sensorData);
-                        }
-                    }
-                });
+                bool changed;
+                // polls controller
+                controller.Poll(out changed);
+                // gets any sensor data and stores it in sensorData
+                GetData();
 
+                // transforms the controller data
+                // modification by sensorData yet to be implemented
                 this.sendData = Transform(controller, sensorData);
-                ReportController();
+
+                // if the controller state has changed, reports it to the gui thread and sends the data down the pipe
+                if (changed)
+                {
+                    ReportController();
+                }
             }
             //bool success;
             //string errorMessage;
@@ -125,9 +130,9 @@ namespace DataSS_Controller_2015.Classes
 
         }
 
-        private void ReportData(ReceivedData data)
+        private void GetData()
         {
-            IncomingData(this, new ProcessorEventArgs(data));
+            IncomingData(this, new ProcessorEventArgs());
         }
 
         public CommandData Transform(Controller controller, ReceivedData sensorData)
@@ -193,19 +198,19 @@ namespace DataSS_Controller_2015.Classes
                 data.TranslateFL = Utilities.MapStick(controller.LS.Y);
                 data.TranslateFR = Utilities.MapStick(controller.LS.Y);
                 data.TranslateBL = Utilities.MapStick(controller.LS.Y);
-                data.TranslateBL = Utilities.MapStick(controller.LS.Y);
+                data.TranslateBR = Utilities.MapStick(controller.LS.Y);
             }
             else if (controller.LS.Y == 0)
             {
                 data.TranslateFL = Utilities.MapStick(controller.LS.X);
                 data.TranslateFR = Utilities.MapStick(controller.LS.X);
                 data.TranslateBL = Utilities.MapStick(controller.LS.X);
-                data.TranslateBL = Utilities.MapStick(controller.LS.X);
+                data.TranslateBR = Utilities.MapStick(controller.LS.X);
             }
             else
             {
-                data.TranslateFL = Utilities.MapStick(controller.LS.Y - controller.LS.X);
-                data.TranslateBR = Utilities.MapStick(controller.LS.Y - controller.LS.X);
+                data.TranslateFL = Utilities.MapStick(controller.LS.Y + controller.LS.X);
+                data.TranslateBR = Utilities.MapStick(controller.LS.Y + controller.LS.X);
 
                 data.TranslateFR = Utilities.MapStick(Math.Sign(controller.LS.Y) * controller.LS.Length());
                 data.TranslateBL = Utilities.MapStick(Math.Sign(controller.LS.Y) * controller.LS.Length());

@@ -10,7 +10,7 @@ namespace DataSS_Controller_2015.Classes
     {
         public byte Meta
         {
-            get { return 0x00; }
+            get { return 0x01; }
             set { }
         }
         public byte TranslateFL { get; set; }

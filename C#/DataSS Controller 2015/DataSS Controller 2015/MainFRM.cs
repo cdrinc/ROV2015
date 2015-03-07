@@ -210,15 +210,25 @@ namespace DataSS_Controller_2015
         {
             this.Invoke((Action)delegate
             {
-                ReceivedData data = e.Data;
-                
-                if (data is PacketResponse||data is TestingPacket)
+                ReceivedData data;
+
+                if (connection != null)
                 {
-                    dataListenBox.AddToEnd(data.ToString());
-                }
-                else
-                {
-                    ethernetListenListBox.AddToEnd(data.ToString());
+                    if (connection.Connected && connection.DataAvailable())
+                    {
+                        data = connection.GetResponse();
+
+                        if (data is PacketResponse || data is TestingPacket)
+                        {
+                            dataListenBox.AddToEnd(data.ToString());
+                        }
+                        else
+                        {
+                            ethernetListenListBox.AddToEnd(data.ToString());
+                        }
+
+                        DataProcessor.SensorData = data;
+                    }
                 }
             });
         }

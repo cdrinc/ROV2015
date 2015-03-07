@@ -87,7 +87,7 @@ namespace DataSS_Controller_2015.Classes
             throw new NotImplementedException();
         }
 
-        public virtual void Poll()
+        public virtual void Poll(out bool changed)
         {
             throw new NotImplementedException();
         }
