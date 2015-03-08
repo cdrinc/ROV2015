@@ -8,18 +8,131 @@ namespace DataSS_Controller_2015.Classes
 {
     public class CommandData
     {
+        private byte translateFR;
+        private byte translateFL;
+        private byte translateBL;
+        private byte translateBR;
+        private byte verticalF;
+        private byte verticalM;
+        private byte verticalB;
+
         public byte Meta
         {
             get { return 0x01; }
             set { }
         }
-        public byte TranslateFL { get; set; }
-        public byte TranslateFR { get; set; }
-        public byte TranslateBL { get; set; }
-        public byte TranslateBR { get; set; }
-        public byte VerticalF { get; set; }
-        public byte VerticalM { get; set; }
-        public byte VerticalB { get; set; }
+        public byte TranslateFL
+        {
+            get { return translateFL; }
+            set
+            {
+                if (value != 125)
+                {
+                    translateFL = value;
+                }
+                else
+                {
+                    translateFL = 126;
+                }
+            }
+        }
+
+        public byte TranslateFR
+        {
+            get { return translateFR; }
+            set
+            {
+                if (value != 125)
+                {
+                    translateFR = value;
+                }
+                else
+                {
+                    translateFR = 126;
+                }
+            }
+        }
+
+        public byte TranslateBL
+        {
+            get { return translateBL; }
+            set
+            {
+                if (value != 125)
+                {
+                    translateBL = value;
+                }
+                else
+                {
+                    translateBL = 126;
+                }
+            }
+        }
+
+        public byte TranslateBR
+        {
+            get { return translateBR; }
+            set
+            {
+                if (value != 125)
+                {
+                    translateBR = value;
+                }
+                else
+                {
+                    translateBR = 126;
+                }
+            }
+        }
+
+        public byte VerticalF
+        {
+            get { return verticalF; }
+            set
+            {
+                if (value != 125)
+                {
+                    verticalF = value;
+                }
+                else
+                {
+                    verticalF = 126;
+                }
+            }
+        }
+
+        public byte VerticalM
+        {
+            get { return verticalM; }
+            set
+            {
+                if (value != 125)
+                {
+                    verticalM = value;
+                }
+                else
+                {
+                    verticalM = 126;
+                }
+            }
+        }
+
+        public byte VerticalB
+        {
+            get { return verticalB; }
+            set
+            {
+                if (value != 125)
+                {
+                    verticalB = value;
+                }
+                else
+                {
+                    verticalB = 126;
+                }
+            }
+        }
+
         public byte Pump { get; set; }
         public byte Valve { get; set; }
         public byte Length { get; set; }
@@ -30,7 +143,7 @@ namespace DataSS_Controller_2015.Classes
         /// <returns>A byte array containing the data to be sent.</returns>
         public byte[] Serialize()
         {
-            List<byte> byteList = new List<byte>() { Meta, TranslateFL, TranslateFR, TranslateBL, TranslateBR, VerticalF, VerticalM, VerticalB, Pump, Valve, Length };
+            List<byte> byteList = new List<byte>() { Meta, translateFL, translateFR, translateBL, translateBR, verticalF, verticalM, verticalB, Pump, Valve, Length };
             byte[] byteArr = byteList.ToArray();
             return byteArr;
         }

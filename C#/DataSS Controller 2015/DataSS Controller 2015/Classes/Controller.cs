@@ -53,7 +53,10 @@ namespace DataSS_Controller_2015.Classes
         public Vector2 LS 
         {
             get { return ls; }
-            set { }
+            set 
+            { 
+                
+            }
         }
 
         public Vector2 RS 
