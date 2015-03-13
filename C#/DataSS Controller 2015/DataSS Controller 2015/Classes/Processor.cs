@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 
 namespace DataSS_Controller_2015.Classes
@@ -15,10 +16,14 @@ namespace DataSS_Controller_2015.Classes
     {
         private CommandData sendData;
         private Controller controller;
+        private enum ControlStates { Manual, Hover, Mediated}
+        private int ProcessorState;
+        private const int TimerInterval = 20;
         private PacketResponse incoming;
         private ReceivedData sensorData;
         private TcpConnection Connection;
         private Thread PollThread;
+        private System.Timers.Timer ModelTimer;
 
         /// <summary>
         /// A delegate representing a method to be called when the InputChanged event is fired.
@@ -68,8 +73,10 @@ namespace DataSS_Controller_2015.Classes
             set { this.sensorData = value; }
         }
 
+
         public Processor(bool gamePad, TcpConnection connection)
         {
+            ProcessorState = (int)ControlStates.Manual;
             this.Connection = connection;
             if (gamePad)
             {
@@ -96,38 +103,21 @@ namespace DataSS_Controller_2015.Classes
 
         public void Poll()
         {
-            while (true)
+            bool changed;
+            // polls controller
+            controller.Poll(out changed);
+            // gets any sensor data and stores it in sensorData
+            GetData();
+
+            // transforms the controller data
+            // modification by sensorData yet to be implemented
+            this.sendData = Transform(controller, sensorData);
+
+            // if the controller state has changed, reports it to the gui thread and sends the data down the pipe
+            if (changed)
             {
-                bool changed;
-                // polls controller
-                controller.Poll(out changed);
-                // gets any sensor data and stores it in sensorData
-                GetData();
-
-                // transforms the controller data
-                // modification by sensorData yet to be implemented
-                this.sendData = Transform(controller, sensorData);
-
-                // if the controller state has changed, reports it to the gui thread and sends the data down the pipe
-                if (changed)
-                {
-                    ReportController();
-                }
+                ReportController();
             }
-            //bool success;
-            //string errorMessage;
-            //Connection.SendPacket(sending.Serialize(), out success, out errorMessage);
-
-            //if (!success)
-            //{
-            //    ReceivedData error = new ReceivedData(System.Text.Encoding.ASCII.GetBytes(errorMessage));
-            //    ReportData(error);
-            //    MainFRM.ActiveForm.Invoke((Action)delegate
-            //    {
-            //        Connection.Close();
-            //    });
-            //}
-
         }
 
         private void GetData()
@@ -135,11 +125,14 @@ namespace DataSS_Controller_2015.Classes
             IncomingData(this, new ProcessorEventArgs());
         }
 
+        
         public CommandData Transform(Controller controller, ReceivedData sensorData)
         {
             CommandData data = new CommandData();
+            // this sets the Pump motor depending on the state of the A button
             data.Pump = (byte)controller.A;
             #region Length
+            // this sets the Length motor to either full on or full off, depending on the state of the DPad
             if (controller.DLeft != 0)
             {
                 data.Length = 1;
@@ -155,6 +148,7 @@ namespace DataSS_Controller_2015.Classes
             #endregion
 
             #region Valve
+            // this sets the Valve motor to either full on or full off, depending on the state of the DPad
             if (controller.DUp != 0)
             {
                 data.Valve = 1;
@@ -169,22 +163,13 @@ namespace DataSS_Controller_2015.Classes
             }
             #endregion
 
+            // these lines set the vertical motors to the Y-value of RS
             data.VerticalB = Utilities.MapStick(controller.RS.Y);
             data.VerticalM = Utilities.MapStick(controller.RS.Y);
             data.VerticalF = Utilities.MapStick(controller.RS.Y);
 
-            //if (controller.LS.X > 0 && controller.LS.Y > 0)
-            //{
-            //    data.TranslateFL = Utilities.MapStick(controller.LS.Length());
-            //    data.TranslateBR = Utilities.MapStick(-1 * controller.LS.Length());
-            //}
-            //else if (controller.LS.X < 0 && controller.LS.Y < 0)
-            //{
-            //    data.TranslateFL = Utilities.MapStick(-1 * controller.LS.Length());
-            //    data.TranslateBR = Utilities.MapStick(controller.LS.Length());
-            //}
-            // this might work
-            // idk
+            // sometimes the Length property is slightly greater than 1
+            // if that happens, this rectifies it
             float l = controller.LS.Length();
             if (l > 1)
             {
