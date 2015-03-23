@@ -71,6 +71,7 @@
     </Compile>
     <Compile Include="Classes\ControllerEventArgs.cs" />
     <Compile Include="Classes\PacketResponse.cs" />
+    <Compile Include="Classes\ProcessorEventArgs.cs" />
     <Compile Include="Classes\ReceivedData.cs" />
     <Compile Include="Classes\RawSentData.cs" />
     <Compile Include="Classes\GameController.cs" />

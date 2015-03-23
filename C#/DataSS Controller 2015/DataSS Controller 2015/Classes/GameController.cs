@@ -71,12 +71,131 @@ namespace DataSS_Controller_2015.Classes
                 return false;
         }
 
+        public override void Poll(out bool changed)
+        {
+            padState = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One);
+            bool flag = false;
+            #region Sticks
+            if (ls != padState.ThumbSticks.Left)
+            {
+                ls = padState.ThumbSticks.Left;
+                flag = true;
+            }
+
+            if (rs != padState.ThumbSticks.Right)
+            {
+                rs = padState.ThumbSticks.Right;
+                flag = true;
+            }
+
+            #endregion
+            #region Triggers
+            if (LT != padState.Triggers.Left)
+            {
+                LT = padState.Triggers.Left;
+                flag = true;
+            }
+
+            if (RT != padState.Triggers.Right)
+            {
+                RT = padState.Triggers.Right;
+                flag = true;
+            }
+
+            #endregion
+            #region Buttons, Shoulders, DPad, Stick Clicks, Start/Select
+            if (A != (int)padState.Buttons.A)
+            {
+                A = (int)padState.Buttons.A;
+                flag = true;
+            }
+
+            if (B != (int)padState.Buttons.B)
+            {
+                B = (int)padState.Buttons.B;
+                flag = true;
+            }
+
+            if (X != (int)padState.Buttons.X)
+            {
+                X = (int)padState.Buttons.X;
+                flag = true;
+            }
+
+            if (Y != (int)padState.Buttons.Y)
+            {
+                Y = (int)padState.Buttons.Y;
+                flag = true;
+            }
+
+            if (LB != (int)padState.Buttons.LeftShoulder)
+            {
+                LB = (int)padState.Buttons.LeftShoulder;
+                flag = true;
+            }
+
+            if (RB != (int)padState.Buttons.RightShoulder)
+            {
+                RB = (int)padState.Buttons.RightShoulder;
+                flag = true;
+            }
+
+            if (LSClick != (int)padState.Buttons.LeftStick)
+            {
+                LSClick = (int)padState.Buttons.LeftStick;
+                flag = true;
+            }
+
+            if (RSClick != (int)padState.Buttons.RightStick)
+            {
+                RSClick = (int)padState.Buttons.RightStick;
+                flag = true;
+            }
+
+            if (DUp != (int)padState.DPad.Up)
+            {
+                DUp = (int)padState.DPad.Up;
+                flag = true;
+            }
+
+            if (DLeft != (int)padState.DPad.Left)
+            {
+                DLeft = (int)padState.DPad.Left;
+                flag = true;
+            }
+
+            if (DRight != (int)padState.DPad.Right)
+            {
+                DRight = (int)padState.DPad.Right;
+                flag = true;
+            }
+
+            if (DDown != (int)padState.DPad.Down)
+            {
+                DDown = (int)padState.DPad.Down;
+                flag = true;
+            } 
+
+            if (Start != (int)padState.Buttons.Start)
+            {
+                Start = (int)padState.Buttons.Start;
+                flag = true;
+            }
+
+            if (Back != (int)padState.Buttons.Back)
+            {
+                Back = (int)padState.Buttons.Back;
+                flag = true;
+            }
+            #endregion                
+            changed = flag;
+        }
+
         /// <summary>
         /// Polls the gamepad to detect state changes.
         /// </summary>
         private void Polling()
         {
-            this.Processor = new Processor();
             while (true)
             {
                 padState = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One);

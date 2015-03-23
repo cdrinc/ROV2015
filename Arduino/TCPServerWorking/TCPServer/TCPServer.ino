@@ -20,8 +20,8 @@ EthernetClient altClient;
 //control characters
 byte stx[] = { 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B};
 byte etx[] = { 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D};
-byte testByte =  0x00;
-byte packetByte = 0x01;
+byte prodByte =  0x00;
+byte testByte = 0x01;
 byte stringByte = 0x02;
 
 //byte exitSafe[] = { 0xAA, 0x0D, 0x03 };
@@ -33,7 +33,7 @@ byte controllers[] = { 0x0D, 0x0E };
 
 //data packet
 byte testingPacket[20];
-byte prodPacket[11];
+byte prodPacket[10];
 byte header[7];
 byte footer[7];
 
@@ -158,9 +158,29 @@ void processPacket(byte packet[])
   }*/
 }
 
+void sendProdPacket(byte data[], EthernetClient& client)
+{
+  byte sendPacket[27];
+  for (int i = 0; i < 7; i++)
+  {
+     sendPacket[i] = '{'; 
+  }
+  sendPacket[7] = prodByte;
+  for (int i = 0; i < 10; i++)
+  {
+     sendPacket[i + 8] = data[i];
+  }
+  for (int i = 0; i < 7; i++)
+  {
+     sendPacket[i + 20] = '}'; 
+  }
+  
+  client.write(sendPacket, 27);
+}
+
 void sendTestPacket(byte data[], EthernetClient& client)
 {
-  byte sendPacket[35];
+  byte sendPacket[25];
   for (int i = 0; i < 7; i++)
   {
      sendPacket[i] = '{'; 
@@ -172,10 +192,10 @@ void sendTestPacket(byte data[], EthernetClient& client)
   }
   for (int i = 0; i < 7; i++)
   {
-     sendPacket[i + 28] = '}'; 
+     sendPacket[i + 18] = '}'; 
   }
   
-  client.write(sendPacket, 35);
+  client.write(sendPacket, 25);
 }
   
 
@@ -213,7 +233,7 @@ void loop() {
          thisByte = client.read();
          if (thisByte == 0x00)
          {
-           for (int i = 0; client.available() > 0 && i < 11; i++)
+           for (int i = 0; client.available() > 0 && i < 12; i++)
            {
               thisByte = client.read();
               prodPacket[i] = thisByte;
@@ -224,12 +244,12 @@ void loop() {
               footer[i] = thisByte;
            }
            
-           sendTestPacket(prodPacket, client);
+           sendProdPacket(prodPacket, client);
            processPacket(prodPacket);
          }
          else if (thisByte == 0x01)
          {
-           for (int i = 0; client.available() > 0 && i < 20; i++)
+           for (int i = 0; client.available() > 0 && i < 10; i++)
            {
               thisByte = client.read();
               testingPacket[i] = thisByte;

@@ -16,7 +16,7 @@ namespace DataSS_Controller_2015.Classes
         public TestingPacket(byte[] data)
         {
             Value = "";
-            if (data.Length != 20)
+            if (data.Length != 10)
             {
                 return;
             }

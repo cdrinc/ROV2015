@@ -30,7 +30,7 @@ namespace DataSS_Controller_2015.Classes
         /// </summary>
         /// <param name="val">Value to be mapped.</param>
         /// <returns>Returns the mapped value.</returns>
-        public static float MapStick(float val)
+        public static byte MapStick(float val)
         {
             float f;
             if (val < 0)
@@ -47,7 +47,7 @@ namespace DataSS_Controller_2015.Classes
                 f = 0;
             }
 
-            return f;
+            return (byte)f;
         }
 
         /// <summary>

@@ -21,6 +21,11 @@ namespace DataSS_Controller_2015.Classes
         private string ipAddress;
         private int port;
 
+        // production, test, and general data bytes, respectively
+        private byte prodByte = 0x00;
+        private byte testByte = 0x01;
+        private byte stringByte = 0x02;
+
         // blank byte to send as handshake
         private byte[] blankData = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
@@ -168,15 +173,15 @@ namespace DataSS_Controller_2015.Classes
                 return new ReceivedData(data.ToArray());
             }
 
-            if (data[0] == 0x00)
-            {
-                data.RemoveAt(0);
-                return new TestingPacket(data.ToArray());
-            }
-            else if (data[0] == 0x01)
+            if (data[0] == prodByte)
             {
                 data.RemoveAt(0);
                 return new PacketResponse(data.ToArray());
+            }
+            else if (data[0] == testByte)
+            {
+                data.RemoveAt(0);
+                return new TestingPacket(data.ToArray());
             }
             else
             {
@@ -254,7 +259,7 @@ namespace DataSS_Controller_2015.Classes
 
             if (Find(Header))
             {
-                System.Threading.Thread.Sleep(5);
+                System.Threading.Thread.Sleep(10);
                 while (stream.DataAvailable)
                 {
                     data.Add((byte)stream.ReadByte());
