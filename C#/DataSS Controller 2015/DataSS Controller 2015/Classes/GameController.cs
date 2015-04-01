@@ -179,7 +179,8 @@ namespace DataSS_Controller_2015.Classes
             if (Start != (int)padState.Buttons.Start)
             {
                 Start = (int)padState.Buttons.Start;
-                flag = true;
+                if (Start != 0) //this acts as a toggle, so that start only changes when start turns on
+                    flag = true;
             }
 
             if (Back != (int)padState.Buttons.Back)
