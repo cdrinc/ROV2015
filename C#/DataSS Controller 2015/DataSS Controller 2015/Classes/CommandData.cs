@@ -136,6 +136,7 @@ namespace DataSS_Controller_2015.Classes
         public byte Pump { get; set; }
         public byte Valve { get; set; }
         public byte Length { get; set; }
+        public byte Hover { get; set; }
 
         /// <summary>
         /// Converts the data stored in the class to a byte array in the correct format for transmission.
@@ -143,7 +144,7 @@ namespace DataSS_Controller_2015.Classes
         /// <returns>A byte array containing the data to be sent.</returns>
         public byte[] Serialize()
         {
-            List<byte> byteList = new List<byte>() { Meta, translateFL, translateFR, translateBL, translateBR, verticalF, verticalM, verticalB, Pump, Valve, Length };
+            List<byte> byteList = new List<byte>() { Meta, translateFL, translateFR, translateBL, translateBR, verticalF, verticalM, verticalB, Pump, Valve, Length, Hover };
             byte[] byteArr = byteList.ToArray();
             return byteArr;
         }

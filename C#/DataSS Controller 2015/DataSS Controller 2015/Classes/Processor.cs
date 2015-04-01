@@ -163,6 +163,8 @@ namespace DataSS_Controller_2015.Classes
             }
             #endregion
 
+            data.Hover = (byte)controller.Start;
+
             // these lines set the vertical motors to the Y-value of RS
             data.VerticalB = Utilities.MapStick(controller.RS.Y);
             data.VerticalM = Utilities.MapStick(controller.RS.Y);
