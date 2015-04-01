@@ -1,6 +1,10 @@
 #include <SPI.h>
 #include <Ethernet.h>
 
+//
+//List<byte> byteList = new List<byte>() { Meta, translateFL, translateFR, translateBL, translateBR, verticalF, verticalM, verticalB, Pump, Valve, Length, Hover };
+//
+
 // Enter a MAC address and IP address for your controller below.
 // The IP address will be dependent on your local network.
 // gateway and subnet are optional:
