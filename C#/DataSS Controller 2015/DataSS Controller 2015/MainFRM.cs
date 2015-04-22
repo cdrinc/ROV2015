@@ -270,15 +270,18 @@ namespace DataSS_Controller_2015
                 rightNum.Value = DataProcessor.Controller.DRight;
                 downNum.Value = DataProcessor.Controller.DDown;
 
-                List<byte> sendList = DataProcessor.SendData.Serialize().ToList<byte>();
-                sendList.RemoveAt(0);
-                string toAdd = "";
-                foreach (byte b in sendList)
+                if (debugModeChk.Checked)
                 {
-                    toAdd += b.ToString();
-                    toAdd += "|";
+                    List<byte> sendList = DataProcessor.SendData.Serialize().ToList<byte>();
+                    sendList.RemoveAt(0);
+                    string toAdd = "";
+                    foreach (byte b in sendList)
+                    {
+                        toAdd += b.ToString();
+                        toAdd += "|";
+                    }
+                    ethernetListenListBox.AddToEnd(toAdd);
                 }
-                ethernetListenListBox.AddToEnd(toAdd);
 
                 if (connected)
                 {
