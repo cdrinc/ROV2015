@@ -181,32 +181,32 @@ namespace DataSS_Controller_2015.Classes
             if (Math.Sign(controller.LS.X) == Math.Sign(controller.LS.Y))
             {
                 data.TranslateFL = Utilities.MapStick(Math.Sign(controller.LS.Y) * l);
-                data.TranslateBR = Utilities.MapStick(Math.Sign(controller.LS.Y) * l);
+                data.TranslateBR = Utilities.MapStick(Math.Sign(controller.LS.Y) * l * -1);
 
                 data.TranslateFR = Utilities.MapStick(controller.LS.Y - controller.LS.X);
-                data.TranslateBL = Utilities.MapStick(controller.LS.Y - controller.LS.X);
+                data.TranslateBL = Utilities.MapStick((controller.LS.Y - controller.LS.X) * -1);
             }
             else if (Math.Sign(controller.LS.X) != Math.Sign(controller.LS.Y))
             {
                 data.TranslateFL = Utilities.MapStick(controller.LS.Y + controller.LS.X);
-                data.TranslateBR = Utilities.MapStick(controller.LS.Y + controller.LS.X);
+                data.TranslateBR = Utilities.MapStick((controller.LS.Y + controller.LS.X) * -1);
 
                 data.TranslateFR = Utilities.MapStick(Math.Sign(controller.LS.Y) * l);
-                data.TranslateBL = Utilities.MapStick(Math.Sign(controller.LS.Y) * l);
+                data.TranslateBL = Utilities.MapStick(Math.Sign(controller.LS.Y) * l * -1);
             }
             else if (controller.LS.X == 0)
             {
                 data.TranslateFL = Utilities.MapStick(controller.LS.Y);
                 data.TranslateFR = Utilities.MapStick(controller.LS.Y);
-                data.TranslateBL = Utilities.MapStick(controller.LS.Y);
-                data.TranslateBR = Utilities.MapStick(controller.LS.Y);
+                data.TranslateBL = Utilities.MapStick(-1 * controller.LS.Y);
+                data.TranslateBR = Utilities.MapStick(-1 * controller.LS.Y);
             }
             else if (controller.LS.Y == 0)
             {
                 data.TranslateFL = Utilities.MapStick(controller.LS.X);
                 data.TranslateFR = Utilities.MapStick(-1 * controller.LS.X);
-                data.TranslateBL = Utilities.MapStick(-1 * controller.LS.X);
-                data.TranslateBR = Utilities.MapStick(controller.LS.X);
+                data.TranslateBL = Utilities.MapStick(controller.LS.X);
+                data.TranslateBR = Utilities.MapStick(-1 * controller.LS.X);
             }
 
             return data;
