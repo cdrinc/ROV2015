@@ -103,20 +103,23 @@ namespace DataSS_Controller_2015.Classes
 
         public void Poll()
         {
-            bool changed;
-            // polls controller
-            controller.Poll(out changed);
-            // gets any sensor data and stores it in sensorData
-            GetData();
-
-            // transforms the controller data
-            // modification by sensorData yet to be implemented
-            this.sendData = Transform(controller, sensorData);
-
-            // if the controller state has changed, reports it to the gui thread and sends the data down the pipe
-            if (changed)
+            while (true)
             {
-                ReportController();
+                bool changed;
+                // polls controller
+                controller.Poll(out changed);
+                // gets any sensor data and stores it in sensorData
+                GetData();
+
+                // transforms the controller data
+                // modification by sensorData yet to be implemented
+                this.sendData = Transform(controller, sensorData);
+
+                // if the controller state has changed, reports it to the gui thread and sends the data down the pipe
+                if (changed)
+                {
+                    ReportController();
+                }
             }
         }
 

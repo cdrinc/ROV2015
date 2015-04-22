@@ -40,9 +40,9 @@ void loop()
 // gateway and subnet are optional:
 byte mac[] = {  
   0x90, 0xA2, 0xDA, 0x0F, 0x43, 0xB2 };
-//IPAddress ip(169, 254, 60, 110); //169.254.60.110 works on mac
+IPAddress ip(169, 254, 60, 110); //169.254.60.110 works on mac
 //IPAddress ip(169, 254, 180, 60); //169.254.180.60 works on mac port 2
-IPAddress ip(192, 168, 137, 2); //works on windows
+//IPAddress ip(192, 168, 137, 2); //works on windows
 
 
 //port set to 13000 for tcp comms with c#
@@ -63,7 +63,7 @@ byte stringByte = 0x02;
 //char etx[] = { '}', '}', '}', '}', '}', '}', '}' };
 
 //byte values of connected controllers
-byte controllers[] = { 0x0D, 0x0E };
+byte controllers[] = { 0x00, 0x01, 0x02, 0x03, 0x04 };
 
 //data packet
 byte testingPacket[20];
@@ -124,7 +124,7 @@ void processPacket(byte packet[])
   byte controllerPacket[5];
   byte n = 0; //holds controller number
   //handles the four translate motors, which are the first four in the controllers array
-  for (int i = n; i < 4 && i < sizeof(controllers); i++)
+  for (int i = n; i < 5 && i < sizeof(controllers); i++)
   {
     deviceNumber = controllers[i];
     val = packet[i];
@@ -245,17 +245,9 @@ void loop() {
     if (!alreadyConnected) {
       Serial.println("We have a new client"); 
       alreadyConnected = true;
-      client.print("{{{{{{{");
-      client.write(stringByte);
-      client.print("Client connected}}}}}}}");
-      exitSafeStart();
-    }
-    
-    if (digitalRead(8) == HIGH)
-    {
-      client.print("{{{{{{{");
-      client.write(stringByte);
-      client.print("Error Detected}}}}}}}");
+      //client.print("{{{{{{{");
+      //client.write(stringByte);
+      //client.print("Client connected}}}}}}}");
       exitSafeStart();
     }
 
