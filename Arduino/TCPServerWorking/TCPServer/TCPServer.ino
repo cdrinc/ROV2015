@@ -63,10 +63,10 @@ byte stringByte = 0x02;
 //char etx[] = { '}', '}', '}', '}', '}', '}', '}' };
 
 //byte values of connected controllers
-byte controllers[] = { 0x00, 0x01, 0x02, 0x03, 0x04 };
+byte controllers[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09 };
 
 //data packet
-byte testingPacket[20];
+byte testingPacket[10];
 byte prodPacket[10];
 byte header[7];
 byte footer[7];
@@ -80,7 +80,7 @@ void setup() {
   // start listening for clientss
   server.begin();
  // Open serial communications and wait for port to open:
-  Serial.begin(9600);
+  Serial.begin(115200);
    while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
@@ -113,25 +113,23 @@ void exitSafeStart()
     exitSafe[1] = controllers[i];
     Serial.write(exitSafe, 3);
   }
-  delay(25);
+  //delay(25);
 }
 
 void processPacket(byte packet[])
 {
+  exitSafeStart();
   byte deviceNumber; //lets order the device numbers based on the order of bytes in the packet to reduce variable usage and make logic easier
-  byte command; //motor forward/backward
   byte val;
   byte controllerPacket[5];
-  byte n = 0; //holds controller number
   //handles the four translate motors, which are the first four in the controllers array
-  for (int i = n; i < 5 && i < sizeof(controllers); i++)
+  for (int i = 0; i < 5 && i < sizeof(controllers); i++)
   {
     deviceNumber = controllers[i];
     val = packet[i];
     
     controllerPacket[0] = 0xAA; //auto-detect baud rate
     controllerPacket[1] = deviceNumber; //device number
-    controllerPacket[2] = command; //command byte
     //insert logic to handle direction based on device number
     //this is just an implementation of the forward/back ls stick so we know 1-127 is neg and 128-255 is pos
     if (val == 0x00)
@@ -156,6 +154,62 @@ void processPacket(byte packet[])
     }
     Serial.write(controllerPacket, 5);
   }
+  for (int i = 5; i < 8 && i < sizeof(controllers); i++)
+  {
+    deviceNumber = controllers[i];
+    val = packet[i];
+    
+    controllerPacket[0] = 0xAA;
+    controllerPacket[1] = deviceNumber;
+    
+    if (val == 0)
+    {
+      controllerPacket[2] = 0x05;
+      controllerPacket[3] = 0x00;
+      controllerPacket[4] = 0x00;
+    }
+    else
+    {
+      byte dir = val == 1 ? 0x06 : 0x05;
+      int motorSpeed = 3200;
+      controllerPacket[2] = dir;
+      controllerPacket[3] = motorSpeed % 32; //how to get the first 5 bits
+      controllerPacket[4] = motorSpeed / 32; //how to get the last 7 bits
+    }
+    Serial.write(controllerPacket, 5);
+  }
+  for (int i = 9; i < 10; i++)
+  {
+    deviceNumber = controllers[i];
+    val = packet[i];
+    
+    controllerPacket[0] = 0xAA; //auto-detect baud rate
+    controllerPacket[1] = deviceNumber; //device number
+    //insert logic to handle direction based on device number
+    //this is just an implementation of the forward/back ls stick so we know 1-127 is neg and 128-255 is pos
+    if (val == 0x00)
+    {
+      controllerPacket[2] = 0x05;
+      controllerPacket[3] = 0x00;
+      controllerPacket[4] = 0x00;
+    }
+    else
+    {
+      //handles setting the speed if val is a byte (0-255) e.g. bound to packet[0] (LSY)
+      byte dir = val <= 126 ? 0x06 : 0x05;
+      byte minInitialRange = dir == 0x06 ? 1 : 128; //gets the initial min for mapping based on direction
+      byte maxInitialRange = dir == 0x06 ? 127 : 255; //gets the initial max for mapping based on direction
+      int motorSpeed = map(val,minInitialRange,maxInitialRange,0,3200);
+      //this handles setting the motor speed if val is binary (one or zero) e.g. bound to packet[6] (A)
+      //byte dir = 0x05;
+      //int motorSpeed = val == 0 ? 0 : 1000;
+      controllerPacket[2] = dir;
+      controllerPacket[3] = motorSpeed % 32; //how to get the first 5 bits
+      controllerPacket[4] = motorSpeed / 32; //how to get the last 7 bits
+    }
+    Serial.write(controllerPacket, 5);
+  }
+  
   /*for (int i = 0; i < sizeof(controllers); i++)
   {
     deviceNumber = controllers[i]; //lets order the device numbers based on the order of bytes in the packet to reduce variable usage and make logic easier
@@ -192,7 +246,7 @@ void processPacket(byte packet[])
   }*/
 }
 
-void sendProdPacket(byte data[], EthernetClient& client)
+/*void sendProdPacket(byte data[], EthernetClient& client)
 {
   byte sendPacket[27];
   for (int i = 0; i < 7; i++)
@@ -210,7 +264,7 @@ void sendProdPacket(byte data[], EthernetClient& client)
   }
   
   client.write(sendPacket, 27);
-}
+}*/
 
 void sendTestPacket(byte data[], EthernetClient& client)
 {
@@ -220,7 +274,7 @@ void sendTestPacket(byte data[], EthernetClient& client)
      sendPacket[i] = '{'; 
   }
   sendPacket[7] = testByte;
-  for (int i = 0; i < 20; i++)
+  for (int i = 0; i < 10; i++)
   {
      sendPacket[i + 8] = data[i];
   }
@@ -257,9 +311,9 @@ void loop() {
       if (client.find("{{{{{{{"))
       {
          thisByte = client.read();
-         if (thisByte == 0x00)
+         /*if (thisByte == 0x00)
          {
-           for (int i = 0; client.available() > 0 && i < 12; i++)
+           for (int i = 0; client.available() > 0 && i < 9; i++)
            {
               thisByte = client.read();
               prodPacket[i] = thisByte;
@@ -272,8 +326,8 @@ void loop() {
            
            sendProdPacket(prodPacket, client);
            processPacket(prodPacket);
-         }
-         else if (thisByte == 0x01)
+         }*/
+         if (thisByte == 0x01)
          {
            for (int i = 0; client.available() > 0 && i < 10; i++)
            {

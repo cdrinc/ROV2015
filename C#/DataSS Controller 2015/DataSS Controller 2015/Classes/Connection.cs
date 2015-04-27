@@ -27,7 +27,7 @@ namespace DataSS_Controller_2015.Classes
         private byte stringByte = 0x02;
 
         // blank byte to send as handshake
-        private byte[] blankData = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+        private byte[] blankData = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
         // this holds the data each time ReadPacket() is called
         //private byte[] packet = new byte[35];
@@ -259,7 +259,7 @@ namespace DataSS_Controller_2015.Classes
 
             if (Find(Header))
             {
-                System.Threading.Thread.Sleep(10);
+                System.Threading.Thread.Sleep(5);
                 while (stream.DataAvailable)
                 {
                     data.Add((byte)stream.ReadByte());
