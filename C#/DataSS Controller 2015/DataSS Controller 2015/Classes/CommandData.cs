@@ -145,7 +145,7 @@ namespace DataSS_Controller_2015.Classes
         /// <returns>A byte array containing the data to be sent.</returns>
         public byte[] Serialize()
         {
-            List<byte> byteList = new List<byte>() { Meta, translateFL, translateFR, translateBL, translateBR, verticalF, verticalB, Pump, Valve, Length, Hand };
+            List<byte> byteList = new List<byte>() { Meta, translateFL, translateFR, translateBL, translateBR, verticalF, verticalB, Valve, Pump, Length, Hand };
             byte[] byteArr = byteList.ToArray();
             return byteArr;
         }

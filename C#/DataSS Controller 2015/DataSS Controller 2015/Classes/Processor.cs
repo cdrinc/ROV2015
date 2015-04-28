@@ -205,36 +205,72 @@ namespace DataSS_Controller_2015.Classes
                 r = 1;
             }
 
+            float FL = 0, FR = 0, BL = 0, BR = 0;
+
             if (controller.LS.X == 0)
             {
-                data.TranslateFL = Utilities.MapStick(controller.LS.Y * -1);
-                data.TranslateFR = Utilities.MapStick(controller.LS.Y * -1);
-                data.TranslateBL = Utilities.MapStick(controller.LS.Y);
-                data.TranslateBR = Utilities.MapStick(controller.LS.Y);
+                FL = controller.LS.Y * -1;
+                FR = controller.LS.Y * -1;
+                BL = controller.LS.Y;
+                BR = controller.LS.Y;
             }
             else if (controller.LS.Y == 0)
             {
-                data.TranslateFL = Utilities.MapStick(controller.LS.X * -1);
-                data.TranslateFR = Utilities.MapStick(controller.LS.X);
-                data.TranslateBL = Utilities.MapStick(controller.LS.X * -1);
-                data.TranslateBR = Utilities.MapStick(controller.LS.X);
+                FL = controller.LS.X * -1;
+                FR = controller.LS.X;
+                BL = controller.LS.X * -1;
+                BR = controller.LS.X;
             }
             else if (Math.Sign(controller.LS.X) == Math.Sign(controller.LS.Y))
             {
-                data.TranslateFL = Utilities.MapStick(Math.Sign(controller.LS.Y) * l * -1);
-                data.TranslateBR = Utilities.MapStick(Math.Sign(controller.LS.Y) * l);
+                FL = Math.Sign(controller.LS.Y) * l * -1;
+                BR = Math.Sign(controller.LS.Y) * l;
 
-                data.TranslateFR = Utilities.MapStick((controller.LS.Y - controller.LS.X) * -1);
-                data.TranslateBL = Utilities.MapStick(controller.LS.Y - controller.LS.X);
+                FR = (controller.LS.Y - controller.LS.X) * -1;
+                BL = controller.LS.Y - controller.LS.X;
             }
             else if (Math.Sign(controller.LS.X) != Math.Sign(controller.LS.Y))
             {
-                data.TranslateFL = Utilities.MapStick((controller.LS.Y + controller.LS.X) * -1);
-                data.TranslateBR = Utilities.MapStick(controller.LS.Y + controller.LS.X);
+                FL = (controller.LS.Y + controller.LS.X) * -1;
+                BR = controller.LS.Y + controller.LS.X;
 
-                data.TranslateFR = Utilities.MapStick(Math.Sign(controller.LS.Y) * l * -1);
-                data.TranslateBL = Utilities.MapStick(Math.Sign(controller.LS.Y) * l);
+                FR = Math.Sign(controller.LS.Y) * l * -1;
+                BL = Math.Sign(controller.LS.Y) * l;
             }
+
+            /*if (Math.Sign(controller.RS.X) == -1)
+            {
+                FR = Math.Min(controller.RS.X + FR, 1);
+                BL = Math.Min(controller.RS.X + BL, 1);
+
+                BR = Math.Min(controller.RS.X - BR, 1);
+                FL = Math.Min(controller.RS.X - FL, 1);
+            }
+            else if (Math.Sign(controller.RS.X) == 1)
+            {
+                FR = Math.Min(controller.RS.X - FR, 1);
+                BL = Math.Min(controller.RS.X - BL, 1);
+
+                BR = Math.Min(controller.RS.X + BR, 1);
+                FL = Math.Min(controller.RS.X + FL, 1);
+            }*/
+
+            /*FL -= controller.RS.X;
+            FR += controller.RS.X;
+            BL += controller.RS.X;
+            BR -= controller.RS.X;*/
+
+            FL = Math.Min(Math.Abs(FL - controller.RS.X), 1) * Math.Sign(FL - controller.RS.X);
+            FR = Math.Min(Math.Abs(FR + controller.RS.X), 1) * Math.Sign(FR + controller.RS.X);
+            BL = Math.Min(Math.Abs(BL - controller.RS.X), 1) * Math.Sign(BL - controller.RS.X);
+            BR = Math.Min(Math.Abs(BR + controller.RS.X), 1) * Math.Sign(BR + controller.RS.X);
+
+            
+
+            data.TranslateFL = Utilities.MapStick(FL);
+            data.TranslateFR = Utilities.MapStick(FR);
+            data.TranslateBL = Utilities.MapStick(BL);
+            data.TranslateBR = Utilities.MapStick(BR);
 
             return data;
         }
