@@ -163,30 +163,39 @@ namespace DataSS_Controller_2015.Classes
         {
             List<byte> data = new List<byte>();
 
-            if (DataAvailable())
+            try
             {
-                data = ReadPacket();
+                if (DataAvailable())
+                {
+                    data = ReadPacket();
+                }
+                else
+                {
+                    data = null;
+                    return new ReceivedData(data.ToArray());
+                }
+
+                if (data[0] == prodByte)
+                {
+                    data.RemoveAt(0);
+                    return new PacketResponse(data.ToArray());
+                }
+                else if (data[0] == testByte)
+                {
+                    data.RemoveAt(0);
+                    return new TestingPacket(data.ToArray());
+                }
+                else
+                {
+                    data.RemoveAt(0);
+                    return new ReceivedData(data.ToArray());
+                }
             }
-            else
+            catch
             {
                 data = null;
                 return new ReceivedData(data.ToArray());
-            }
-
-            if (data[0] == prodByte)
-            {
-                data.RemoveAt(0);
-                return new PacketResponse(data.ToArray());
-            }
-            else if (data[0] == testByte)
-            {
-                data.RemoveAt(0);
-                return new TestingPacket(data.ToArray());
-            }
-            else
-            {
-                data.RemoveAt(0);
-                return new ReceivedData(data.ToArray());
+                System.Windows.Forms.MessageBox.Show("FUCK");
             }
         }
 
