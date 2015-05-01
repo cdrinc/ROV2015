@@ -11,55 +11,40 @@ namespace DataSS_Controller_2015.Classes
     /// </summary>
     public class PacketResponse : ReceivedData
     {
-        public float GyroX;
-        public float GyroY;
-        public float GyroZ;
-        public float AccelX;
-        public float AccelY;
-        public float AccelZ;
-        public float CompassX;
-        public float CompassY;
-        public float CompassZ;
+
+        public float Depth;
         public float Voltage;
         public float Length;
-        public float Depth;
-        
-        private List<float> FloatList;
+
+        private float depthConvFactor = (float)1.0197162;
+
+        private List<float> floats = new List<float>();
 
         public PacketResponse(byte[] data)
         {
+
             if (data.Length != 12)
             {
                 return;
             }
             else
             {
-                FloatList = new List<float>();
-                for (int i = 0; i < data.Length; i++)
+                byte[] b = new byte[10];
+                for (int i = 0; i < 3; i++)
                 {
-                    //processing of packet data would go here
-                    FloatList[i] = data[i];
+                    floats[i] = System.BitConverter.ToSingle(data, i * 4);
                 }
 
-                GyroX = FloatList[0];
-                GyroY = FloatList[1];
-                GyroZ = FloatList[2];
-                AccelX = FloatList[3];
-                AccelY = FloatList[4];
-                AccelZ = FloatList[5];
-                CompassX = FloatList[6];
-                CompassY = FloatList[7];
-                CompassZ = FloatList[8];
-                Voltage = FloatList[9];
-                Length = FloatList[10];
-                Depth = FloatList[11];
+                Depth = floats[0] * depthConvFactor;
+                Voltage = floats[1];
+                Length = floats[2];
             }
         }
 
         public override string ToString()
         {
             string str = "";
-            foreach (float f in FloatList)
+            foreach (float f in floats)
             {
                 str += f.ToString();
                 str += " - ";

@@ -66,6 +66,8 @@ namespace DataSS_Controller_2015.Classes
             get { return this.incoming; }
             set { }
         }
+
+        public float TrackedDepth { get; set; }
         
         public ReceivedData SensorData
         {
@@ -78,6 +80,7 @@ namespace DataSS_Controller_2015.Classes
         {
             ProcessorState = (int)ControlStates.Manual;
             this.Connection = connection;
+            TrackedDepth = 0;
             if (gamePad)
             {
                 controller = new GameController();

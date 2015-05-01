@@ -267,7 +267,7 @@ void serializeFloat(float val, byte* array)
 
 void sendSensorPacket(EthernetClient& client)
 {
-  byte sendPacket[19];
+  byte sendPacket[27];
   byte pData[4];
   for (int i = 0; i < 7; i++)
   {
@@ -281,9 +281,21 @@ void sendSensorPacket(EthernetClient& client)
     sendPacket[i + 8] = pData[i];
   }
   
+  // voltage code goes here
+  for (int i = 0; i < 4; i++)
+  {
+    sendPacket[i + 12] = 0;
+  }
+  
+  // length code goes here
+  for (int i = 0; i < 4; i++)
+  {
+    sendPacket[i + 16] = 0;
+  }
+  
   for (int i = 0; i < 7; i++)
   {
-     sendPacket[i + 12] = '}'; 
+     sendPacket[i + 20] = '}'; 
   }
   
   client.write(sendPacket, 27);

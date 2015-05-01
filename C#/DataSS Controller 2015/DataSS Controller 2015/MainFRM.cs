@@ -218,7 +218,26 @@ namespace DataSS_Controller_2015
                     {
                         data = connection.GetResponse();
 
-                        if (data is PacketResponse || data is TestingPacket)
+                        if (data is PacketResponse)
+                        {
+                            PacketResponse sensorData = (PacketResponse)data;
+                            depthLiveLabel.Text = sensorData.Depth.ToString();
+                            if (!depthTrackChk.Checked)
+                            {
+                                DataProcessor.TrackedDepth = 0;
+                                depthTrackLbl.Text = "0";
+                            }
+                            else
+                            {
+                                if (DataProcessor.TrackedDepth == 0)
+                                {
+                                    DataProcessor.TrackedDepth = sensorData.Depth;
+                                }
+                                float d = sensorData.Depth - DataProcessor.TrackedDepth;
+                                depthLiveLabel.Text = d.ToString();
+                            }
+                        }
+                        else if (data is TestingPacket)
                         {
                             dataListenBox.AddToEnd(data.ToString());
                         }

@@ -21,8 +21,8 @@ namespace DataSS_Controller_2015.Classes
         private string ipAddress;
         private int port;
 
-        // production, test, and general data bytes, respectively
-        private byte prodByte = 0x00;
+        // sensor data, test, and general data bytes, respectively
+        private byte sensorByte = 0x00;
         private byte testByte = 0x01;
         private byte stringByte = 0x02;
 
@@ -175,7 +175,7 @@ namespace DataSS_Controller_2015.Classes
                     return new ReceivedData(data.ToArray());
                 }
 
-                if (data[0] == prodByte)
+                if (data[0] == sensorByte)
                 {
                     data.RemoveAt(0);
                     return new PacketResponse(data.ToArray());
@@ -195,7 +195,6 @@ namespace DataSS_Controller_2015.Classes
             {
                 data = null;
                 return new ReceivedData(data.ToArray());
-                System.Windows.Forms.MessageBox.Show("FUCK");
             }
         }
 
