@@ -30,10 +30,9 @@ void loop()
 */
 #include <SPI.h>
 #include <Ethernet.h>
-
-//
-//List<byte> byteList = new List<byte>() { Meta, translateFL, translateFR, translateBL, translateBR, verticalF, verticalM, verticalB, Pump, Valve, Length, Hover };
-//
+#include <Wire.h>
+#include <MS5803_I2C.h>
+#include <stdio.h>
 
 // Enter a MAC address and IP address for your controller below.
 // The IP address will be dependent on your local network.
@@ -54,8 +53,8 @@ EthernetClient altClient;
 //control characters
 byte stx[] = { 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B, 0x7B};
 byte etx[] = { 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D, 0x7D};
-byte prodByte =  0x00;
-byte testByte = 0x01;
+byte sensorByte =  0x00;
+byte motorByte = 0x01;
 byte stringByte = 0x02;
 
 //byte exitSafe[] = { 0xAA, 0x0D, 0x03 };
@@ -66,10 +65,16 @@ byte stringByte = 0x02;
 byte controllers[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09 };
 
 //data packet
-byte testingPacket[10];
-byte prodPacket[10];
+byte motorPacket[10];
+byte sensorPacket[10];
 byte header[7];
 byte footer[7];
+
+// pressure sensor address
+// ADDRESS_HIGH = 0x76
+// ADDRESS_LOW = 0x77;
+
+MS5803 pSensor(ADDRESS_HIGH);
 
 void setup() {
   pinMode(8, INPUT);
@@ -84,10 +89,12 @@ void setup() {
    while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
-
-
+  
   Serial.print("Server address:");
   Serial.println(Ethernet.localIP());
+  
+  pSensor.reset();
+  pSensor.begin();
 }
 
 bool checkHeader(byte checkByte[], bool start)
@@ -246,37 +253,53 @@ void processPacket(byte packet[])
   }*/
 }
 
-/*void sendProdPacket(byte data[], EthernetClient& client)
+void serializeFloat(float val, byte* array)
 {
-  byte sendPacket[27];
+  union
+  {
+    float f;
+    byte buff[4];
+  } u;
+  
+  u.f = val;
+  memcpy(array, u.buff, 4);
+}
+
+void sendSensorPacket(EthernetClient& client)
+{
+  byte sendPacket[19];
+  byte pData[4];
   for (int i = 0; i < 7; i++)
   {
      sendPacket[i] = '{'; 
   }
-  sendPacket[7] = prodByte;
-  for (int i = 0; i < 10; i++)
+  sendPacket[7] = sensorByte;
+  
+  serializeFloat(pSensor.getPressure(ADC_4096), pData);
+  for (int i = 0; i < 4; i++)
   {
-     sendPacket[i + 8] = data[i];
+    sendPacket[i + 8] = pData[i];
   }
+  
   for (int i = 0; i < 7; i++)
   {
-     sendPacket[i + 20] = '}'; 
+     sendPacket[i + 12] = '}'; 
   }
   
   client.write(sendPacket, 27);
-}*/
+}
 
-void sendTestPacket(byte data[], EthernetClient& client)
+void sendMotorPacket(byte motorData[], EthernetClient& client)
 {
   byte sendPacket[25];
   for (int i = 0; i < 7; i++)
   {
      sendPacket[i] = '{'; 
   }
-  sendPacket[7] = testByte;
+  sendPacket[7] = motorByte;
   for (int i = 0; i < 10; i++)
   {
-     sendPacket[i + 8] = data[i];
+     sendPacket[i + 8] = motorData[i];
   }
   for (int i = 0; i < 7; i++)
   {
@@ -311,38 +334,22 @@ void loop() {
       if (client.find("{{{{{{{"))
       {
          thisByte = client.read();
-         /*if (thisByte == 0x00)
-         {
-           for (int i = 0; client.available() > 0 && i < 9; i++)
-           {
-              thisByte = client.read();
-              prodPacket[i] = thisByte;
-           }
-           for (int i = 0; client.available() > 0 && i < 7; i++)
-           {
-              thisByte = client.read();
-              footer[i] = thisByte;
-           }
-           
-           sendProdPacket(prodPacket, client);
-           processPacket(prodPacket);
-         }*/
-         if (thisByte == 0x01)
+         if (thisByte == motorByte)
          {
            for (int i = 0; client.available() > 0 && i < 10; i++)
            {
               thisByte = client.read();
-              testingPacket[i] = thisByte;
+              motorPacket[i] = thisByte;
            }
            for (int i = 0; client.available() > 0 && i < 7; i++)
            {
               thisByte = client.read();
               footer[i] = thisByte;
            }
-           sendTestPacket(testingPacket, client);
-           processPacket(testingPacket);
+           sendMotorPacket(motorPacket, client);
+           processPacket(motorPacket);
          }
-         else if (thisByte == 0x02)
+         /*else if (thisByte == 0x02)
          {
            client.print("{{{{{{{");
            client.write(stringByte);
@@ -351,11 +358,9 @@ void loop() {
            digitalWrite(8, HIGH);
            delay(30);
            pinMode(8, INPUT);
-         }
+         }*/
       }
+      sendSensorPacket(client);
     }
   }
 }
-
-
-
