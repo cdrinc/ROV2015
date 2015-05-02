@@ -263,11 +263,28 @@ namespace DataSS_Controller_2015.Classes
             BL += controller.RS.X;
             BR -= controller.RS.X;*/
 
-            FL = Math.Min(Math.Abs(FL - controller.RS.X), 1) * Math.Sign(FL - controller.RS.X);
-            FR = Math.Min(Math.Abs(FR + controller.RS.X), 1) * Math.Sign(FR + controller.RS.X);
-            BL = Math.Min(Math.Abs(BL - controller.RS.X), 1) * Math.Sign(BL - controller.RS.X);
-            BR = Math.Min(Math.Abs(BR + controller.RS.X), 1) * Math.Sign(BR + controller.RS.X);
+            //FL = Math.Min(Math.Abs(FL - controller.RS.X), 1) * Math.Sign(FL - controller.RS.X);
+            //FR = Math.Min(Math.Abs(FR + controller.RS.X), 1) * Math.Sign(FR + controller.RS.X);
+            //BL = Math.Min(Math.Abs(BL - controller.RS.X), 1) * Math.Sign(BL - controller.RS.X);
+            //BR = Math.Min(Math.Abs(BR + controller.RS.X), 1) * Math.Sign(BR + controller.RS.X);
 
+            var rsMagnitude = Math.Abs(controller.RS.X);
+            var rsSign = Math.Sign(controller.RS.X);
+
+            if (rsSign > 0)
+            {
+                BL = constrain(BL + rsMagnitude);
+                FR = constrain(FR + rsMagnitude);
+                BR = constrain(BR - rsMagnitude);
+                FL = constrain(FL - rsMagnitude);
+            }
+            else if (rsSign < 0)
+            {
+                BL = constrain(BL - rsMagnitude);
+                FR = constrain(FR - rsMagnitude);
+                BR = constrain(BR + rsMagnitude);
+                FL = constrain(FL + rsMagnitude);
+            }
             
 
             data.TranslateFL = Utilities.MapStick(FL);
@@ -276,6 +293,17 @@ namespace DataSS_Controller_2015.Classes
             data.TranslateBR = Utilities.MapStick(BR);
 
             return data;
+        }
+
+        //validate motor values
+        float constrain(float val)
+        {
+            if (val > 1)
+                return 1;
+            else if (val < 1)
+                return -1;
+            else
+                return val;
         }
 
         private void ReportController()

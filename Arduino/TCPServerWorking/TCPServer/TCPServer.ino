@@ -30,8 +30,8 @@ void loop()
 */
 #include <SPI.h>
 #include <Ethernet.h>
-#include <Wire.h>
-#include <MS5803_I2C.h>
+//#include <Wire.h>
+//#include <MS5803_I2C.h>
 #include <stdio.h>
 
 // Enter a MAC address and IP address for your controller below.
@@ -74,7 +74,7 @@ byte footer[7];
 // ADDRESS_HIGH = 0x76
 // ADDRESS_LOW = 0x77;
 
-MS5803 pSensor(ADDRESS_HIGH);
+//MS5803 pSensor(ADDRESS_LOW);
 
 void setup() {
   pinMode(8, INPUT);
@@ -93,8 +93,8 @@ void setup() {
   Serial.print("Server address:");
   Serial.println(Ethernet.localIP());
   
-  pSensor.reset();
-  pSensor.begin();
+  //pSensor.reset();
+  //pSensor.begin();
 }
 
 bool checkHeader(byte checkByte[], bool start)
@@ -161,7 +161,7 @@ void processPacket(byte packet[])
     }
     Serial.write(controllerPacket, 5);
   }
-  for (int i = 5; i < 8 && i < sizeof(controllers); i++)
+  for (int i = 5; i < 9 && i < sizeof(controllers); i++)
   {
     deviceNumber = controllers[i];
     val = packet[i];
@@ -184,6 +184,31 @@ void processPacket(byte packet[])
       controllerPacket[4] = motorSpeed / 32; //how to get the last 7 bits
     }
     Serial.write(controllerPacket, 5);
+  }
+  for (int i = 8; i < 9; i++)
+  {
+    deviceNumber = controllers[i];
+    val = packet[i];
+    
+    controllerPacket[0] = 0xAA;
+    controllerPacket[1] = deviceNumber;
+    
+    if (val == 0)
+    {
+      controllerPacket[2] = 0x05;
+      controllerPacket[3] = 0x00;
+      controllerPacket[4] = 0x00;
+    }
+    else
+    {
+      byte dir = val == 1 ? 0x06 : 0x05;
+      int motorSpeed = 2000;
+      controllerPacket[2] = dir;
+      controllerPacket[3] = motorSpeed % 32; //how to get the first 5 bits
+      controllerPacket[4] = motorSpeed / 32; //how to get the last 7 bits
+    }
+    Serial.write(controllerPacket, 5);
+    
   }
   for (int i = 9; i < 10; i++)
   {
@@ -275,7 +300,7 @@ void sendSensorPacket(EthernetClient& client)
   }
   sendPacket[7] = sensorByte;
   
-  serializeFloat(pSensor.getPressure(ADC_4096), pData);
+  //serializeFloat(pSensor.getPressure(ADC_4096), pData);
   for (int i = 0; i < 4; i++)
   {
     sendPacket[i + 8] = pData[i];
@@ -372,7 +397,7 @@ void loop() {
            pinMode(8, INPUT);
          }*/
       }
-      sendSensorPacket(client);
+      //sendSensorPacket(client);
     }
   }
 }
